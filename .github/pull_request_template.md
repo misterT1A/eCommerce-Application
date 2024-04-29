@@ -3,6 +3,7 @@
 - [ ] Bug Fix
 - [ ] Refactor
 - [ ] Documentation Update
+- [ ] Environment Set Up
 - [ ] Other
 
 ## Description of the changes
