@@ -11,3 +11,11 @@ App pages:
 - User Profile page 👥
 - Basket Page 🛒
 - About Us Page 👦👩
+
+## Technology stack 🛠️
+- TypeScript
+- [Commercetools](https://commercetools.com/)
+- Webpack
+- Sass 
+- ESLint, Prettier, Husky
+- Jest
