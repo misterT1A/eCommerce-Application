@@ -19,7 +19,26 @@ App pages:
 - Sass 
 - ESLint, Prettier, Husky
 - Jest
-- 
+
+## Setting up and running locally 🚀
+To set up and run the project locally, do the following:
+1. Clone he repository 
+```
+git clone https://github.com/misterT1A/eCommerce-Application
+ ```
+2. Navigate to the project directory
+```
+cd eCommerce-Application
+```
+3. Install all dependencies
+```
+npm install
+```
+4. Launch the development server
+```
+npm start
+```
+
 ## Application scripts 📜
 - `npm start`: runs the app in the development mode (http://localhost:3000 in browser)
 - `npm run build`: builds the app to `dist` folder
