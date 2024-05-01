@@ -41,7 +41,7 @@
     ],
     "@typescript-eslint/explicit-function-return-type": "error", // Requires explicit return type declarations for functions
     "@typescript-eslint/consistent-type-exports": "error", // Ensures consistent use of type exports
-    "@typescript-eslint/consistent-type-imports": "error", // Enforces consistent style for importing types.
+    "@typescript-eslint/consistent-type-imports": "error", // Enforces consistent style for importing types
     "sort-imports": [ // Enforces sorting of import declarations
       "error",
       {
@@ -54,7 +54,7 @@
           "allowSeparatedGroups": true
       }
     ],
-    "import/order": [ // Enforces a consistent order for import declarations.
+    "import/order": [ // Enforces a consistent order for import declarations
       "error",
       {
           "groups": [
@@ -73,7 +73,22 @@
               "caseInsensitive": true
           }
       }
-    ]
+    ],
+    "@typescript-eslint/naming-convention": [ // Enforces naming conventions for variables and interfaces
+      "error",
+      {
+        "selector": "variable",
+        "types": ["boolean"],
+        "format": ["PascalCase"],
+        "prefix": ["is", "should", "has", "can", "did", "will"] // Allows specific prefixes for boolean variables
+      },
+      {
+        "selector": "interface",
+        "format": ["PascalCase"],
+        "prefix": ["I"] // Requires interfaces to start with 'I'
+      }
+    ],
+    "no-console": 0 // Allows the use of 'console' statements
   },
   "noInlineConfig": true // Prevents configuring rules inline
 }
