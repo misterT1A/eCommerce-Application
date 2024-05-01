@@ -6,6 +6,8 @@
   "scripts": {
     "start": "webpack serve --open  --env mode=dev",
     "build": "webpack  --env mode=prod",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "ci:format": "prettier --check \"src/**/*.ts\"",
     "prepare": "husky"
   },
   "repository": {
