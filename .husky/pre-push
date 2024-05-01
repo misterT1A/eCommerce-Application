@@ -1,1 +1,2 @@
+mpm run lint
 npx validate-branch-name
