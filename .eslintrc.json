@@ -40,6 +40,40 @@
       }
     ],
     "@typescript-eslint/explicit-function-return-type": "error", // Requires explicit return type declarations for functions
+    "@typescript-eslint/consistent-type-exports": "error", // Ensures consistent use of type exports
+    "@typescript-eslint/consistent-type-imports": "error", // Enforces consistent style for importing types.
+    "sort-imports": [ // Enforces sorting of import declarations
+      "error",
+      {
+          "ignoreCase": false,
+          "ignoreDeclarationSort": true,
+          "ignoreMemberSort": false,
+          "memberSyntaxSortOrder": [
+              "none", "all", "multiple", "single"
+          ],
+          "allowSeparatedGroups": true
+      }
+    ],
+    "import/order": [ // Enforces a consistent order for import declarations.
+      "error",
+      {
+          "groups": [
+              "builtin",
+              "external",
+              "internal",
+              [
+                  "sibling", "parent"
+              ],
+              "index",
+              "unknown"
+          ],
+          "newlines-between": "always",
+          "alphabetize": {
+              "order": "asc",
+              "caseInsensitive": true
+          }
+      }
+    ]
   },
   "noInlineConfig": true // Prevents configuring rules inline
 }
