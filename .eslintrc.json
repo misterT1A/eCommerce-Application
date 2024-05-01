@@ -18,7 +18,7 @@
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module",
-    "project": "./tsconfig.json"
+    "project": "**/tsconfig.json"
   },
   "env": {
     "es2022": true,
@@ -27,9 +27,18 @@
   },
   "rules": {
     "@typescript-eslint/no-explicit-any": "error", // Disallows using 'any' type explicitly
-    "curly": ["error", "all"], // Requires curly braces for all statements
-    "max-lines-per-function": ["error", 40], // Limits the number of lines in a function
-    "max-lines": ["error", 250], // Limits the number of lines in a file
+    "curly": [
+      "error",
+      "all"
+    ], // Requires curly braces for all statements
+    "max-lines-per-function": [
+      "error",
+      40
+    ], // Limits the number of lines in a function
+    "max-lines": [
+      "error",
+      250
+    ], // Limits the number of lines in a file
     "@typescript-eslint/no-inferrable-types": "error", // Disallows explicit type declarations when TypeScript can infer types
     "class-methods-use-this": "off", // Allows class methods to not use 'this'
     "@typescript-eslint/explicit-member-accessibility": [ // Enforces explicit member accessibility (public, protected, private)
@@ -47,47 +56,66 @@
     "sort-imports": [ // Enforces sorting of import declarations
       "error",
       {
-          "ignoreCase": false,
-          "ignoreDeclarationSort": true,
-          "ignoreMemberSort": false,
-          "memberSyntaxSortOrder": [
-              "none", "all", "multiple", "single"
-          ],
-          "allowSeparatedGroups": true
+        "ignoreCase": false,
+        "ignoreDeclarationSort": true,
+        "ignoreMemberSort": false,
+        "memberSyntaxSortOrder": [
+          "none",
+          "all",
+          "multiple",
+          "single"
+        ],
+        "allowSeparatedGroups": true
       }
     ],
     "import/order": [ // Enforces a consistent order for import declarations
       "error",
       {
-          "groups": [
-              "builtin",
-              "external",
-              "internal",
-              [
-                  "sibling", "parent"
-              ],
-              "index",
-              "unknown"
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          [
+            "sibling",
+            "parent"
           ],
-          "newlines-between": "always",
-          "alphabetize": {
-              "order": "asc",
-              "caseInsensitive": true
-          }
+          "index",
+          "unknown"
+        ],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
       }
     ],
     "@typescript-eslint/naming-convention": [ // Enforces naming conventions for variables and interfaces
       "error",
       {
         "selector": "variable",
-        "types": ["boolean"],
-        "format": ["PascalCase"],
-        "prefix": ["is", "should", "has", "can", "did", "will"] // Allows specific prefixes for boolean variables
+        "types": [
+          "boolean"
+        ],
+        "format": [
+          "PascalCase"
+        ],
+        "prefix": [
+          "is",
+          "should",
+          "has",
+          "can",
+          "did",
+          "will"
+        ] // Allows specific prefixes for boolean variables
       },
       {
         "selector": "interface",
-        "format": ["PascalCase"],
-        "prefix": ["I"] // Requires interfaces to start with 'I'
+        "format": [
+          "PascalCase"
+        ],
+        "prefix": [
+          "I"
+        ] // Requires interfaces to start with 'I'
       }
     ],
     "no-console": 0 // Allows the use of 'console' statements
@@ -96,11 +124,15 @@
   "settings": {
     "import/resolver": {
       "typescript": {
-        "project": ["**/tsconfig.json"]
+        "project": [
+          "**/tsconfig.json"
+        ]
       }
     },
     "import/parsers": {
-      "@typescript-eslint/parser": [".ts"]
+      "@typescript-eslint/parser": [
+        ".ts"
+      ]
     }
   }
 }
