@@ -27,7 +27,19 @@
     "@typescript-eslint/no-explicit-any": "error", // Disallows using 'any' type explicitly
     "curly": ["error", "all"], // Requires curly braces for all statements
     "max-lines-per-function": ["error", 40], // Limits the number of lines in a function
-    "max-lines": ["error", 250] // Limits the number of lines in a file
+    "max-lines": ["error", 250], // Limits the number of lines in a file
+    "@typescript-eslint/no-inferrable-types": "error", // Disallows explicit type declarations when TypeScript can infer types
+    "class-methods-use-this": "off", // Allows class methods to not use 'this'
+    "@typescript-eslint/explicit-member-accessibility": [ // Enforces explicit member accessibility (public, protected, private)
+      "error",
+      {
+        "accessibility": "explicit", // Requires specifying accessibility modifiers for class members
+        "overrides": {
+          "constructors": "off" // Allows omitting accessibility modifiers for constructors
+        }
+      }
+    ],
+    "@typescript-eslint/explicit-function-return-type": "error", // Requires explicit return type declarations for functions
   },
   "noInlineConfig": true // Prevents configuring rules inline
 }
