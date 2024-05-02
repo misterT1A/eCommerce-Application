@@ -4,6 +4,9 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
   verbose: true,
+  collectCoverage: true,
+  clearMocks: true,
+  coverageDirectory: 'coverage',
   transform: {
     '^.+\\.ts?$': 'ts-jest',
   },
