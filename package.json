@@ -25,7 +25,7 @@
     "errorMsg": "Invalid branch name! Please, rename branch using `git branch -m new-branch-name` command. Use this template: (feat|fix|chore|refactor|docs)/RSS-ECOMM-#_##_Name_of_task"
   },
   "lint-staged": {
-    "**/*.{ts}": [
+    "**/*.ts": [
       "eslint --max-warnings=0",
       "prettier --write"
     ],
