@@ -10,6 +10,7 @@
     "ci:format": "prettier --check \"src/**/*.ts\"",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
+    "test": "jest --config ./jest.config.js",
     "prepare": "husky"
   },
   "repository": {
