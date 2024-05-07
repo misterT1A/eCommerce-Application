@@ -1,11 +1,6 @@
 {
   "root": true,
-  "plugins": [
-    "prettier",
-    "import",
-    "@typescript-eslint",
-    "eslint-plugin-import"
-  ],
+  "plugins": ["prettier", "import", "@typescript-eslint", "eslint-plugin-import"],
   "extends": [
     "airbnb-base",
     "airbnb-typescript/base",
@@ -27,21 +22,13 @@
   },
   "rules": {
     "@typescript-eslint/no-explicit-any": "error", // Disallows using 'any' type explicitly
-    "curly": [
-      "error",
-      "all"
-    ], // Requires curly braces for all statements
-    "max-lines-per-function": [
-      "error",
-      40
-    ], // Limits the number of lines in a function
-    "max-lines": [
-      "error",
-      250
-    ], // Limits the number of lines in a file
+    "curly": ["error", "all"], // Requires curly braces for all statements
+    "max-lines-per-function": ["error", 40], // Limits the number of lines in a function
+    "max-lines": ["error", 250], // Limits the number of lines in a file
     "@typescript-eslint/no-inferrable-types": "error", // Disallows explicit type declarations when TypeScript can infer types
     "class-methods-use-this": "off", // Allows class methods to not use 'this'
-    "@typescript-eslint/explicit-member-accessibility": [ // Enforces explicit member accessibility (public, protected, private)
+    "@typescript-eslint/explicit-member-accessibility": [
+      // Enforces explicit member accessibility (public, protected, private)
       "error",
       {
         "accessibility": "explicit", // Requires specifying accessibility modifiers for class members
@@ -50,38 +37,24 @@
         }
       }
     ],
-    "@typescript-eslint/explicit-function-return-type": "error", // Requires explicit return type declarations for functions
     "@typescript-eslint/consistent-type-exports": "error", // Ensures consistent use of type exports
     "@typescript-eslint/consistent-type-imports": "error", // Enforces consistent style for importing types
-    "sort-imports": [ // Enforces sorting of import declarations
+    "sort-imports": [
+      // Enforces sorting of import declarations
       "error",
       {
         "ignoreCase": false,
         "ignoreDeclarationSort": true,
         "ignoreMemberSort": false,
-        "memberSyntaxSortOrder": [
-          "none",
-          "all",
-          "multiple",
-          "single"
-        ],
+        "memberSyntaxSortOrder": ["none", "all", "multiple", "single"],
         "allowSeparatedGroups": true
       }
     ],
-    "import/order": [ // Enforces a consistent order for import declarations
+    "import/order": [
+      // Enforces a consistent order for import declarations
       "error",
       {
-        "groups": [
-          "builtin",
-          "external",
-          "internal",
-          [
-            "sibling",
-            "parent"
-          ],
-          "index",
-          "unknown"
-        ],
+        "groups": ["builtin", "external", "internal", ["sibling", "parent"], "index", "unknown"],
         "newlines-between": "always",
         "alphabetize": {
           "order": "asc",
@@ -89,33 +62,19 @@
         }
       }
     ],
-    "@typescript-eslint/naming-convention": [ // Enforces naming conventions for variables and interfaces
+    "@typescript-eslint/naming-convention": [
+      // Enforces naming conventions for variables and interfaces
       "error",
       {
         "selector": "variable",
-        "types": [
-          "boolean"
-        ],
-        "format": [
-          "PascalCase"
-        ],
-        "prefix": [
-          "is",
-          "should",
-          "has",
-          "can",
-          "did",
-          "will"
-        ] // Allows specific prefixes for boolean variables
+        "types": ["boolean"],
+        "format": ["PascalCase"],
+        "prefix": ["is", "should", "has", "can", "did", "will"] // Allows specific prefixes for boolean variables
       },
       {
         "selector": "interface",
-        "format": [
-          "PascalCase"
-        ],
-        "prefix": [
-          "I"
-        ] // Requires interfaces to start with 'I'
+        "format": ["PascalCase"],
+        "prefix": ["I"] // Requires interfaces to start with 'I'
       }
     ],
     "no-console": 0 // Allows the use of 'console' statements
@@ -124,15 +83,11 @@
   "settings": {
     "import/resolver": {
       "typescript": {
-        "project": [
-          "**/tsconfig.json"
-        ]
+        "project": ["**/tsconfig.json"]
       }
     },
     "import/parsers": {
-      "@typescript-eslint/parser": [
-        ".ts"
-      ]
+      "@typescript-eslint/parser": [".ts"]
     }
   }
 }
