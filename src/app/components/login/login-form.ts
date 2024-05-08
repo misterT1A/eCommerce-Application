@@ -1,6 +1,6 @@
 import BaseComponent from '@components/base-component';
 
-const form = new BaseComponent<HTMLFormElement>(
+const formComponent = new BaseComponent<HTMLFormElement>(
   { tag: 'form', className: 'login-form', action: '#', autocomplete: 'off' },
   new BaseComponent<HTMLInputElement>({
     tag: 'input',
@@ -8,7 +8,7 @@ const form = new BaseComponent<HTMLFormElement>(
     name: 'email',
     autocomplete: 'username',
     className: 'login-form__input',
-    placeholder: 'Email*',
+    placeholder: 'john.doe@example.com',
     pattern: '[A-Z][A-Za-z\\-]{2,}',
     required: true,
   }),
@@ -25,7 +25,7 @@ const form = new BaseComponent<HTMLFormElement>(
     name: 'password',
     autocomplete: 'current-password',
     className: 'login-form__input',
-    placeholder: 'Password*',
+    placeholder: '******',
     pattern: '(?=.*[0-9]).{4,}',
     required: true,
   }),
@@ -44,4 +44,4 @@ const form = new BaseComponent<HTMLFormElement>(
   })
 );
 
-export default form.getNode();
+export default formComponent;
