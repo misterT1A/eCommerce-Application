@@ -64,6 +64,9 @@ export default class BaseComponent<T extends HTMLElement = HTMLElement> {
 
   public addListener(event: string, listener: () => void) {
     this.node.addEventListener(event, listener);
+    if (!this.listeners[event]) {
+      this.listeners[event] = [];
+    }
     this.listeners[event].push(listener);
   }
 
