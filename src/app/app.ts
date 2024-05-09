@@ -3,53 +3,56 @@ import BaseComponent from '@utils/base-component';
 import Pages from './router/pages';
 import Router from './router/router';
 
-export default class App extends BaseComponent {
+export default class App {
   protected router: Router;
 
+  protected controller: IController | null;
+
+  protected element: BaseComponent;
+
   constructor() {
-    super({ tag: 'section' });
+    this.element = new BaseComponent({ tag: 'section' });
+
+    this.controller = null;
 
     this.router = new Router(this.createsRoutes());
   }
 
   public showContent(parent: HTMLElement) {
-    parent.append(this.node);
+    parent.append(this.element.getNode());
   }
 
   private createsRoutes(): IRoute[] {
     return [
       {
         path: Pages.START,
-        callBack: () => {
-          this.deleteContent();
-          // callback for view
+        callBack: async () => {
+          // const { default: Controller } = await import('@components/');
+          // this.controller = new Controller();
+          // this.setContent();
         },
       },
       {
         path: Pages.LOGIN,
-        callBack: () => {
-          this.deleteContent();
-          // callback for view
-        },
+        callBack: async () => {},
       },
       {
         path: Pages.REG,
-        callBack: () => {
-          this.deleteContent();
-          // callback for view
-        },
+        callBack: () => {},
       },
       {
         path: Pages.MAIN,
-        callBack: () => {
-          this.deleteContent();
-          // callback for view
-        },
+        callBack: () => {},
       },
     ];
   }
 
+  private setContent() {
+    this.deleteContent();
+    this.controller?.showContent(this.element);
+  }
+
   private deleteContent() {
-    this.destroyChildren();
+    this.element.destroyChildren();
   }
 }
