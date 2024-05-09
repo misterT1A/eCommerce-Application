@@ -1,29 +1,31 @@
-import BaseComponent from '@components/base-component';
-import formComponent from '@components/login/login-form';
+import LoginFormComponent from '@components/login/login-form-component';
+import BaseComponent from '@utils/base-component';
 
-import './login.scss';
+import style from './_login.scss';
+import loginFormValidator from './utils/form-validator';
 
 export default class LoginPage extends BaseComponent {
+  private loginFormValidator = loginFormValidator;
+
   constructor() {
-    super({ className: 'wrapper' });
+    super(
+      { className: style['login-block'] },
+      new BaseComponent<HTMLParagraphElement>({
+        tag: 'p',
+        className: 'login-title',
+        textContent: 'Enter your email and password',
+      })
+    );
     this.render();
   }
 
   protected render() {
-    const loginPage = new BaseComponent(
-      { className: 'login-block' },
-      new BaseComponent<HTMLParagraphElement>({
-        tag: 'p',
-        className: 'login-title',
-        textContent: 'Enter your name and password',
-      }),
-      formComponent
-    );
-    formComponent.addListener('keyup', () => this.handleKeyUp);
+    const formComponent = new LoginFormComponent();
+    this.append(formComponent);
+    formComponent.addListener('keyup', this.handleKeyUp);
     // formComponent.addEventListener('submit', () => {
     //   this.handleSubmit();
     // });
-    this.appendChildren([loginPage]);
   }
 
   protected handleKeyUp(e: Event) {
@@ -32,22 +34,15 @@ export default class LoginPage extends BaseComponent {
       return;
     }
 
-    const { form } = input;
-    if (!input.checkValidity()) {
-      input.classList.remove('valid');
-      input.classList.add('invalid');
-    } else {
-      input.classList.remove('invalid');
-      input.classList.add('valid');
+    if (input.type === 'text') {
+      const validationRes = loginFormValidator.validateEmail(input.value);
+      console.log(validationRes, loginFormValidator);
     }
-
-    const button = form.querySelector('button');
-    if (!form.checkValidity()) {
-      button?.setAttribute('disabled', 'disabled');
-    } else {
-      button?.removeAttribute('disabled');
+    if (input.type === 'password') {
+      const validationRes = loginFormValidator.validatePassword(input.value);
+      console.log(validationRes);
     }
   }
 
-  protected handleSubmit() {}
+  // protected handleSubmit() {}
 }
