@@ -1,0 +1,142 @@
+.form__checkbox {
+}
+
+.form__inputCheckbox {
+}
+
+.form__inputCheckmark {
+}
+
+.form__addresses {
+}
+
+.form__addressesTitle {
+}
+
+.form__inputLabel {
+}
+
+.form__selection {
+}
+
+.form__selectionName {
+}
+
+.form__selectionButton {
+}
+
+.form__selectionList {
+}
+
+.form__selectionItem {
+}
+
+.form__selectionField {
+}
+
+.form__selectionInput {
+}
+
+.form__selectionLabel {
+}
+
+.form__address {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form__input {
+  display: flex;
+  width: 100%;
+  padding: 5px;
+  border: 1px solid $color-dark-gray;
+  border-radius: 5px;
+}
+
+.form__errors {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: $main-color-error;
+  font-size: 12px;
+}
+
+.form__inputWrapper {
+  position: relative;
+}
+
+.form__inputsWrapperSmall {
+  display: flex;
+  gap: 5px;
+}
+
+.form__inputPasswordToggler {
+  position: absolute;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  opacity: 0.5;
+  &__visible {
+    opacity: 1;
+  }
+}
+
+.form__addressesTogglerLabelLeft {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $color-light;
+  left: 0px;
+  width: 50%;
+  height: 100%;
+}
+
+.form__addressesTogglerLabelRight {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $main-color-accent;
+  right: 0px;
+  width: 50%;
+  height: 100%;
+}
+
+.form__addressesTogglerBar {
+  display: flex;
+  background-color: $main-color-accent;
+  border-radius: 50px;
+  height: 30px;
+  width: 50%;
+  transition: 0.5s;
+}
+
+.form__addressesToggler {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border: 1px solid $main-color-accent;
+  background-color: transparent;
+  border-radius: 20px;
+  &_shipping {
+    .form__addressesTogglerBar {
+      transform: translate(-50%);
+    }
+  }
+  &_common {
+    .form__addressesTogglerBar {
+      transform: translate(0%);
+    }
+  }
+  &_billing {
+    .form__addressesTogglerBar {
+      transform: translate(50%);
+    }
+  }
+}
