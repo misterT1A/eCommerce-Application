@@ -3,7 +3,7 @@ export type Props<T extends HTMLElement = HTMLElement> = Partial<T> & {
   data?: DOMStringMap;
 };
 
-type ListenerType = (...params: unknown[]) => void;
+type ListenerType = (e: Event) => void;
 
 export default class BaseComponent<T extends HTMLElement = HTMLElement> {
   protected node: T;
@@ -62,7 +62,7 @@ export default class BaseComponent<T extends HTMLElement = HTMLElement> {
     this.node.classList.remove(className);
   }
 
-  public addListener(event: string, listener: () => void) {
+  public addListener(event: string, listener: ListenerType) {
     this.node.addEventListener(event, listener);
     if (!this.listeners[event]) {
       this.listeners[event] = [];
