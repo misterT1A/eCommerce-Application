@@ -12,6 +12,6 @@ export default abstract class Controller<T extends BaseComponent> {
   }
 
   public showContent(parent: BaseComponent) {
-    (parent as BaseComponent).appendChildren([this.view]);
+    parent.appendChildren([this.view]);
   }
 }
