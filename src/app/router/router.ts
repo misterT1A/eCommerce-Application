@@ -15,8 +15,7 @@ export default class Router {
 
     const route = this.routes.find((routeItem) => routeItem.path === url);
     if (!route) {
-      console.log('no matches');
-      // to do / for 404 page
+      this.navigate('error');
       return;
     }
     route.callBack();
