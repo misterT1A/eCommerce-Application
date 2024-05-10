@@ -26,33 +26,31 @@
 
 // }
 
-// .form__selectionName {
+.form__selectionName {
+}
 
-// }
+.form__selectionButton {
+  display: flex;
+  width: 100%;
+  padding: 5px;
+  border: 1px solid $color-dark-gray;
+  border-radius: 5px;
+}
 
-// .form__selectionButton {
+.form__selectionList {
+}
 
-// }
+.form__selectionItem {
+}
 
-// .form__selectionList {
+.form__selectionField {
+}
 
-// }
+.form__selectionInput {
+}
 
-// .form__selectionItem {
-
-// }
-
-// .form__selectionField {
-
-// }
-
-// .form__selectionInput {
-
-// }
-
-// .form__selectionLabel {
-
-// }
+.form__selectionLabel {
+}
 
 $main-color-accent: #aa4e41;
 $color-light: #faf4f4;

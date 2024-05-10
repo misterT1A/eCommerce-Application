@@ -1,3 +1,4 @@
+import { VALID_COUNTRIES } from '@services/registrationValidationService/validCountries';
 import BaseComponent from '@utils/base-component';
 import { div } from '@utils/elements';
 
@@ -24,7 +25,7 @@ class AddressField extends BaseComponent {
       commonAddress: new Checkbox('common'),
       city: new FormField('City', 'text', ''),
       street: new FormField('Street', 'text', ''),
-      country: new FormSelection('Country', ['UK', 'Ireland', 'France', 'Belgium']),
+      country: new FormSelection('Country', [...VALID_COUNTRIES]),
       zipCode: new FormField('Postal Code', 'text', ''),
     };
     this.appendChildren([
