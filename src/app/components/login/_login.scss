@@ -30,7 +30,7 @@ input:focus {
   height: 20px;
   position: absolute;
   right: 1%;
-  top: 50%;
+  top: 20px;
   cursor: pointer;
   background: center / contain no-repeat;
 
@@ -43,15 +43,7 @@ input:focus {
   }
 }
 
-.valid {
-  border: 1px solid green;
-}
-
-.invalid {
-  border: 1px solid red;
-}
-
-input.invalid + span:after {
-  content: attr(data-error-text);
-  display: inline-block;
+.error-container {
+  color: red;
+  font-size: 12px;
 }
