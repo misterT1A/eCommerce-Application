@@ -1,0 +1,32 @@
+.wrapper {
+  @include flex(center, center, column);
+}
+
+.title {
+  font-size: 33px;
+  margin-bottom: 30px;
+}
+
+.text {
+  font-size: 16px;
+}
+
+.button {
+  margin-top: 30px;
+  cursor: pointer;
+  @include flex(center, center, column);
+
+  max-width: 195px;
+  height: 50px;
+  padding: 0 90px;
+  border: 1px solid $page404_border_color_button;
+  border-radius: 50px;
+  color: $page404_border_color_button;
+  background-color: transparent;
+  transition: all 0.2s linear;
+
+  &:hover {
+    background-color: $page404_border_color_button;
+    color: $page404_text_color_button_hover;
+  }
+}
