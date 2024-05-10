@@ -27,15 +27,15 @@ export default class App {
     return [
       {
         path: Pages.START,
+        callBack: async () => {},
+      },
+      {
+        path: Pages.LOGIN,
         callBack: async () => {
           const { default: Controller } = await import('@components/login/login-controller');
           this.controller = new Controller();
           this.setContent();
         },
-      },
-      {
-        path: Pages.LOGIN,
-        callBack: async () => {},
       },
       {
         path: Pages.REG,
