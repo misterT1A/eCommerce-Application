@@ -27,9 +27,9 @@ export default class App {
       {
         path: Pages.START,
         callBack: async () => {
-          // const { default: Controller } = await import('@components/');
-          // this.controller = new Controller();
-          // this.setContent();
+          const { default: Controller } = await import('@components/login/controller');
+          this.controller = new Controller();
+          this.setContent();
         },
       },
       {
