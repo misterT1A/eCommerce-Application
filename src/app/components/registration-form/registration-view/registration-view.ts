@@ -3,18 +3,13 @@ import FormField from '@components/form-ui-elements/formField';
 import BaseComponent from '@utils/base-component';
 import { button, div } from '@utils/elements';
 
-import styles from './_registration-form.scss';
+import styles from './registrationForm.scss';
+import type { IRegistrationFormFields } from './registrationTypes';
 
 class RegistrationView extends BaseComponent {
   private form: BaseComponent<HTMLElement>;
 
-  private fields: {
-    firstName: FormField;
-    lastName: FormField;
-    email: FormField;
-    password: FormField;
-    addresses: AddressesFieldset;
-  };
+  private fields: IRegistrationFormFields;
 
   public button: BaseComponent<HTMLButtonElement>;
 
@@ -25,6 +20,7 @@ class RegistrationView extends BaseComponent {
     this.fields = {
       firstName: new FormField('First Name', 'text', ''),
       lastName: new FormField('Last Name', 'text', ''),
+      date: new FormField('Date Of Bitdth', 'date', ''),
       email: new FormField('Email', 'email', ''),
       password: new FormField('Password', 'password', ''),
       addresses: new AddressesFieldset(),
