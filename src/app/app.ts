@@ -1,5 +1,6 @@
 import BaseComponent from '@utils/base-component';
 
+import styles from './_app_style.scss';
 import Pages from './router/pages';
 import Router from './router/router';
 
@@ -8,10 +9,10 @@ export default class App {
 
   protected controller: IController | null;
 
-  protected element: BaseComponent;
+  protected main: BaseComponent;
 
   constructor() {
-    this.element = new BaseComponent({ tag: 'section' });
+    this.main = new BaseComponent({ tag: 'section', className: styles.main });
 
     this.controller = null;
 
@@ -19,7 +20,7 @@ export default class App {
   }
 
   public showContent(parent: HTMLElement) {
-    parent.append(this.element.getNode());
+    parent.append(this.main.getNode());
   }
 
   private createsRoutes(): IRoute[] {
@@ -27,8 +28,8 @@ export default class App {
       {
         path: Pages.START,
         callBack: async () => {
-          // const { default: Controller } = await import('@components/');
-          // this.controller = new Controller();
+          // const { default: Controller } = await import('@components/);
+          // this.controller = new Controller(this.router);
           // this.setContent();
         },
       },
@@ -44,15 +45,23 @@ export default class App {
         path: Pages.MAIN,
         callBack: () => {},
       },
+      {
+        path: Pages.ERROR,
+        callBack: async () => {
+          const { default: Controller } = await import('@components/404/404_controller');
+          this.controller = new Controller(this.router);
+          this.setContent();
+        },
+      },
     ];
   }
 
   private setContent() {
     this.deleteContent();
-    this.controller?.showContent(this.element);
+    this.controller?.showContent(this.main);
   }
 
   private deleteContent() {
-    this.element.destroyChildren();
+    this.main.destroyChildren();
   }
 }
