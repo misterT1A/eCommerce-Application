@@ -3,6 +3,10 @@ button {
   border: 1px solid black;
 }
 
+input:focus {
+  outline: none;
+}
+
 .login-block {
   width: 100%;
   max-width: 400px;
@@ -37,4 +41,17 @@ button {
   input[type='password'] + & {
     background-image: url('../../../assets/closed-eye.svg');
   }
+}
+
+.valid {
+  border: 1px solid green;
+}
+
+.invalid {
+  border: 1px solid red;
+}
+
+input.invalid + span:after {
+  content: attr(data-error-text);
+  display: inline-block;
 }

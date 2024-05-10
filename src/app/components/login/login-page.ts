@@ -34,12 +34,23 @@ export default class LoginPage extends BaseComponent {
       return;
     }
 
-    if (input.type === 'text') {
+    if (input.name === 'email') {
       const validationRes = loginFormValidator.validateEmail(input.value);
-      console.log(validationRes, loginFormValidator);
+      if (validationRes.errors.length > 0) {
+        input.className = style.invalid;
+      } else {
+        input.className = style.valid;
+      }
+
+      console.log(validationRes);
     }
-    if (input.type === 'password') {
+    if (input.name === 'password') {
       const validationRes = loginFormValidator.validatePassword(input.value);
+      if (validationRes.errors.length > 0) {
+        input.className = style.invalid;
+      } else {
+        input.className = style.valid;
+      }
       console.log(validationRes);
     }
   }
