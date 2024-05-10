@@ -44,6 +44,7 @@ class RegistrationValidator {
   private static calculateAge(dateOfBirth: string) {
     const today = new Date();
     const birthDate = new Date(dateOfBirth);
+    console.debug(birthDate);
     return today.getFullYear() - birthDate.getFullYear();
   }
 }
