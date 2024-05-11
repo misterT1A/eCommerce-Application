@@ -35,19 +35,25 @@ export default class App {
     return [
       {
         path: Pages.START,
-        callBack: async () => {
-          // const { default: Controller } = await import('@components/);
-          // this.controller = new Controller(this.router);
-          // this.setContent();
-        },
-      },
-      {
-        path: Pages.LOGIN,
         callBack: async () => {},
       },
       {
+        path: Pages.LOGIN,
+        callBack: async () => {
+          const { default: Controller } = await import('@components/login/login-controller');
+          this.controller = new Controller();
+          this.setContent();
+        },
+      },
+      {
         path: Pages.REG,
-        callBack: () => {},
+        callBack: async () => {
+          const { default: RegistrationController } = await import(
+            '@components/registration-form/registration-controller'
+          );
+          this.controller = new RegistrationController();
+          this.setContent();
+        },
       },
       {
         path: Pages.MAIN,
