@@ -1,7 +1,7 @@
 const Pages = {
   START: '',
   LOGIN: 'login',
-  REG: 'registr',
+  REG: 'registration',
   MAIN: 'main',
   ERROR: 'error',
 };
