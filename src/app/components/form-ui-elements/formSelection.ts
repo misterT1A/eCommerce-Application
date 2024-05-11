@@ -16,7 +16,7 @@ class FormSelection extends BaseComponent<HTMLFormElement> {
   ) {
     super({ tag: 'form', action: '', className: styles.form__selection }, label([styles.form__selectionName], title));
     this.button = button([styles.form__selectionButton], '', { type: 'button', value: '' });
-    this.button.addListener('click', () => this.showList());
+    this.button.addListener('click', () => this.toggleList());
     this.addListener('input', () => this.updateAppearance());
     const listItems = this.options.map((option) => {
       const itemInput = input([styles.form__selectionInput], { type: 'radio', name: 'options', value: option });
@@ -52,8 +52,8 @@ class FormSelection extends BaseComponent<HTMLFormElement> {
     }
   }
 
-  private showList() {
-    this.addClass(styles.form__selection_show);
+  private toggleList() {
+    this.getNode().classList.toggle(styles.form__selection_show);
   }
 
   private hideList() {

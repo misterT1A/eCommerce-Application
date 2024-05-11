@@ -42,9 +42,10 @@ export const input = (classList: string[], props: Props<HTMLInputElement> = {}) 
 };
 
 export const label = (classList: string[], text: string, ...children: BaseComponent[]) => {
-  const labelComponent = new BaseComponent<HTMLLabelElement>({ tag: 'label' }, ...children);
+  const labelComponent = new BaseComponent<HTMLLabelElement>({ tag: 'label' });
   labelComponent.setTextContent(text);
   labelComponent.addClass(...classList);
+  labelComponent.appendChildren(children);
   return labelComponent;
 };
 
@@ -62,7 +63,8 @@ export const ul = (classList: string[], ...children: BaseComponent<HTMLLIElement
 };
 
 export const li = (classList: string[], ...children: BaseComponent[]) => {
-  const liComponent = new BaseComponent<HTMLLIElement>({ tag: 'li' }, ...children);
+  const liComponent = new BaseComponent<HTMLLIElement>({ tag: 'li' });
+  liComponent.appendChildren(children);
   liComponent.addClass(...classList);
   return liComponent;
 };
