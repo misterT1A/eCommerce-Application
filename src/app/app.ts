@@ -40,7 +40,7 @@ export default class App {
       {
         path: Pages.LOGIN,
         callBack: async () => {
-          const { default: Controller } = await import('@components/login/login-controller');
+          const { default: Controller } = await import('@components/login-form/login-controller');
           this.controller = new Controller();
           this.setContent();
         },

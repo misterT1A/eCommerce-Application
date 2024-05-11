@@ -1,0 +1,88 @@
+input,
+button {
+  border: 1px solid black;
+}
+
+input:focus {
+  outline: none;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin: 0 auto;
+  padding: 20px 0;
+  gap: 15px;
+  width: 100%;
+  max-width: 400px;
+
+  .form-title {
+    font-size: 33px;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .form-text {
+    text-align: center;
+  }
+
+  .form-input {
+    display: flex;
+    width: 100%;
+    height: 40px;
+    padding: 5px;
+    border: 1px solid $color-dark-gray;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .button {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    border-radius: 50px;
+    border: 1px solid $main-color-accent;
+    color: $main-color-accent;
+    transition: 0.2s;
+    &:hover {
+      background-color: $main-color-accent;
+      color: $color-white;
+    }
+  }
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  & span {
+    font-weight: 700;
+  }
+}
+
+.input-password-toggler {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  right: 1%;
+  top: 22px;
+  cursor: pointer;
+  background: center / contain no-repeat;
+
+  input[type='text'] + & {
+    background-image: url('../../../assets/opened-eye.svg');
+  }
+
+  input[type='password'] + & {
+    background-image: url('../../../assets/closed-eye.svg');
+  }
+}
+
+.error-container {
+  color: $main-color-error;
+  font-size: 12px;
+}
