@@ -1,6 +1,7 @@
 .menuBlock {
   @include flex(center, space-between, row);
   gap: 20px;
+  background-color: #fff;
 
   transition: all 0.3s linear;
 }
@@ -37,7 +38,7 @@
 @media screen and (max-width: 1000px) {
   .menuBlock {
     padding: 20px 20px;
-    position: fixed;
+    position: absolute;
     z-index: 10;
     top: 136px;
     left: -50%;

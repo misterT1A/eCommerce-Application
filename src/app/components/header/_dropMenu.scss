@@ -5,6 +5,7 @@
   padding: 27px;
   @include flex(center, space-between, column);
   gap: 35px;
+  background-color: #fff;
 
   position: absolute;
   top: -30%;
