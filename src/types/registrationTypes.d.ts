@@ -28,9 +28,11 @@ interface IAddressData {
 interface IRegistrationErrors {
   firstName: string[];
   lastName: string[];
-  date: string[]; // Assuming it's an array of strings, adjust if necessary
+  date: string[];
   email: string[];
   password: string[];
   billingAddress: IAddressData;
   shippingAddress: IAddressData;
 }
+
+// TODO: add interfaces for reusable UI form elements
