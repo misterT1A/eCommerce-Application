@@ -5,6 +5,8 @@ export type Props<T extends HTMLElement = HTMLElement> = Partial<T> & {
 
 type ListenerType = (e: Event) => void;
 
+type ChildType = BaseComponent | HTMLElement | SVGSVGElement | null;
+
 export default class BaseComponent<T extends HTMLElement = HTMLElement> {
   protected node: T;
 
@@ -12,7 +14,7 @@ export default class BaseComponent<T extends HTMLElement = HTMLElement> {
 
   protected children: BaseComponent[] = [];
 
-  constructor(props: Props<T>, ...children: (BaseComponent | HTMLElement | null)[]) {
+  constructor(props: Props<T>, ...children: ChildType[]) {
     const node = document.createElement(props.tag ?? 'div') as T;
     Object.assign(node, props);
 
@@ -29,7 +31,10 @@ export default class BaseComponent<T extends HTMLElement = HTMLElement> {
     }
   }
 
-  public append(child: BaseComponent | HTMLElement): void {
+  public append(child: ChildType): void {
+    if (!child) {
+      return;
+    }
     if (child instanceof BaseComponent) {
       this.children.push(child);
       this.node.append(child.getNode());
@@ -38,7 +43,7 @@ export default class BaseComponent<T extends HTMLElement = HTMLElement> {
     }
   }
 
-  public appendChildren(children: (BaseComponent | HTMLElement | null)[]): void {
+  public appendChildren(children: ChildType[]): void {
     children.forEach((el) => {
       if (el) {
         this.append(el);
@@ -62,7 +67,7 @@ export default class BaseComponent<T extends HTMLElement = HTMLElement> {
     this.node.classList.remove(className);
   }
 
-  public addListener(event: string, listener: ListenerType) {
+  public addListener(event: string, listener: ListenerType): void {
     this.node.addEventListener(event, listener);
     if (!this.listeners[event]) {
       this.listeners[event] = [];
