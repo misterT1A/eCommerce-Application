@@ -5,6 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const DotenvWebpackPlugin = require('dotenv-webpack');
 const EslingPlugin = require('eslint-webpack-plugin');
 const postCss = require('postcss-preset-env');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = ({ mode }) => {
   const isDevMode = mode === 'dev';
@@ -104,6 +105,14 @@ module.exports = ({ mode }) => {
       new MiniCssExtractPlugin({
         filename: '[name].css',
         chunkFilename: '[id].css',
+      }),
+      new CopyPlugin({
+        patterns: [
+          {
+            from: 'src/assets',
+            to: 'assets/img',
+          },
+        ],
       }),
     ],
   };
