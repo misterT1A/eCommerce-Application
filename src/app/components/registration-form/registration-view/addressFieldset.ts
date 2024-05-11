@@ -14,8 +14,8 @@ class AddressesFieldset extends BaseComponent {
   public billingAddress: AddressField;
 
   constructor() {
-    super({ tag: 'div', classList: styles.form__addresses }, h2([styles.form__addressesTitle], 'Addresses'));
-    this.addressesToggler = button([styles.form__addressesToggler], '');
+    super({ tag: 'div', classList: styles.form__addresses }, h2([styles.form__addressesTitle], 'ADDRESSES'));
+    this.addressesToggler = button([styles.form__addressesToggler], '', { type: 'button' });
     this.addressesToggler.appendChildren([
       span([styles.form__addressesTogglerBar], ''),
       span([styles.form__addressesTogglerLabelRight], 'BILLING ADDRESS'),
