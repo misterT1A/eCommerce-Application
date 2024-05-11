@@ -1,57 +1,3 @@
-// .form__checkbox{
-
-// }
-
-// .form__inputCheckbox{
-
-// }
-
-// .form__inputCheckmark{
-
-// }
-
-// .form__addresses{
-
-// }
-
-// .form__addressesTitle{
-
-// }
-
-// .form__inputLabel{
-
-// }
-
-// .form__selection {
-
-// }
-
-.form__selectionName {
-}
-
-.form__selectionButton {
-  display: flex;
-  width: 100%;
-  padding: 5px;
-  border: 1px solid $color-dark-gray;
-  border-radius: 5px;
-}
-
-.form__selectionList {
-}
-
-.form__selectionItem {
-}
-
-.form__selectionField {
-}
-
-.form__selectionInput {
-}
-
-.form__selectionLabel {
-}
-
 $main-color-accent: #aa4e41;
 $color-light: #faf4f4;
 $color-white: #ffffff;
@@ -60,18 +6,99 @@ $color-gray: #d8d8d8;
 $color-light-gray: #efefef;
 $main-color-error: #d82700;
 
-.form__address {
+.form__field {
+  flex-shrink: 0;
+}
+
+.form__selection {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  position: relative;
+}
+
+.form__selectionName {
+  font-weight: 500;
+}
+
+.form__selectionButton {
+  display: flex;
+  padding: 5px;
+  border: 1px solid $color-dark-gray;
+  border-radius: 5px;
+  height: 35px;
+  background-color: transparent;
+  background-image: url(../../../assets/arrow.svg);
+  background-repeat: no-repeat;
+  background-position: calc(100% - 10px);
+  cursor: pointer;
+}
+
+.form__selectionList {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  list-style: none;
+  background-color: #ffffff;
+  top: calc(100% - 5px);
+  overflow: hidden;
+  border-radius: 0 0 5px 5px;
+  border: #707070 1px solid;
+  border-top: none;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: 0.2s;
+  opacity: 0;
+}
+
+.form__selectionItem {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 35px;
+  &:hover {
+    background-color: $color-light;
+  }
+}
+
+.form__selectionField {
+  display: flex;
+  width: 100%;
+  padding: 0;
+}
+
+.form__selectionInput {
+  display: none;
+}
+
+.form__selectionLabel {
+  display: flex;
+  width: 100%;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.form__selection_show {
+  .form__selectionList {
+    transform: scaleY(1);
+    opacity: 1;
+  }
 }
 
 .form__input {
   display: flex;
   width: 100%;
+  height: 35px;
   padding: 5px;
-  border: 1px solid $color-dark-gray;
+  border: 1px solid #707070;
   border-radius: 5px;
+  cursor: pointer;
+}
+
+.form__selectionInput:checked ~ .form__selectionLabel {
+  background-color: $color-light;
 }
 
 .form__errors {
@@ -82,81 +109,101 @@ $main-color-error: #d82700;
   font-size: 12px;
 }
 
-.form__inputWrapper {
-  position: relative;
-}
-
-.form__inputsWrapperSmall {
-  display: flex;
-  gap: 5px;
-}
-
 .form__inputPasswordToggler {
   position: absolute;
+  top: calc(50% - 15px);
   right: 10px;
   width: 30px;
   height: 30px;
-  opacity: 0.5;
-  &__visible {
-    opacity: 1;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  background-size: 70%;
+  background-position: center;
+}
+
+.form__inputWrapper {
+  position: relative;
+  .form__inputPasswordToggler {
+    background-image: URL(../../../assets/opened-eye.svg);
+  }
+  &_visible {
+    .form__inputPasswordToggler {
+      opacity: 1;
+      background-image: URL(../../../assets/closed-eye.svg);
+    }
   }
 }
 
-.form__addressesTogglerLabelLeft {
-  position: absolute;
+.form__inputsWrapperSmall {
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  display: grid;
+}
+
+.form__inputWrapper_date {
   display: flex;
-  justify-content: center;
   align-items: center;
-  color: $color-light;
-  left: 0px;
-  width: 50%;
-  height: 100%;
-}
-
-.form__addressesTogglerLabelRight {
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: $main-color-accent;
-  right: 0px;
-  width: 50%;
-  height: 100%;
-}
-
-.form__addressesTogglerBar {
-  display: flex;
-  background-color: $main-color-accent;
-  border-radius: 50px;
-  height: 30px;
-  width: 50%;
-  transition: 0.5s;
-}
-
-.form__addressesToggler {
+  padding-left: 40px;
   position: relative;
   width: 100%;
+  height: 35px;
+  border: 1px solid black;
+  background-image: url(../../../assets/calendar.svg);
+  background-position: 10px;
+  background-size: 20px;
+  background-repeat: no-repeat;
+}
+
+.form__input[type='date'] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.form__input[type='date']::-webkit-calendar-picker-indicator {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.form__address {
   display: flex;
   flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+
+.form__checkbox {
+  display: flex;
+  gap: 5px;
   align-items: center;
-  justify-content: center;
-  padding: 5px;
-  border: 1px solid $main-color-accent;
-  background-color: transparent;
-  border-radius: 20px;
-  &_shipping {
-    .form__addressesTogglerBar {
-      transform: translate(-50%);
-    }
-  }
-  &_common {
-    .form__addressesTogglerBar {
-      transform: translate(0%);
-    }
-  }
-  &_billing {
-    .form__addressesTogglerBar {
-      transform: translate(50%);
-    }
-  }
+}
+
+.form__inputCheckbox {
+  display: none;
+}
+
+.form__inputCheckbox:checked ~ .form__inputCheckmark {
+  background-image: url(../../../assets/checkmark.svg);
+  background-size: contain;
+}
+
+.form__inputCheckmark {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  border: 1px solid $color-dark-gray;
+}
+
+.form__inputLabel {
 }

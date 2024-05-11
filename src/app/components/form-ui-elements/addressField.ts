@@ -31,10 +31,15 @@ class AddressField extends BaseComponent {
     this.appendChildren([
       this.fields.defaultAddress,
       this.fields.commonAddress,
+      div([styles.form__inputsWrapperSmall], this.fields.country, this.fields.zipCode),
       this.fields.city,
       this.fields.street,
-      div([styles.form__inputsWrapperSmall], this.fields.country, this.fields.zipCode),
     ]);
+  }
+
+  public getValue() {
+    const values = new Map(Object.entries(this.fields).map(([key, field]) => [key, field.getValue()]));
+    return Object.fromEntries(values);
   }
 }
 

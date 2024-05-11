@@ -1,5 +1,5 @@
 import BaseComponent from '@utils/base-component';
-import { button, div, input, label, p } from '@utils/elements';
+import { button, div, input, label, p, span } from '@utils/elements';
 
 import styles from './_form-ui-elements.scss';
 
@@ -11,14 +11,22 @@ class FormField extends BaseComponent {
   private inputWrapper: BaseComponent<HTMLElement>;
 
   constructor(name: string, type: string, pattern: string, required = true) {
-    super({ tag: 'div' }, label([styles.form__inputLabel], name));
+    super({ tag: 'div', className: styles.form__field }, label([styles.form__inputLabel], name));
     this.input = input([styles.form__input], { type, value: '', pattern, required });
     this.errors = div([styles.form__errors]);
     this.inputWrapper = div([styles.form__inputWrapper], this.input);
-    if (name === 'Password') {
+    if (type === 'password') {
       const togglerPasswordVisibility = button([styles.form__inputPasswordToggler], '');
       togglerPasswordVisibility.addListener('click', () => this.toggleFieldType());
       this.inputWrapper.appendChildren([togglerPasswordVisibility]);
+    }
+    if (type === 'date') {
+      this.inputWrapper.addClass(styles.form__inputWrapper_date);
+      const dateLabel = span([styles.form__inputDateLabel], `${new Date().toLocaleDateString()}`);
+      this.input.addListener('input', () =>
+        dateLabel.setTextContent(`${new Date(this.getValue()).toLocaleDateString()}`)
+      );
+      this.inputWrapper.append(dateLabel);
     }
     this.appendChildren([this.inputWrapper, this.errors]);
   }
@@ -29,7 +37,7 @@ class FormField extends BaseComponent {
 
   private toggleFieldType() {
     const inputType = this.input.getNode().type;
-    this.inputWrapper.getNode().classList.toggle(styles.form__inputPasswordToggler_visible);
+    this.inputWrapper.getNode().classList.toggle(styles.form__inputWrapper_visible);
     this.input.getNode().type = inputType === 'text' ? 'password' : 'text';
   }
 

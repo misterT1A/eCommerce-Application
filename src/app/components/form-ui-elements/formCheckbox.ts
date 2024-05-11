@@ -10,7 +10,11 @@ class Checkbox extends BaseComponent {
     super({ tag: 'label' });
     this.addClass(styles.form__checkbox);
     this.input = input([styles.form__inputCheckbox], { type: 'checkbox' });
-    this.appendChildren([this.input, span([styles.form__inputCheckmark], ''), span(['form__input-label'], labelText)]);
+    this.appendChildren([
+      this.input,
+      span([styles.form__inputCheckmark], ''),
+      span([styles.form__inputLabel], labelText),
+    ]);
   }
 
   public getValue() {

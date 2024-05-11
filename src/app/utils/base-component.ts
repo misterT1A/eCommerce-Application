@@ -29,7 +29,7 @@ export default class BaseComponent<T extends HTMLElement = HTMLElement> {
     }
   }
 
-  protected append(child: BaseComponent | HTMLElement): void {
+  public append(child: BaseComponent | HTMLElement): void {
     if (child instanceof BaseComponent) {
       this.children.push(child);
       this.node.append(child.getNode());
