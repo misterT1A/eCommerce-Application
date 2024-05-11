@@ -17,7 +17,7 @@ export default class HeaderView extends BaseComponent {
     super({ tag: 'header', className: styles.header });
 
     this.dropMenu = new BaseComponent({ tag: 'ul', className: menuStyle.wrapper });
-    this.burgerMenu = new BurgerMenu(this.getBaseComponent);
+    this.burgerMenu = new BurgerMenu();
     this.burgerBtn = new BaseComponent({ classList: styles.burgerBtn });
 
     this.setBurgerComponents();
@@ -47,8 +47,11 @@ export default class HeaderView extends BaseComponent {
       className: styles.userCheckbox,
       id: 'user',
     });
-    const userLabel = new BaseComponent<HTMLLabelElement>({ tag: 'label', className: styles.userLogo });
-    userLabel.getNode().setAttribute('for', 'user');
+    const userLabel = new BaseComponent<HTMLLabelElement>({
+      tag: 'label',
+      className: styles.userLogo,
+      htmlFor: 'user',
+    });
     userBox.addListener('click', () => this.showDropMenu());
 
     const basket = new BaseComponent({

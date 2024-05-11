@@ -65,13 +65,15 @@
   }
 }
 
-.links:hover::after {
-  width: 100%;
-  opacity: 1;
-}
-
 @media screen and (max-width: 650px) {
   .wrapper {
     padding: 10px;
+  }
+}
+
+@media not all and (hover: none) {
+  .links:hover::after {
+    width: 100%;
+    opacity: 1;
   }
 }

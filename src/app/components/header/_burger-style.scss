@@ -1,7 +1,7 @@
 .menuBlock {
   @include flex(center, space-between, row);
   gap: 20px;
-  background-color: #fff;
+  background-color: transparent;
 
   transition: all 0.3s linear;
 }
@@ -42,6 +42,7 @@
     z-index: 10;
     top: 136px;
     left: -50%;
+    background-color: #fff;
 
     flex-direction: column;
     justify-content: flex-start;

@@ -4,11 +4,8 @@ import BaseComponent from '@utils/base-component';
 import styles from './_burger-style.scss';
 
 export default class BurgerMenu extends BaseComponent {
-  protected parrent: BaseComponent;
-
-  constructor(parrent: BaseComponent) {
+  constructor() {
     super({ className: styles.menuBlock });
-    this.parrent = parrent;
     this.setMenuContent();
   }
 
