@@ -1,3 +1,4 @@
+import AuthService from '@services/auth-service';
 import BaseComponent from '@utils/base-component';
 
 import style from './_login.scss';
@@ -157,5 +158,9 @@ export default class LoginFormComponent extends BaseComponent<HTMLFormElement> {
     return result;
   }
 
-  protected submit() {}
+  protected submit() {
+    const userEmail = this.getNode().elements[0] as HTMLInputElement;
+    const userPass = this.getNode().elements[1] as HTMLInputElement;
+    AuthService.login(userEmail.value, userPass.value);
+  }
 }
