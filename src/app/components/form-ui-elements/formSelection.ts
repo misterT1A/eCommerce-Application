@@ -3,18 +3,28 @@ import { button, input, label, li, span, ul } from '@utils/elements';
 
 import styles from './_form-ui-elements.scss';
 
+/**
+ * Represents a form selection component.
+ * @extends BaseComponent
+ */
 class FormSelection extends BaseComponent<HTMLFormElement> {
   public button: BaseComponent<HTMLButtonElement>;
 
   private inputs: Map<string, BaseComponent<HTMLInputElement>> = new Map();
 
+  /**
+   * Creates an instance of FormSelection.
+   * @param {string} title - The title of the form selection.
+   * @param {string[]} options - An array of options for the selection.
+   * @param {string} [value=''] - The initial value of the selection (default is an empty string).
+   */
   constructor(
     title: string,
     private options: string[],
 
     private value = ''
   ) {
-    super({ tag: 'form', action: '', className: styles.form__selection }, label([styles.form__selectionName], title));
+    super({ tag: 'form', action: '', className: styles.form__selection }, label([styles.form__inputLabel], title));
     this.button = button([styles.form__selectionButton], '', { type: 'button', value: '' });
     this.button.addListener('click', () => this.toggleList());
     this.addListener('input', () => this.updateAppearance());
@@ -41,6 +51,10 @@ class FormSelection extends BaseComponent<HTMLFormElement> {
     this.hideList();
   }
 
+  /**
+   * Sets the specified option as checked.
+   * @param {string} option - The option to set as checked.
+   */
   public setOptionChecked(option: string) {
     if (this.inputs.has(option)) {
       const inputOption = this.inputs.get(option)?.getNode();
@@ -60,7 +74,11 @@ class FormSelection extends BaseComponent<HTMLFormElement> {
     this.removeClass(styles.form__selection_show);
   }
 
-  public getValue() {
+  /**
+   * Gets the value of the form selection.
+   * @returns {string} - The value of the form selection.
+   */
+  public getValue(): string {
     return this.value;
   }
 }

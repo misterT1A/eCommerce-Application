@@ -21,12 +21,12 @@ class AddressField extends BaseComponent {
     super({ tag: 'div' });
     this.addClass(styles.form__address);
     this.fields = {
-      defaultAddress: new Checkbox('default'),
-      commonAddress: new Checkbox('common'),
-      city: new FormField('City', 'text', ''),
-      street: new FormField('Street', 'text', ''),
+      defaultAddress: new Checkbox('Set as default address.'),
+      commonAddress: new Checkbox('Set this address as billing and shipping.'),
+      city: new FormField('City', 'text'),
+      street: new FormField('Street', 'text'),
       country: new FormSelection('Country', [...VALID_COUNTRIES]),
-      zipCode: new FormField('Postal Code', 'text', ''),
+      zipCode: new FormField('Postal Code', 'text'),
     };
     this.appendChildren([
       this.fields.defaultAddress,
