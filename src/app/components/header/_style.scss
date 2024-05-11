@@ -1,0 +1,87 @@
+.header {
+  position: relative;
+  width: 100%;
+  padding: 0 60px;
+  height: 130px;
+  @include flex(center, space-between, row);
+  background-color: $header_background_color;
+}
+
+.menuBlock {
+  @include flex(center, space-between, row);
+  gap: 20px;
+}
+
+.menuBtn {
+  position: relative;
+  font-size: 15px;
+  font-weight: 700;
+  color: $header_menuBtn_color;
+
+  cursor: pointer;
+
+  &::after {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    z-index: 2;
+    display: block;
+    content: '';
+    width: 0;
+    height: 2px;
+    background-color: $header_menuBtn_color;
+    transition: all 0.3s linear;
+
+    transform: translateX(-50%);
+    opacity: 0;
+  }
+}
+
+.menuBtn:hover::after {
+  width: 100%;
+  opacity: 1;
+}
+
+.logo {
+  width: 345px;
+  height: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.userLogo {
+  width: 30px;
+  height: 30px;
+
+  transition: background 0.2s;
+
+  background: url(../../../assets/userEmpty.svg) no-repeat;
+  background-size: cover;
+
+  cursor: pointer;
+
+  &:hover {
+    background: url(../../../assets/userFill.svg) no-repeat;
+    background-size: cover;
+  }
+}
+
+.basketLogo {
+  width: 30px;
+  height: 30px;
+
+  transition: background 0.2s;
+
+  background: url(../../../assets/basketEmpty.svg) no-repeat;
+  background-size: cover;
+
+  cursor: pointer;
+
+  &:hover {
+    background: url(../../../assets/basketFill.svg) no-repeat;
+    background-size: cover;
+  }
+}
