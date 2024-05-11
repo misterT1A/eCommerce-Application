@@ -1,4 +1,6 @@
 import logo from '@assets/headerLogo.svg';
+import Pages from '@src/app/router/pages';
+import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
 import type { Props } from '@utils/base-component';
 
@@ -13,11 +15,14 @@ export default class HeaderView extends BaseComponent {
 
   protected burgerBtn: BaseComponent;
 
-  constructor() {
+  protected router: Router;
+
+  constructor(router: Router) {
     super({ tag: 'header', className: styles.header });
+    this.router = router;
 
     this.dropMenu = new BaseComponent({ tag: 'ul', className: menuStyle.wrapper });
-    this.burgerMenu = new BurgerMenu();
+    this.burgerMenu = new BurgerMenu(router);
     this.burgerBtn = new BaseComponent({ classList: styles.burgerBtn });
 
     this.setBurgerComponents();
@@ -76,8 +81,14 @@ export default class HeaderView extends BaseComponent {
         textContent: 'Sign Up',
       },
     ];
-    props.forEach((prop) => this.dropMenu.append(new BaseComponent(prop)));
-    this.appendChildren([this.dropMenu]);
+    props.forEach((prop) => {
+      const element = new BaseComponent(prop);
+      this.dropMenu.append(element);
+    });
+
+    this.dropMenu.addListener('click', (e: Event) => this.navigate(e));
+
+    this.append(this.dropMenu);
   }
 
   private showDropMenu() {
@@ -92,5 +103,26 @@ export default class HeaderView extends BaseComponent {
   private showBurgerMenu() {
     this.burgerBtn.getNode().classList.toggle(styles.burgerBtn_active);
     this.burgerMenu.toggleMenu();
+  }
+
+  private navigate(e: Event) {
+    console.log(e.target);
+    this.showDropMenu();
+    const target = (e.target as HTMLElement)?.textContent;
+    if (!target) {
+      return;
+    }
+    // to do for logged in user
+
+    switch (target) {
+      case 'Log In':
+        this.router.navigate(Pages.LOGIN);
+        break;
+      case 'Sign Up':
+        this.router.navigate(Pages.REG);
+        break;
+      default:
+        break;
+    }
   }
 }

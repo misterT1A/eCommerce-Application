@@ -17,13 +17,13 @@ export default class App {
   protected main: BaseComponent;
 
   constructor() {
+    this.router = new Router(this.createsRoutes());
+
     this.wrapper = new BaseComponent({ tag: 'section', className: styles.section });
-    this.header = new HeaderController();
+    this.header = new HeaderController(this.router);
     this.main = new BaseComponent({ tag: 'main', className: styles.main });
 
     this.controller = null;
-
-    this.router = new Router(this.createsRoutes());
   }
 
   public showContent(parent: HTMLElement) {
