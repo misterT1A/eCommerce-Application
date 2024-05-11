@@ -1,7 +1,9 @@
 import type { Props } from './base-component';
 import BaseComponent from './base-component';
 
-export const div = (classList: string[], ...children: BaseComponent[]): BaseComponent => {
+type ChildType = BaseComponent | HTMLElement | SVGSVGElement | null;
+
+export const div = (classList: string[], ...children: ChildType[]): BaseComponent => {
   const divComponent = new BaseComponent({ tag: 'div' }, ...children);
   divComponent.addClass(...classList);
   return divComponent;
@@ -41,7 +43,7 @@ export const input = (classList: string[], props: Props<HTMLInputElement> = {}) 
   return inputComponent;
 };
 
-export const label = (classList: string[], text: string, ...children: BaseComponent[]) => {
+export const label = (classList: string[], text: string, ...children: ChildType[]) => {
   const labelComponent = new BaseComponent<HTMLLabelElement>({ tag: 'label' });
   labelComponent.setTextContent(text);
   labelComponent.addClass(...classList);
@@ -49,7 +51,7 @@ export const label = (classList: string[], text: string, ...children: BaseCompon
   return labelComponent;
 };
 
-export const span = (classList: string[], text: string, ...children: BaseComponent[]) => {
+export const span = (classList: string[], text: string, ...children: ChildType[]) => {
   const spanComponent = new BaseComponent<HTMLSpanElement>({ tag: 'span' }, ...children);
   spanComponent.setTextContent(text);
   spanComponent.addClass(...classList);
@@ -62,9 +64,36 @@ export const ul = (classList: string[], ...children: BaseComponent<HTMLLIElement
   return ulComponent;
 };
 
-export const li = (classList: string[], ...children: BaseComponent[]) => {
+export const li = (classList: string[], ...children: ChildType[]) => {
   const liComponent = new BaseComponent<HTMLLIElement>({ tag: 'li' });
   liComponent.appendChildren(children);
   liComponent.addClass(...classList);
   return liComponent;
+};
+
+/**
+ * Creates an SVG element with the specified URL and class name.
+ * @param {string} url - The URL of the SVG file (relative path from index.html in /dist folder to .svg file + #id-of-svg-element
+ *
+ * To use add in your svg file, <svg id="id-of-svg-element" ...
+ *
+ * @example  // in component.ts
+ * const url = "./assets/img/icon.svg#some-id";
+ * const mySvg = svg(url, "some-class-1");
+ * mySvg.onclick = () => mySvg.classList.toggle('some-class-2');
+ * // in icon.svg
+ * <svg id="some-id" ...
+ * // svg can be appended in BaseComponent wrapper:
+ * const div = new BaseComponent({tag: "div"}, mySvg);
+ * @param {string} classname - The class name to add to the SVG element.
+ * @returns {SVGSVGElement} - The SVG element.
+ */
+export const svg = (url: string, classname: string): SVGSVGElement => {
+  const svgContainer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svgContainer.classList.add(classname);
+  const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+  use.setAttribute('href', url);
+  use.classList.add(classname);
+  svgContainer.append(use);
+  return svgContainer;
 };
