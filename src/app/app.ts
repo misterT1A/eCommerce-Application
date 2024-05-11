@@ -1,5 +1,4 @@
 import HeaderController from '@components/header/controller';
-import AuthService from '@services/auth-service';
 import BaseComponent from '@utils/base-component';
 
 import styles from './_app_style.scss';
@@ -36,10 +35,7 @@ export default class App {
     return [
       {
         path: Pages.START,
-        callBack: async () => {
-          const apiRoot = AuthService.getRoot();
-          apiRoot.get().execute();
-        },
+        callBack: async () => {},
       },
       {
         path: Pages.LOGIN,
@@ -52,7 +48,9 @@ export default class App {
       {
         path: Pages.REG,
         callBack: async () => {
-          const { default: RegistrationController } = await import('@components/registration-form/registration-controller');
+          const { default: RegistrationController } = await import(
+            '@components/registration-form/registration-controller'
+          );
           this.controller = new RegistrationController();
           this.setContent();
         },

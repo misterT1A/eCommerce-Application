@@ -1,3 +1,5 @@
+import AuthService from '@services/auth-service';
+
 export default class Router {
   protected routes: IRoute[];
 
@@ -5,7 +7,10 @@ export default class Router {
     this.routes = routes;
 
     window.addEventListener('popstate', this.changeBrowser.bind(this));
-    document.addEventListener('DOMContentLoaded', this.navigateToLastPoint.bind(this));
+    document.addEventListener('DOMContentLoaded', () => {
+      this.startAnonymousSession();
+      this.navigateToLastPoint();
+    });
   }
 
   public navigate(url: string, popstate = false) {
@@ -48,5 +53,10 @@ export default class Router {
 
   private getCurrentPath() {
     return window.location.pathname.slice(1);
+  }
+
+  private startAnonymousSession() {
+    const apiRoot = AuthService.getRoot();
+    apiRoot.get().execute();
   }
 }
