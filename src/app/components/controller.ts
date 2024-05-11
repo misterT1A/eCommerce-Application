@@ -1,7 +1,7 @@
 import type BaseComponent from '../utils/base-component';
 
 export default abstract class Controller<T extends BaseComponent> {
-  protected view: BaseComponent;
+  protected view: T;
 
   constructor(view: T) {
     this.view = view;
