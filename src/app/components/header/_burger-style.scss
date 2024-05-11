@@ -1,0 +1,65 @@
+.menuBlock {
+  @include flex(center, space-between, row);
+  gap: 20px;
+
+  transition: all 0.3s linear;
+}
+
+.menuBlock.menuBlockActive {
+  left: 1%;
+}
+
+.menuBtn {
+  position: relative;
+  font-size: 15px;
+  font-weight: 700;
+  color: $header_menuBtn_color;
+
+  cursor: pointer;
+
+  &::after {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    z-index: 2;
+    display: block;
+    content: '';
+    width: 0;
+    height: 2px;
+    background-color: $header_menuBtn_color;
+    transition: all 0.3s linear;
+
+    transform: translateX(-50%);
+    opacity: 0;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .menuBlock {
+    padding: 20px 20px;
+    position: fixed;
+    z-index: 10;
+    top: 115px;
+    left: -50%;
+
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 20px;
+
+    border: 1px solid $header_dropmenu_border_color;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .menuBlock {
+    top: 68px;
+  }
+}
+
+@media not all and (hover: none) {
+  .menuBtn:hover::after {
+    width: 100%;
+    opacity: 1;
+  }
+}

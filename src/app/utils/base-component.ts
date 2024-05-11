@@ -54,6 +54,14 @@ export default class BaseComponent<T extends HTMLElement = HTMLElement> {
     return this.node;
   }
 
+  public get getBaseComponent() {
+    return this;
+  }
+
+  public get getChildren() {
+    return this.children;
+  }
+
   public addClass(...classNames: string[]): void {
     [...classNames].forEach((className) => this.node.classList.add(className));
   }

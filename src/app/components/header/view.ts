@@ -4,68 +4,90 @@ import type { Props } from '@utils/base-component';
 
 import menuStyle from './_dropMenu.scss';
 import styles from './_style.scss';
+import BurgerMenu from './burger-menu';
 
 export default class HeaderView extends BaseComponent {
+  protected dropMenu: BaseComponent;
+
+  protected burgerMenu: BurgerMenu;
+
+  protected burgerBtn: BaseComponent;
+
   constructor() {
     super({ tag: 'header', className: styles.header });
 
-    this.setMenuBlock();
+    this.dropMenu = new BaseComponent({ tag: 'ul', className: menuStyle.wrapper });
+    this.burgerMenu = new BurgerMenu(this.getBaseComponent);
+    this.burgerBtn = new BaseComponent({ classList: styles.burgerBtn });
+
+    this.setBurgerComponents();
     this.setLogo();
     this.setUserBlock();
     this.setDropMenu();
   }
 
-  private setMenuBlock() {
-    const props: Props[] = [
-      { tag: 'span', textContent: 'HOME', className: styles.menuBtn },
-      {
-        tag: 'span',
-        textContent: 'CATALOG',
-        className: styles.menuBtn,
-      },
-      {
-        tag: 'span',
-        textContent: 'ABOUT US',
-        className: styles.menuBtn,
-      },
-    ];
+  private setBurgerComponents() {
+    this.burgerBtn.addListener('click', () => this.showBurgerMenu());
 
-    const wrapper = new BaseComponent<HTMLDivElement>({ className: styles.menuBlock });
+    const element = new BaseComponent<HTMLSpanElement>({ tag: 'span', className: styles.burgerBtnIcon });
+    this.burgerBtn.append(element);
 
-    props.forEach((prop) => wrapper.append(new BaseComponent(prop)));
-
-    this.appendChildren([wrapper]);
+    this.appendChildren([this.burgerBtn, this.burgerMenu]);
   }
 
   private setLogo() {
     const img = new BaseComponent<HTMLImageElement>({ tag: 'img', src: logo, className: styles.logo });
-    this.appendChildren([img]);
+    this.append(img);
   }
 
   private setUserBlock() {
-    const user = new BaseComponent({ tag: 'div', className: styles.userLogo });
+    const userBox = new BaseComponent<HTMLInputElement>({
+      tag: 'input',
+      type: 'checkbox',
+      className: styles.userCheckbox,
+      id: 'user',
+    });
+    const userLabel = new BaseComponent<HTMLLabelElement>({ tag: 'label', className: styles.userLogo });
+    userLabel.getNode().setAttribute('for', 'user');
+    userBox.addListener('click', () => this.showDropMenu());
+
     const basket = new BaseComponent({
       tag: 'div',
       className: styles.basketLogo,
     });
-    const wrapper = new BaseComponent({ className: styles.menuBlock }, user, basket);
-    this.appendChildren([wrapper]);
+    const wrapper = new BaseComponent({ className: styles.menuBlock }, userLabel, userBox, basket);
+    this.append(wrapper);
   }
 
   private setDropMenu() {
-    const userName = new BaseComponent({ tag: 'span', className: menuStyle.userName, textContent: 'J. DOE' });
-    const logBtn = new BaseComponent({
-      tag: 'span',
-      className: menuStyle.links,
-      textContent: 'Log In',
-    });
-    const registerMyAccount = new BaseComponent({
-      tag: 'div',
-      className: menuStyle.links,
-      textContent: 'Sign Up',
-    });
+    const props: Props[] = [
+      { tag: 'li', className: menuStyle.userName, textContent: 'J. DOE' },
+      {
+        tag: 'li',
+        className: menuStyle.links,
+        textContent: 'Log In',
+      },
+      {
+        tag: 'li',
+        className: menuStyle.links,
+        textContent: 'Sign Up',
+      },
+    ];
+    props.forEach((prop) => this.dropMenu.append(new BaseComponent(prop)));
+    this.appendChildren([this.dropMenu]);
+  }
 
-    const wrapper = new BaseComponent({ className: menuStyle.wrapper }, userName, logBtn, registerMyAccount);
-    this.appendChildren([wrapper]);
+  private showDropMenu() {
+    const menu = this.dropMenu.getNode();
+    if (menu.classList.contains(menuStyle.show)) {
+      menu.classList.remove(menuStyle.show);
+    } else {
+      menu.classList.add(menuStyle.show);
+    }
+  }
+
+  private showBurgerMenu() {
+    this.burgerBtn.getNode().classList.toggle(styles.burgerBtn_active);
+    this.burgerMenu.toggleMenu();
   }
 }
