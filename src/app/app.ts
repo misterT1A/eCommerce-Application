@@ -39,7 +39,13 @@ export default class App {
       },
       {
         path: Pages.REG,
-        callBack: () => {},
+        callBack: async () => {
+          const { default: RegistrationController } = await import(
+            '@components/registration-form/registration-controller'
+          );
+          this.controller = new RegistrationController();
+          this.setContent();
+        },
       },
       {
         path: Pages.MAIN,
