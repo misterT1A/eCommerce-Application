@@ -1,0 +1,221 @@
+$main-color-accent: #aa4e41;
+$color-light: #faf4f4;
+$color-white: #ffffff;
+$color-dark-gray: #707070;
+$color-gray: #d8d8d8;
+$color-light-gray: #efefef;
+$main-color-error: #d82700;
+
+.form__field {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form__selection {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  gap: 5px;
+}
+
+.form__selectionName {
+  font-weight: 500;
+}
+
+.form__selectionButton {
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  border: 1px solid $color-dark-gray;
+  border-radius: 5px;
+  height: 40px;
+  background-color: transparent;
+  background-image: url(../../../assets/arrow.svg);
+  background-repeat: no-repeat;
+  background-position: calc(100% - 10px);
+  cursor: pointer;
+}
+
+.form__selectionList {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  list-style: none;
+  background-color: $color-white;
+  top: calc(100% - 10px);
+  overflow: hidden;
+  border-radius: 0 0 5px 5px;
+  border: $color-dark-gray 1px solid;
+  border-top: none;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: 0.2s;
+  opacity: 0;
+}
+
+.form__selectionItem {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 40px;
+  &:hover {
+    background-color: $color-light-gray;
+  }
+}
+
+.form__selectionField {
+  display: flex;
+  width: 100%;
+  padding: 0;
+}
+
+.form__selectionInput {
+  display: none;
+}
+
+.form__selectionLabel {
+  display: flex;
+  width: 100%;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.form__selection_show {
+  .form__selectionList {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.form__input {
+  display: flex;
+  width: 100%;
+  height: 40px;
+  padding: 5px;
+  border: 1px solid $color-dark-gray;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.form__selectionInput:checked ~ .form__selectionLabel {
+  background-color: $color-light-gray;
+}
+
+.form__errors {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: $main-color-error;
+  font-size: 12px;
+}
+
+.form__inputPasswordToggler {
+  position: absolute;
+  top: calc(50% - 15px);
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  background-position: center;
+}
+
+.form__inputWrapper {
+  position: relative;
+  .form__inputPasswordToggler {
+    background-image: URL(../../../assets/opened-eye.svg);
+  }
+  &_visible {
+    .form__inputPasswordToggler {
+      opacity: 1;
+      background-image: URL(../../../assets/closed-eye.svg);
+    }
+  }
+}
+
+.form__inputsWrapperSmall {
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  display: grid;
+}
+
+.form__inputWrapper_date {
+  display: flex;
+  align-items: center;
+  padding-left: 40px;
+  position: relative;
+  width: 100%;
+  height: 40px;
+  border: 1px solid $color-dark-gray;
+  border-radius: 5px;
+  background-image: url(../../../assets/calendar.svg);
+  background-position: 10px;
+  background-size: 20px;
+  background-repeat: no-repeat;
+}
+
+.form__input[type='date'] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.form__input[type='date']::-webkit-calendar-picker-indicator {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.form__input:focus {
+  outline: none;
+  border: 1px solid #000000;
+}
+
+.form__address {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+
+.form__checkbox {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.form__inputCheckbox {
+  display: none;
+}
+
+.form__inputCheckbox:checked ~ .form__inputCheckmark {
+  background-image: url(../../../assets/checkmark.svg);
+  background-size: contain;
+}
+
+.form__inputCheckmark {
+  width: 20px;
+  height: 20px;
+  border-radius: 2px;
+  border: 1px solid $color-dark-gray;
+}
+
+.form__inputLabel {
+  font-weight: 700;
+}

@@ -1,3 +1,4 @@
+import HeaderController from '@components/header/controller';
 import BaseComponent from '@utils/base-component';
 
 import styles from './_app_style.scss';
@@ -9,10 +10,16 @@ export default class App {
 
   protected controller: IController | null;
 
+  protected wrapper: BaseComponent;
+
+  protected header: HeaderController;
+
   protected main: BaseComponent;
 
   constructor() {
-    this.main = new BaseComponent({ tag: 'section', className: styles.main });
+    this.wrapper = new BaseComponent({ tag: 'section', className: styles.section });
+    this.header = new HeaderController();
+    this.main = new BaseComponent({ tag: 'main', className: styles.main });
 
     this.controller = null;
 
@@ -20,7 +27,8 @@ export default class App {
   }
 
   public showContent(parent: HTMLElement) {
-    parent.append(this.main.getNode());
+    this.wrapper.appendChildren([this.header.getView.getNode(), this.main.getNode()]);
+    parent.append(this.wrapper.getNode());
   }
 
   private createsRoutes(): IRoute[] {
@@ -39,7 +47,13 @@ export default class App {
       },
       {
         path: Pages.REG,
-        callBack: () => {},
+        callBack: async () => {
+          const { default: RegistrationController } = await import(
+            '@components/registration-form/registration-controller'
+          );
+          this.controller = new RegistrationController();
+          this.setContent();
+        },
       },
       {
         path: Pages.MAIN,
