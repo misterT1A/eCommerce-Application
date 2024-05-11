@@ -1,54 +1,11 @@
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
-import type {
-  AuthMiddlewareOptions,
-  Client,
-  HttpMiddlewareOptions,
-  TokenCache,
-  TokenCacheOptions,
-  TokenStore,
-} from '@commercetools/sdk-client-v2';
+import type { AuthMiddlewareOptions, Client, HttpMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { ClientBuilder } from '@commercetools/sdk-client-v2';
 
-// interface IBaseApiOptions {
-//   host: string;
-//   projectKey: string;
-//   credentials: {
-//     clientId: string;
-//     clientSecret: string;
-//   };
-//   tokenCache: TokenCache;
-// }
+import { tokenCacheAnon, tokenCacheAuth } from './tocken-cache';
 
-const tokenCache: TokenCache = {
-  get: (options?: TokenCacheOptions): TokenStore => {
-    const cached = JSON.parse(sessionStorage.getItem(`${options?.projectKey}-anon`) || '{}');
-    return {
-      expirationTime: cached.expirationTime || 0,
-      token: cached.token || '',
-      refreshToken: cached.refreshToken || '',
-    };
-  },
-  set: (cache: TokenStore, options?: TokenCacheOptions) => {
-    sessionStorage.setItem(`${options?.projectKey}-anon`, JSON.stringify(cache));
-  },
-};
-
-const tokenCacheAuth: TokenCache = {
-  get: (options?: TokenCacheOptions): TokenStore => {
-    const cached = JSON.parse(sessionStorage.getItem(`${options?.projectKey}-auth`) || '{}');
-    return {
-      expirationTime: cached.expirationTime || 0,
-      token: cached.token || '',
-      refreshToken: cached.refreshToken || '',
-    };
-  },
-  set: (cache: TokenStore, options?: TokenCacheOptions) => {
-    sessionStorage.setItem(`${options?.projectKey}-auth`, JSON.stringify(cache));
-  },
-};
-
-class AuthService {
+class AuthenticationService {
   protected root: ByProjectKeyRequestBuilder;
 
   protected BASE_URI: string = process.env.CTP_API_URL || '';
@@ -73,7 +30,7 @@ class AuthService {
         clientId: this.CLIENT_ID,
         clientSecret: this.CLIENT_SECRET,
       },
-      tokenCache,
+      tokenCache: tokenCacheAnon,
     };
   }
 
@@ -83,12 +40,12 @@ class AuthService {
     };
   }
 
-  protected getDefaultClient(): Client {
-    return new ClientBuilder()
-      .withClientCredentialsFlow(this.getAuthMiddlewareOptions())
-      .withHttpMiddleware(this.getHttpMiddlewareOptions())
-      .build();
-  }
+  // protected getDefaultClient(): Client {
+  //   return new ClientBuilder()
+  //     .withClientCredentialsFlow(this.getAuthMiddlewareOptions())
+  //     .withHttpMiddleware(this.getHttpMiddlewareOptions())
+  //     .build();
+  // }
 
   protected getLoggedClient(email: string, password: string): Client {
     return new ClientBuilder()
@@ -110,10 +67,7 @@ class AuthService {
   }
 
   protected getAnonymousClient(): Client {
-    return new ClientBuilder()
-      .withAnonymousSessionFlow(this.getAuthMiddlewareOptions())
-      .withHttpMiddleware(this.getHttpMiddlewareOptions())
-      .build();
+    return new ClientBuilder().withAnonymousSessionFlow(this.getAuthMiddlewareOptions()).withHttpMiddleware(this.getHttpMiddlewareOptions()).build();
   }
 
   protected creteRoot(client: Client) {
@@ -132,5 +86,5 @@ class AuthService {
   }
 }
 
-const authService = new AuthService();
-export default authService;
+const AuthService = new AuthenticationService();
+export default AuthService;
