@@ -1,5 +1,5 @@
-import type AddressesFieldset from '@components/form-ui-elements/addressFieldset';
 import type FormField from '@components/form-ui-elements/formField';
+import type AddressesFieldset from '@components/registration-form/registration-view/addressFieldset';
 
 export interface IRegistrationFormFields {
   firstName: FormField;

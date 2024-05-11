@@ -1,23 +1,22 @@
+import Controller from '@components/controller';
+
 import RegistrationView from './registration-view/registration-view';
 
-class RegistrationController {
-  private view: RegistrationView;
-
+class RegistrationController extends Controller<RegistrationView> {
   constructor() {
-    this.view = new RegistrationView();
+    super(new RegistrationView());
+    this.getView.fields.addresses.addressesToggler.addListener('click', () => {
+      this.getView.toggleAddress();
+    });
   }
 
-  public validateForm() {
-    // TODO check if formData has issues
-  }
+  // public validateForm() {
+  //   // TODO check if formData has issues
+  // }
 
-  public render() {
-    this.view.render();
-  }
-
-  public submitForm() {
-    // TODO process valid data via AuthService
-  }
+  // public submitForm() {
+  //   // TODO process valid data via AuthService
+  // }}
 }
 
 export default RegistrationController;

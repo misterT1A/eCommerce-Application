@@ -1,0 +1,137 @@
+$main-color-accent: #aa4e41;
+$color-light: #faf4f4;
+$color-white: #ffffff;
+$color-dark-gray: #707070;
+$color-gray: #d8d8d8;
+$color-light-gray: #efefef;
+$main-color-error: #d82700;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  gap: 15px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.form__wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.form__button {
+  width: 100%;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+}
+
+.form__inputsWrapperSmall {
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  display: grid;
+}
+
+.form__addresses {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  &_billing {
+    .form__addressesTogglerBar {
+      transform: translate(50%);
+    }
+    .form__addressesBar {
+      transform: translate(-50%);
+    }
+    .form__addressesTogglerLabelRight {
+      color: $color-light;
+    }
+    .form__addressesTogglerLabelLeft {
+      color: $main-color-accent;
+    }
+  }
+  &_shipping {
+    .form__addressesTogglerBar {
+      transform: translate(-50%);
+    }
+  }
+}
+
+.form__addressesTogglerBar {
+  display: flex;
+  background-color: $main-color-accent;
+  border-radius: 50px;
+  height: 30px;
+  width: 50%;
+  transition: 0.5s;
+}
+
+.form__addressesContainer {
+  overflow-x: hidden;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.form__addressesBar {
+  width: 200%;
+  display: flex;
+  transition: 0.5s;
+  gap: 10px;
+}
+
+.form__addressesTogglerLabelLeft {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $color-light;
+  left: 0px;
+  width: 50%;
+  height: 100%;
+  transition: 0.5s;
+}
+
+.form__addressesTogglerLabelRight {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $main-color-accent;
+  right: 0px;
+  width: 50%;
+  height: 100%;
+  transition: 0.5s;
+}
+
+.form__addressesToggler {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border: 1px solid $main-color-accent;
+  background-color: transparent;
+  border-radius: 20px;
+  &_shipping {
+    .form__addressesTogglerBar {
+      transform: translate(-50%);
+    }
+  }
+  &_common {
+    .form__addressesTogglerBar {
+      transform: translate(0%);
+    }
+  }
+  &_billing {
+    .form__addressesTogglerBar {
+      transform: translate(50%);
+    }
+  }
+}
