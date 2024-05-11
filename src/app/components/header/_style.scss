@@ -1,0 +1,133 @@
+.header {
+  position: relative;
+  width: 100%;
+  padding: 0 60px;
+  height: 130px;
+  @include flex(center, space-between, row);
+  background-color: $header_background_color;
+}
+
+.burgerBtn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 44px;
+
+  cursor: pointer;
+}
+
+.burgerBtnIcon {
+  position: relative;
+  width: 33px;
+  height: 5px;
+  background-color: $header_menuBtn_color;
+  border-radius: 10px;
+
+  transition: all 0.3s linear;
+
+  &::after {
+    top: 10px;
+  }
+
+  &::before {
+    top: -10px;
+  }
+}
+
+.burgerBtnIcon::after,
+.burgerBtnIcon::before {
+  position: absolute;
+  z-index: 2;
+  width: 33px;
+  height: 5px;
+  content: '';
+  background-color: $header_menuBtn_color;
+  transition: all 0.3s linear;
+  border-radius: 10px;
+}
+
+.burgerBtn.burgerBtn_active {
+  .burgerBtnIcon {
+    height: 0px;
+  }
+
+  .burgerBtnIcon::after {
+    top: 0;
+    transform: rotate(-45deg);
+  }
+
+  .burgerBtnIcon::before {
+    top: 0;
+    transform: rotate(45deg);
+  }
+}
+
+.menuBlock {
+  @include flex(center, space-between, row);
+  gap: 20px;
+}
+
+.logo {
+  width: 345px;
+  height: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.userCheckbox {
+  display: none;
+}
+
+.userLogo,
+.basketLogo {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.userLogo {
+  background: url(../../../assets/userEmpty.svg) no-repeat;
+  background-size: cover;
+}
+
+.userLogo:has(+ input:checked) {
+  background: url(../../../assets/userFill.svg) no-repeat;
+  background-size: cover;
+}
+
+.basketLogo {
+  background: url(../../../assets/basketEmpty.svg) no-repeat;
+  background-size: cover;
+}
+
+@media screen and (max-width: 1000px) {
+  .burgerBtn {
+    display: flex;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .header {
+    height: 70px;
+    padding: 0 15px;
+  }
+
+  .logo {
+    width: 200px;
+  }
+
+  .menuBlock {
+    gap: 10px;
+  }
+
+  .userLogo,
+  .basketLogo {
+    width: 20px;
+    height: 20px;
+  }
+}

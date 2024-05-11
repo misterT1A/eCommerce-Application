@@ -83,6 +83,8 @@ export const li = (classList: string[], ...children: ChildType[]) => {
  * mySvg.onclick = () => mySvg.classList.toggle('some-class-2');
  * // in icon.svg
  * <svg id="some-id" ...
+ * // svg can be appended in BaseComponent wrapper:
+ * const div = new BaseComponent({tag: "div"}, mySvg);
  * @param {string} classname - The class name to add to the SVG element.
  * @returns {SVGSVGElement} - The SVG element.
  */
