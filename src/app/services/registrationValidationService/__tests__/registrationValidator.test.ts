@@ -1,17 +1,34 @@
 import RegistrationValidator from '../registrationValidator';
 import { COUNTRIES_PATTERNS } from '../validCountries';
 
-describe('RegistrationValidator main fields', () => {
+describe('RegistrationValidator name fields', () => {
   it('validates firstName field', () => {
-    const errors = RegistrationValidator.validateField('', 'firstName');
-    expect(errors).toContain('Name must contain at least one character and no special characters or numbers');
+    const testData: { value: string; expectedErrors: string[] }[] = [
+      { value: '', expectedErrors: ['Name must contain at least one character and no special characters or numbers'] },
+      { value: 'John', expectedErrors: [] },
+      {
+        value: '123John',
+        expectedErrors: ['Name must contain at least one character and no special characters or numbers'],
+      },
+      {
+        value: '!@#$',
+        expectedErrors: ['Name must contain at least one character and no special characters or numbers'],
+      },
+    ];
+
+    testData.forEach(({ value, expectedErrors }) => {
+      const errors = RegistrationValidator.validateField(value, 'firstName');
+      expect(errors).toEqual(expectedErrors);
+    });
   });
 
   it('validates lastName field', () => {
     const errors = RegistrationValidator.validateField('', 'lastName');
     expect(errors).toContain('Name must contain at least one character and no special characters or numbers');
   });
+});
 
+describe('RegistrationValidator email and password fields', () => {
   it('validates email field', () => {
     const errors = RegistrationValidator.validateField('invalidemail', 'email');
     expect(errors).toContain('Should be a properly formatted email address.');

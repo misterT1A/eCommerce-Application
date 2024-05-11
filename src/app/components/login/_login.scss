@@ -3,6 +3,10 @@ button {
   border: 1px solid black;
 }
 
+input:focus {
+  outline: none;
+}
+
 .login-block {
   width: 100%;
   max-width: 400px;
@@ -26,7 +30,7 @@ button {
   height: 20px;
   position: absolute;
   right: 1%;
-  top: 50%;
+  top: 20px;
   cursor: pointer;
   background: center / contain no-repeat;
 
@@ -37,4 +41,9 @@ button {
   input[type='password'] + & {
     background-image: url('../../../assets/closed-eye.svg');
   }
+}
+
+.error-container {
+  color: red;
+  font-size: 12px;
 }
