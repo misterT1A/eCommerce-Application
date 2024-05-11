@@ -1,7 +1,7 @@
 import FormField from '@components/form-ui-elements/formField';
 import AddressesFieldset from '@components/registration-form/registration-view/addressFieldset';
 import BaseComponent from '@utils/base-component';
-import { button, div, h2, p } from '@utils/elements';
+import { button, div, h2, p, svg } from '@utils/elements';
 
 import styles from './_registrationForm.scss';
 import type { IRegistrationFormFields } from '../registrationTypes';
@@ -32,6 +32,9 @@ class RegistrationView extends BaseComponent<HTMLFormElement> {
       this.button,
     ]);
     this.disableButton();
+
+    // SVG EXAMPLE
+    this.append(div([styles.svg_example], svg('./assets/img/example.svg#my-id', styles.svg_exampleIcon)));
   }
 
   public toggleAddress() {

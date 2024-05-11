@@ -147,3 +147,17 @@ $main-color-error: #d82700;
   background-color: transparent;
   border-radius: 50px;
 }
+
+//SVG EXAMPLE
+.svg_example {
+  display: flex;
+  width: 100px;
+}
+.svg_exampleIcon {
+  fill: red;
+  stroke: black;
+  cursor: pointer;
+  &:hover {
+    fill: #d8d8d8;
+  }
+}
