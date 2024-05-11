@@ -18,10 +18,10 @@ describe('RegistrationValidator main fields', () => {
   });
 
   it('validates password field', () => {
-    const errors = RegistrationValidator.validateField('weak', 'password');
+    const errors = RegistrationValidator.validateField('wedsfda', 'password');
     expect(errors).toContain('Minimum 8 characters');
-    expect(errors).toContain('At least 1 uppercase letter');
-    expect(errors).toContain('At least 1 number');
+    expect(errors).toContain('Should contain at least 1 uppercase letter');
+    expect(errors).toContain('Should contain at least 1 number');
   });
 
   it('validates date field', () => {

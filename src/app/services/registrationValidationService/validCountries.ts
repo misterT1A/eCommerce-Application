@@ -9,7 +9,7 @@ export const COUNTRIES_PATTERNS = {
     code: 'FR',
     pattern: /^\d{2}[ ]?\d{3}$/,
   },
-  Belgium: { rule: 'Postal code in Belgium should be in format NNNN', code: 'BE', pattern: /^\\d{4}$/ },
+  Belgium: { rule: 'Postal code in Belgium should be in format NNNN', code: 'BE', pattern: /^\d{4}$/ },
 } as const;
 
 export const VALID_COUNTRIES = ['UK', 'France', 'Belgium'] as const;
