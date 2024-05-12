@@ -1,83 +1,31 @@
-import BaseComponent from '@utils/base-component';
+import Controller from '@components/controller';
+import AuthService from '@services/auth-service';
 
-import style from './_login.scss';
+import style from './_login-form.scss';
+import LoginView from './login-view';
 
 export interface IFormValidatorResult {
   success: boolean;
   errors: string[];
 }
 
-export default class LoginFormComponent extends BaseComponent<HTMLFormElement> {
-  public constructor() {
-    super({ tag: 'form', noValidate: true, className: style['login-form'], action: '#' });
-
-    this.renderFormContain();
+export default class LoginController extends Controller<LoginView> {
+  constructor() {
+    super(new LoginView());
     this.initListeners();
   }
 
-  protected renderFormContain() {
-    const emailInput = new BaseComponent<HTMLInputElement>({
-      tag: 'input',
-      type: 'text',
-      name: 'email',
-      autocomplete: 'email',
-      placeholder: 'john.doe@example.com',
-      required: true,
-    });
-    this.append(this.createInputContainer('Email', emailInput));
-
-    const passwordInput = new BaseComponent<HTMLInputElement>({
-      tag: 'input',
-      type: 'password',
-      name: 'password',
-      autocomplete: 'current-password',
-      placeholder: '******',
-      required: true,
-    });
-    const passwordEye = new BaseComponent<HTMLSpanElement>({
-      tag: 'span',
-      className: `${style['toggle-password-visibility']}`,
-      onclick: () => {
-        passwordInput.getNode().type = passwordInput.getNode().type === 'password' ? 'text' : 'password';
-      },
-    });
-
-    this.append(this.createInputContainer('Password', passwordInput, passwordEye));
-
-    this.append(
-      new BaseComponent<HTMLButtonElement>({
-        tag: 'button',
-        type: 'submit',
-        textContent: 'Login',
-      })
-    );
-  }
-
-  protected createInputContainer(title: string, ...elements: BaseComponent[]): BaseComponent<HTMLLabelElement> {
-    return new BaseComponent<HTMLLabelElement>(
-      { tag: 'label', className: style['input-container'] },
-      new BaseComponent<HTMLSpanElement>({
-        tag: 'span',
-        textContent: title,
-      }),
-      ...elements,
-      new BaseComponent<HTMLSpanElement>({
-        tag: 'span',
-        className: style['error-container'],
-      })
-    );
-  }
-
-  protected initListeners() {
-    this.addListener('keyup', (e) => {
+  protected initListeners(): void {
+    this.getView.addListener('keyup', (e) => {
       const input = e.target as HTMLInputElement;
       this.validateInput(input);
     });
-    this.addListener('submit', (e) => {
+    this.getView.addListener('submit', (e) => {
       e.preventDefault();
       let isValid = true;
 
-      this.getNode()
+      this.getView
+        .getNode()
         .querySelectorAll('input')
         .forEach((input) => {
           if (!this.validateInput(input)) {
@@ -157,5 +105,11 @@ export default class LoginFormComponent extends BaseComponent<HTMLFormElement> {
     return result;
   }
 
-  protected submit() {}
+  protected submit(): void {
+    const userEmail = this.getView.getNode().elements[0] as HTMLInputElement;
+    const userPass = this.getView.getNode().elements[1] as HTMLInputElement;
+
+    // AuthService call
+    AuthService.login(userEmail.value, userPass.value);
+  }
 }
