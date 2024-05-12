@@ -4,13 +4,18 @@ import type { Props } from '@utils/base-component';
 import BaseComponent from '@utils/base-component';
 
 import styles from './_burger-style.scss';
+import mainStyles from './_style.scss';
 
 export default class BurgerMenu extends BaseComponent {
   protected router: Router;
 
-  constructor(router: Router) {
+  protected burgerBtn: BaseComponent;
+
+  constructor(router: Router, btn: BaseComponent) {
     super({ className: styles.menuBlock });
     this.router = router;
+
+    this.burgerBtn = btn;
 
     this.setMenuContent();
   }
@@ -34,21 +39,12 @@ export default class BurgerMenu extends BaseComponent {
   }
 
   public toggleMenu() {
+    this.burgerBtn.getNode().classList.toggle(mainStyles.burgerBtn_active);
     this.getNode().classList.toggle(styles.menuBlockActive);
   }
 
-  private showDropMenu() {
-    const menu = this.getBaseComponent.getNode();
-    if (menu.classList.contains(styles.menuBlockActive)) {
-      menu.classList.remove(styles.menuBlockActive);
-    } else {
-      menu.classList.add(styles.menuBlockActive);
-    }
-  }
-
   private navigate(e: Event) {
-    console.log(e.target);
-    this.showDropMenu();
+    this.toggleMenu();
     const target = (e.target as HTMLElement)?.textContent;
     if (!target) {
       return;

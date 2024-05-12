@@ -82,27 +82,20 @@
   display: none;
 }
 
-.userLogo,
-.basketLogo {
-  width: 30px;
-  height: 30px;
+.svglogo {
   cursor: pointer;
-  transition: background 0.2s;
-}
+  transition: all 0.3s;
 
-.userLogo {
-  background: url(../../../assets/userEmpty.svg) no-repeat;
-  background-size: cover;
-}
+  &Fill {
+    transition: all 0.4s;
+    width: 30px;
+    height: 30px;
+    fill: $header_background_color;
+  }
 
-.userLogo:has(+ input:checked) {
-  background: url(../../../assets/userFill.svg) no-repeat;
-  background-size: cover;
-}
-
-.basketLogo {
-  background: url(../../../assets/basketEmpty.svg) no-repeat;
-  background-size: cover;
+  &Active {
+    fill: $header_menuBtn_color;
+  }
 }
 
 @media screen and (max-width: 1000px) {

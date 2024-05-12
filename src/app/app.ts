@@ -1,4 +1,4 @@
-import HeaderController from '@components/header/controller';
+import HeaderController from '@components/header/header_controller';
 import BaseComponent from '@utils/base-component';
 
 import styles from './_app_style.scss';

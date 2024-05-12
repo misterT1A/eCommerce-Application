@@ -3,6 +3,7 @@ import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
 import type { Props } from '@utils/base-component';
+import { svg } from '@utils/elements';
 
 import menuStyle from './_dropMenu.scss';
 import styles from './_style.scss';
@@ -22,12 +23,12 @@ export default class HeaderView extends BaseComponent {
     this.router = router;
 
     this.dropMenu = new BaseComponent({ tag: 'ul', className: menuStyle.wrapper });
-    this.burgerMenu = new BurgerMenu(router);
     this.burgerBtn = new BaseComponent({ classList: styles.burgerBtn });
+    this.burgerMenu = new BurgerMenu(router, this.burgerBtn);
 
     this.setBurgerComponents();
     this.setLogo();
-    this.setUserBlock();
+    this.setIconsBlock();
     this.setDropMenu();
   }
 
@@ -45,25 +46,20 @@ export default class HeaderView extends BaseComponent {
     this.append(img);
   }
 
-  private setUserBlock() {
-    const userBox = new BaseComponent<HTMLInputElement>({
-      tag: 'input',
-      type: 'checkbox',
-      className: styles.userCheckbox,
-      id: 'user',
+  private setIconsBlock() {
+    const svgUser = svg(`./assets/img/userIcon.svg#svgElem`, styles.svglogoFill);
+    const userIcon = new BaseComponent({ className: styles.svglogo }, svgUser);
+    userIcon.addListener('click', () => {
+      this.showDropMenu();
     });
-    const userLabel = new BaseComponent<HTMLLabelElement>({
-      tag: 'label',
-      className: styles.userLogo,
-      htmlFor: 'user',
-    });
-    userBox.addListener('click', () => this.showDropMenu());
 
-    const basket = new BaseComponent({
-      tag: 'div',
-      className: styles.basketLogo,
+    const svgBasket = svg(`./assets/img/basketIcon.svg#svgElem`, styles.svglogoFill);
+    const basketIcon = new BaseComponent({ className: styles.svglogo }, svgBasket);
+    basketIcon.addListener('click', () => {
+      svgBasket.classList.toggle(styles.svglogoActive);
     });
-    const wrapper = new BaseComponent({ className: styles.menuBlock }, userLabel, userBox, basket);
+
+    const wrapper = new BaseComponent({ className: styles.menuBlock }, userIcon, basketIcon);
     this.append(wrapper);
   }
 
@@ -93,26 +89,42 @@ export default class HeaderView extends BaseComponent {
 
   private showDropMenu() {
     const menu = this.dropMenu.getNode();
+    const icon = this.getChildren[3].getNode().children[0].children[0];
+
     if (menu.classList.contains(menuStyle.show)) {
+      icon.classList.remove(styles.svglogoActive);
       menu.classList.remove(menuStyle.show);
     } else {
       menu.classList.add(menuStyle.show);
+      icon.classList.add(styles.svglogoActive);
     }
   }
 
   private showBurgerMenu() {
-    this.burgerBtn.getNode().classList.toggle(styles.burgerBtn_active);
     this.burgerMenu.toggleMenu();
   }
 
+  public changeTextLoggined() {
+    const logInTitle = this.dropMenu.getChildren[1];
+    const signTitle = this.dropMenu.getChildren[2];
+    logInTitle.setTextContent('Log out');
+    signTitle.setTextContent('My Account');
+  }
+
+  private changeTextNotLoginned() {
+    const logInTitle = this.dropMenu.getChildren[1];
+    const signTitle = this.dropMenu.getChildren[1];
+    signTitle.setTextContent('Sign Up');
+    logInTitle.setTextContent('Log in');
+  }
+
   private navigate(e: Event) {
-    console.log(e.target);
     this.showDropMenu();
     const target = (e.target as HTMLElement)?.textContent;
     if (!target) {
       return;
     }
-    // to do for logged in user
+    // to do check for login
 
     switch (target) {
       case 'Log In':
@@ -120,6 +132,13 @@ export default class HeaderView extends BaseComponent {
         break;
       case 'Sign Up':
         this.router.navigate(Pages.REG);
+        break;
+      case 'My Account':
+        // TODO for account
+        break;
+      case 'Log out':
+        this.changeTextNotLoginned();
+        // todo log out
         break;
       default:
         break;

@@ -93,7 +93,6 @@ export const svg = (url: string, classname: string): SVGSVGElement => {
   svgContainer.classList.add(classname);
   const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
   use.setAttribute('href', url);
-  use.classList.add(classname);
   svgContainer.append(use);
   return svgContainer;
 };
