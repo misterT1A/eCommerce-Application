@@ -59,9 +59,13 @@ class FormField extends BaseComponent {
    * Updates the errors displayed for the form field.
    * @param {...string[]} errors - The error messages to display.
    */
-  public updateErrors(...errors: string[]): void {
+  public updateErrors(errors: string[]): void {
     this.errors.destroyChildren();
-    [...errors].forEach((error) => this.errors.appendChildren([p([styles.form__inputError], error)]));
+    if (this.getValue()) {
+      [...errors].forEach((error) => this.errors.appendChildren([p([styles.form__inputError], error)]));
+    } else {
+      this.errors.append(p([styles.form__inputError], 'Required'));
+    }
   }
 }
 

@@ -23,10 +23,10 @@ class AddressField extends BaseComponent {
     this.fields = {
       defaultAddress: new Checkbox('Set as default address.'),
       commonAddress: new Checkbox('Set this address as billing and shipping.'),
-      city: new FormField('City', 'text'),
-      street: new FormField('Street', 'text'),
+      city: new FormField('City', 'text', false),
+      street: new FormField('Street', 'text', false),
       country: new FormSelection('Country', [...VALID_COUNTRIES]),
-      zipCode: new FormField('Postal Code', 'text'),
+      zipCode: new FormField('Postal Code', 'text', false),
     };
     this.appendChildren([
       this.fields.defaultAddress,
