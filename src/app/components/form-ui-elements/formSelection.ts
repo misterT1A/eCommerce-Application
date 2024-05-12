@@ -1,5 +1,5 @@
 import BaseComponent from '@utils/base-component';
-import { button, input, label, li, span, ul } from '@utils/elements';
+import { button, div, input, label, li, span, ul } from '@utils/elements';
 
 import styles from './_form-ui-elements.scss';
 
@@ -36,7 +36,9 @@ class FormSelection extends BaseComponent<HTMLFormElement> {
         label([styles.form__selectionField], '', itemInput, span([styles.form__selectionLabel], option))
       );
     });
-    this.appendChildren([this.button, ul([styles.form__selectionList], ...listItems)]);
+    this.appendChildren([
+      div([styles.form__selectionButtonWrapper], this.button, ul([styles.form__selectionList], ...listItems)),
+    ]);
   }
 
   public updateAppearance() {
