@@ -112,7 +112,7 @@ class AuthenticationService {
   }
 
   protected getRefreshTokenFromStorage(sessionType: Session): string {
-    const token = localStorage.getItem(`${sessionType}-${process.env.CTP_PROJECT_KEY}`);
+    const token = localStorage.getItem(`${sessionType}-${this.PROJECT_KEY}`);
     if (!token) {
       return '';
     }
@@ -149,7 +149,7 @@ class AuthenticationService {
         },
       })
       .execute();
-    // To delete previous anon session
+    // Uncomment to delete previous anon session
     // localStorage.removeItem(`${Session.ANON}-${this.PROJECT_KEY}`);
     localStorage.setItem('loggedIn', 'true');
     console.log('login');
@@ -157,7 +157,7 @@ class AuthenticationService {
 
   public logout(): void {
     localStorage.removeItem(`${Session.AUTH}-${this.PROJECT_KEY}`);
-    localStorage.removeItem('logged');
+    localStorage.removeItem('loggedIn');
     // localStorage.clear();
     this.sessionStateHandler();
     console.log('logout');
