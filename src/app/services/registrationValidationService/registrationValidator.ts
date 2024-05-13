@@ -40,13 +40,15 @@ class RegistrationValidator {
     if (this.calculateAge(value) < 13) {
       return ['Age should be > 13'];
     }
+    if (!value) {
+      return ['Select date'];
+    }
     return [];
   }
 
   private static calculateAge(dateOfBirth: string) {
     const today = new Date();
     const birthDate = new Date(dateOfBirth);
-    console.debug(birthDate);
     return today.getFullYear() - birthDate.getFullYear();
   }
 

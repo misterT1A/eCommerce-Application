@@ -1,3 +1,5 @@
+import AuthService from '@services/auth-service';
+
 export default class Router {
   protected routes: IRoute[];
 
@@ -5,7 +7,10 @@ export default class Router {
     this.routes = routes;
 
     window.addEventListener('popstate', this.changeBrowser.bind(this));
-    document.addEventListener('DOMContentLoaded', this.navigateToLastPoint.bind(this));
+    document.addEventListener('DOMContentLoaded', () => {
+      AuthService.sessionStateHandler();
+      this.navigateToLastPoint();
+    });
   }
 
   public navigate(url: string, popstate = false) {

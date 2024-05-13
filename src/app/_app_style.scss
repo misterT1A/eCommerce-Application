@@ -11,4 +11,7 @@
   height: 100%;
   padding: 60px;
   @include flex(center, center, column);
+  @media (width <= 500px) {
+    padding: 20px;
+  }
 }

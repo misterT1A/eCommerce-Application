@@ -1,9 +1,16 @@
 import Controller from '@components/controller';
+import FormField from '@components/form-ui-elements/formField';
+import AuthService from '@services/auth-service';
 import RegistrationValidator from '@services/registrationValidationService/registrationValidator';
+import type BaseComponent from '@utils/base-component';
+import { assertsArrayOfStrings } from '@utils/is-array-of-strings';
 
+import { prepareCustomerDraft } from './registration-adapters';
 import RegistrationView from './registration-view/registration-view';
 
 class RegistrationController extends Controller<RegistrationView> {
+  private formData: IRegistrationFormData | null = null;
+
   constructor() {
     super(new RegistrationView());
     this.setListeners();
@@ -21,42 +28,58 @@ class RegistrationController extends Controller<RegistrationView> {
     this.getView.addListener('input', () => this.validateForm());
   }
 
+  // TODO isolate address checks from main registration fields
+  // move validate function to helpers
   private isValidForm(errorsObject: IRegistrationErrors | object) {
-    let isValid = true;
-    if (!errorsObject) {
-      return false;
-    }
-    Object.values(errorsObject).forEach((value) => {
-      if (Array.isArray(value)) {
-        if (value.length > 0) {
-          // TODO clear errors container for associated field
-          isValid = false;
-          // TODO emit errors
-        }
-      } else if (typeof value === 'object') {
-        if (!this.isValidForm(value)) {
-          isValid = false;
-        }
-      } else if (typeof value !== 'boolean') {
-        isValid = false;
+    const { fields } = this.getView;
+    const validate = (errorsObj: IRegistrationErrors | object, fs: Record<string, BaseComponent>) => {
+      let inputs = fs;
+      let isValid = true;
+      if (!errorsObj) {
+        return false;
       }
-    });
-    return isValid;
+      Object.entries(errorsObj).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          if (value.length > 0) {
+            isValid = false;
+          }
+          const field = fs[key];
+          if (field instanceof FormField) {
+            assertsArrayOfStrings(value);
+            field.updateErrors(value);
+          }
+        } else if (typeof value === 'object') {
+          if (key === 'shippingAddress' || key === 'billingAddress') {
+            inputs = fields.addresses[key].fields;
+          }
+          if (!validate(value, inputs)) {
+            isValid = false;
+          }
+        }
+      });
+      return isValid;
+    };
+    return validate(errorsObject, fields);
   }
 
   private validateForm() {
     this.getView.disableButton();
-    const formData = this.getView.getValues();
-    const errorsObj = RegistrationValidator.processFormData(formData);
+    this.formData = this.getView.getValues();
+    const errorsObj = RegistrationValidator.processFormData(this.formData);
     if (this.isValidForm(errorsObj)) {
       this.getView.unlockButton();
     }
-    console.log('is valid?', this.isValidForm(errorsObj));
   }
 
   private submitForm() {
-    // TODO process valid data via AuthService
-    console.log('submit form');
+    if (!this.formData) {
+      return;
+    }
+    const customerDraft = prepareCustomerDraft(this.formData);
+    if (!customerDraft) {
+      return;
+    }
+    AuthService.signUp(customerDraft);
   }
 }
 

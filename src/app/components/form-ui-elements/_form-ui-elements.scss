@@ -29,6 +29,7 @@ $main-color-error: #d82700;
   display: flex;
   align-items: center;
   padding-left: 10px;
+  text-align: start;
   border: 1px solid $color-dark-gray;
   border-radius: 5px;
   height: 40px;
@@ -72,6 +73,18 @@ $main-color-error: #d82700;
   display: flex;
   width: 100%;
   padding: 0;
+}
+
+.form__selectionButtonWrapper {
+  display: flex;
+  position: relative;
+  height: 40px;
+  button,
+  ul {
+    flex-shrink: 0;
+    display: block;
+    width: 100%;
+  }
 }
 
 .form__selectionInput {
@@ -142,6 +155,9 @@ $main-color-error: #d82700;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
   display: grid;
+  @media (width <= 450px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .form__inputWrapper_date {
