@@ -3,20 +3,29 @@ type IAddressFormData = {
   country?: 'UK' | 'France' | 'Belgium' | undefined;
 };
 interface IRegistrationFormData {
-  [k: string]:
-    | string
-    | {
-        shippingAddress?: {
-          [k: string]: string | boolean;
-        };
-        billingAddress?: {
-          country?: 'UK' | 'France' | 'Belgium';
-          [k: string]: string | boolean;
-        };
-      };
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  date: string;
+
+  addresses: {
+    shippingAddress: IAddressData;
+    billingAddress: IAddressData;
+  };
 }
 
 interface IAddressData {
+  defaultAddress: boolean;
+  commonAddress: boolean;
+  city: string;
+  street: string;
+  country: 'UK' | 'France' | 'Belgium';
+  zipCode: string;
+  [k: string]: string | boolean;
+}
+
+interface IAddressDataErrors {
   defaultAddress: boolean;
   commonAddress: boolean;
   city: string[];
@@ -31,8 +40,8 @@ interface IRegistrationErrors {
   date: string[];
   email: string[];
   password: string[];
-  billingAddress: IAddressData;
-  shippingAddress: IAddressData;
+  billingAddress: IAddressDataErrors;
+  shippingAddress: IAddressDataErrors;
 }
 
 // TODO: add interfaces for reusable UI form elements
