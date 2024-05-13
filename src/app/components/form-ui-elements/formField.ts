@@ -32,7 +32,9 @@ class FormField extends BaseComponent {
     }
     if (type === 'date') {
       this.inputWrapper.addClass(styles.form__inputWrapper_date);
-      const dateLabel = span([styles.form__inputDateLabel], `${new Date().toLocaleDateString()}`);
+      const currentDate = `${new Date().toLocaleDateString()}`;
+      const dateLabel = span([styles.form__inputDateLabel], currentDate);
+      this.input.getNode().value = currentDate;
       this.input.addListener('input', () =>
         dateLabel.setTextContent(`${new Date(this.getValue()).toLocaleDateString()}`)
       );

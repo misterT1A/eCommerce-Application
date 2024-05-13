@@ -14,7 +14,7 @@ class RegistrationView extends BaseComponent<HTMLFormElement> {
     email: new FormField('Email', 'email'),
     password: new FormField('Password', 'password'),
     addresses: new AddressesFieldset(),
-  };
+  } as const;
 
   public button: BaseComponent<HTMLButtonElement>;
 
@@ -47,13 +47,11 @@ class RegistrationView extends BaseComponent<HTMLFormElement> {
   }
 
   public getValues() {
-    const values = new Map(
-      Object.entries(this.fields).map(([key, field]: [string, FormField | AddressesFieldset]) => [
-        key,
-        field.getValue(),
-      ])
-    );
-    return Object.fromEntries(values);
+    const values = Object.entries(this.fields).map(([key, field]: [string, FormField | AddressesFieldset]) => [
+      key,
+      field.getValue(),
+    ]);
+    return Object.fromEntries(values) as IRegistrationFormData;
   }
 }
 

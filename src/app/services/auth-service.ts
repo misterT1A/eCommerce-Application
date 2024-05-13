@@ -1,3 +1,4 @@
+import type { CustomerDraft } from '@commercetools/platform-sdk';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import type {
@@ -160,6 +161,26 @@ class AuthenticationService {
     // localStorage.clear();
     this.sessionStateHandler();
     console.log('logout');
+  }
+
+  public async signUp(customerDraft: CustomerDraft) {
+    try {
+      await this.root
+        .customers()
+        .post({
+          body: customerDraft,
+        })
+        .execute()
+        .then(() => {
+          // TODO: implement auto-login after account creation
+          console.log(`Account was created! login: ${customerDraft.email} password: ${customerDraft.password}`);
+          // TODO Redirect to main page
+          // Show message after signup success
+        })
+        .catch((error) => console.log(error));
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
 
