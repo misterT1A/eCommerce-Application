@@ -39,6 +39,10 @@ export default class BurgerMenu extends BaseComponent {
   }
 
   public toggleMenu() {
+    const screenSize = 1000;
+    if (window.innerWidth > screenSize) {
+      return;
+    }
     this.burgerBtn.getNode().classList.toggle(mainStyles.burgerBtn_active);
     this.getNode().classList.toggle(styles.menuBlockActive);
   }
@@ -52,7 +56,7 @@ export default class BurgerMenu extends BaseComponent {
 
     switch (target) {
       case 'HOME':
-        this.router.navigate(Pages.MAIN);
+        this.router.navigate(Pages.START);
         break;
       case 'CATALOG':
         // this.router.navigate(Pages.REG);

@@ -118,9 +118,19 @@
     gap: 10px;
   }
 
-  .userLogo,
-  .basketLogo {
-    width: 20px;
-    height: 20px;
+  .svglogo {
+    width: 25px;
+    height: 25px;
+
+    &Fill {
+      transition: all 0.4s;
+      width: 25px;
+      height: 25px;
+      fill: $header_background_color;
+    }
+
+    &Active {
+      fill: $header_menuBtn_color;
+    }
   }
 }
