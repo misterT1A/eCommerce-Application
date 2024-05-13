@@ -1,3 +1,4 @@
+import type { CustomerDraft } from '@commercetools/platform-sdk';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import type { AuthMiddlewareOptions, Client, HttpMiddlewareOptions } from '@commercetools/sdk-client-v2';
@@ -67,7 +68,10 @@ class AuthenticationService {
   }
 
   protected getAnonymousClient(): Client {
-    return new ClientBuilder().withAnonymousSessionFlow(this.getAuthMiddlewareOptions()).withHttpMiddleware(this.getHttpMiddlewareOptions()).build();
+    return new ClientBuilder()
+      .withAnonymousSessionFlow(this.getAuthMiddlewareOptions())
+      .withHttpMiddleware(this.getHttpMiddlewareOptions())
+      .build();
   }
 
   protected creteRoot(client: Client) {
@@ -83,6 +87,26 @@ class AuthenticationService {
   public async login(email: string, password: string) {
     this.root = this.creteRoot(this.getLoggedClient(email, password));
     await this.root.get().execute();
+  }
+
+  public async signUp(customerDraft: CustomerDraft) {
+    try {
+      await this.root
+        .customers()
+        .post({
+          body: customerDraft,
+        })
+        .execute()
+        .then(() => {
+          // TODO: implement auto-login after account creation
+          console.log(`Account was created! login: ${customerDraft.email} password: ${customerDraft.password}`);
+          // TODO Redirect to main page
+          // Show message after signup success
+        })
+        .catch((error) => console.log(error));
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
 
