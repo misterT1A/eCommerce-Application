@@ -97,10 +97,8 @@ class AuthenticationService {
           body: customerDraft,
         })
         .execute()
-        .then(async (r) => {
-          console.log(r.body);
+        .then(() => {
           // TODO: implement auto-login after account creation
-          // await this.login(customerDraft.email, customerDraft.password ?? '');
           console.log(`Account was created! login: ${customerDraft.email} password: ${customerDraft.password}`);
           // TODO Redirect to main page
           // Show message after signup success
