@@ -3,7 +3,7 @@ import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dis
 import type { AuthMiddlewareOptions, Client, HttpMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { ClientBuilder } from '@commercetools/sdk-client-v2';
 
-import { tokenCacheAnon, tokenCacheAuth } from './tocken-cache';
+import { tokenCacheAnon, tokenCacheAuth } from './token-cache';
 
 class AuthenticationService {
   protected root: ByProjectKeyRequestBuilder;
@@ -19,7 +19,7 @@ class AuthenticationService {
   private PROJECT_KEY: string = process.env.CTP_PROJECT_KEY || '';
 
   constructor() {
-    this.root = this.creteRoot(this.getAnonymousClient());
+    this.root = this.createRoot(this.getAnonymousClient());
   }
 
   protected getAuthMiddlewareOptions(): AuthMiddlewareOptions {
@@ -67,10 +67,13 @@ class AuthenticationService {
   }
 
   protected getAnonymousClient(): Client {
-    return new ClientBuilder().withAnonymousSessionFlow(this.getAuthMiddlewareOptions()).withHttpMiddleware(this.getHttpMiddlewareOptions()).build();
+    return new ClientBuilder()
+      .withAnonymousSessionFlow(this.getAuthMiddlewareOptions())
+      .withHttpMiddleware(this.getHttpMiddlewareOptions())
+      .build();
   }
 
-  protected creteRoot(client: Client) {
+  protected createRoot(client: Client) {
     return createApiBuilderFromCtpClient(client).withProjectKey({
       projectKey: this.PROJECT_KEY,
     });
@@ -81,8 +84,16 @@ class AuthenticationService {
   }
 
   public async login(email: string, password: string) {
-    this.root = this.creteRoot(this.getLoggedClient(email, password));
-    await this.root.get().execute();
+    this.root = this.createRoot(this.getLoggedClient(email, password));
+    await this.root
+      .login()
+      .post({
+        body: {
+          email,
+          password,
+        },
+      })
+      .execute();
   }
 }
 
