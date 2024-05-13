@@ -111,7 +111,7 @@ class AuthenticationService {
       .build();
   }
 
-  private getRefreshTokenFromStorage(sessionType: Session): string {
+  protected getRefreshTokenFromStorage(sessionType: Session): string {
     const token = localStorage.getItem(`${sessionType}-${process.env.CTP_PROJECT_KEY}`);
     if (!token) {
       return '';
@@ -151,7 +151,7 @@ class AuthenticationService {
       .execute();
     // To delete previous anon session
     // localStorage.removeItem(`${Session.ANON}-${this.PROJECT_KEY}`);
-    localStorage.setItem('logged', 'true');
+    localStorage.setItem('loggedIn', 'true');
     console.log('login');
   }
 
@@ -181,6 +181,10 @@ class AuthenticationService {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  public isAuthorized() {
+    return !!localStorage.getItem('loggedIn');
   }
 }
 
