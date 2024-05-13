@@ -1,9 +1,20 @@
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
-import type { AuthMiddlewareOptions, Client, HttpMiddlewareOptions } from '@commercetools/sdk-client-v2';
+import type {
+  AuthMiddlewareOptions,
+  Client,
+  HttpMiddlewareOptions,
+  PasswordAuthMiddlewareOptions,
+  RefreshAuthMiddlewareOptions,
+} from '@commercetools/sdk-client-v2';
 import { ClientBuilder } from '@commercetools/sdk-client-v2';
 
 import { tokenCacheAnon, tokenCacheAuth } from './token-cache';
+
+enum Session {
+  ANON = 'anon',
+  AUTH = 'auth',
+}
 
 class AuthenticationService {
   protected root: ByProjectKeyRequestBuilder;
@@ -22,6 +33,22 @@ class AuthenticationService {
     this.root = this.createRoot(this.getAnonymousClient());
   }
 
+  protected createRoot(client: Client): ByProjectKeyRequestBuilder {
+    return createApiBuilderFromCtpClient(client).withProjectKey({
+      projectKey: this.PROJECT_KEY,
+    });
+  }
+
+  public getRoot(): ByProjectKeyRequestBuilder {
+    return this.root;
+  }
+
+  protected getHttpMiddlewareOptions(): HttpMiddlewareOptions {
+    return {
+      host: this.BASE_URI,
+    };
+  }
+
   protected getAuthMiddlewareOptions(): AuthMiddlewareOptions {
     return {
       host: this.OAUTH_URI,
@@ -34,34 +61,37 @@ class AuthenticationService {
     };
   }
 
-  protected getHttpMiddlewareOptions(): HttpMiddlewareOptions {
+  protected getPasswordAuthMiddlewareOptions(email: string, password: string): PasswordAuthMiddlewareOptions {
     return {
-      host: this.BASE_URI,
+      host: this.OAUTH_URI,
+      projectKey: this.PROJECT_KEY,
+      credentials: {
+        clientId: this.CLIENT_ID,
+        clientSecret: this.CLIENT_SECRET,
+        user: {
+          username: email,
+          password,
+        },
+      },
+      tokenCache: tokenCacheAuth,
     };
   }
 
-  // protected getDefaultClient(): Client {
-  //   return new ClientBuilder()
-  //     .withClientCredentialsFlow(this.getAuthMiddlewareOptions())
-  //     .withHttpMiddleware(this.getHttpMiddlewareOptions())
-  //     .build();
-  // }
+  public getRefreshMiddlewareOptions(refreshToken: string): RefreshAuthMiddlewareOptions {
+    return {
+      host: this.OAUTH_URI,
+      projectKey: this.PROJECT_KEY,
+      credentials: {
+        clientId: this.CLIENT_ID,
+        clientSecret: this.CLIENT_SECRET,
+      },
+      refreshToken,
+    };
+  }
 
-  protected getLoggedClient(email: string, password: string): Client {
+  protected getPasswordFlowClient(email: string, password: string): Client {
     return new ClientBuilder()
-      .withPasswordFlow({
-        host: this.OAUTH_URI,
-        projectKey: this.PROJECT_KEY,
-        credentials: {
-          clientId: this.CLIENT_ID,
-          clientSecret: this.CLIENT_SECRET,
-          user: {
-            username: email,
-            password,
-          },
-        },
-        tokenCache: tokenCacheAuth,
-      })
+      .withPasswordFlow(this.getPasswordAuthMiddlewareOptions(email, password))
       .withHttpMiddleware(this.getHttpMiddlewareOptions())
       .build();
   }
@@ -73,18 +103,42 @@ class AuthenticationService {
       .build();
   }
 
-  protected createRoot(client: Client) {
-    return createApiBuilderFromCtpClient(client).withProjectKey({
-      projectKey: this.PROJECT_KEY,
-    });
+  protected getRefreshClient(session: Session): Client {
+    return new ClientBuilder()
+      .withRefreshTokenFlow(this.getRefreshMiddlewareOptions(this.getRefreshTokenFromStorage(session)))
+      .withHttpMiddleware(this.getHttpMiddlewareOptions())
+      .build();
   }
 
-  public getRoot(): ByProjectKeyRequestBuilder {
-    return this.root;
+  private getRefreshTokenFromStorage(sessionType: Session): string {
+    const token = localStorage.getItem(`${sessionType}-${process.env.CTP_PROJECT_KEY}`);
+    if (!token) {
+      return '';
+    }
+    return JSON.parse(token).refreshToken;
   }
 
-  public async login(email: string, password: string) {
-    this.root = this.createRoot(this.getLoggedClient(email, password));
+  public sessionStateHandler(): void {
+    let apiRoot = this.getRoot();
+
+    if (this.getRefreshTokenFromStorage(Session.AUTH) !== '') {
+      apiRoot = createApiBuilderFromCtpClient(this.getRefreshClient(Session.AUTH)).withProjectKey({
+        projectKey: this.PROJECT_KEY,
+      });
+      console.log('customer session is restored');
+    } else if (this.getRefreshTokenFromStorage(Session.ANON) !== '') {
+      apiRoot = createApiBuilderFromCtpClient(this.getRefreshTokenFromStorage(Session.ANON)).withProjectKey({
+        projectKey: this.PROJECT_KEY,
+      });
+      console.log('anon session is restored');
+    } else {
+      apiRoot.get().execute();
+      console.log('new anon session started');
+    }
+  }
+
+  public async login(email: string, password: string): Promise<void> {
+    this.root = this.createRoot(this.getPasswordFlowClient(email, password));
     await this.root
       .login()
       .post({
@@ -94,6 +148,18 @@ class AuthenticationService {
         },
       })
       .execute();
+    // To delete previous anon session
+    // localStorage.removeItem(`${Session.ANON}-${this.PROJECT_KEY}`);
+    localStorage.setItem('logged', 'true');
+    console.log('login');
+  }
+
+  public logout(): void {
+    localStorage.removeItem(`${Session.AUTH}-${this.PROJECT_KEY}`);
+    localStorage.removeItem('logged');
+    // localStorage.clear();
+    this.sessionStateHandler();
+    console.log('logout');
   }
 }
 

@@ -8,7 +8,7 @@ export default class Router {
 
     window.addEventListener('popstate', this.changeBrowser.bind(this));
     document.addEventListener('DOMContentLoaded', () => {
-      this.startAnonymousSession();
+      AuthService.sessionStateHandler();
       this.navigateToLastPoint();
     });
   }
@@ -53,10 +53,5 @@ export default class Router {
 
   private getCurrentPath() {
     return window.location.pathname.slice(1);
-  }
-
-  private startAnonymousSession() {
-    const apiRoot = AuthService.getRoot();
-    apiRoot.get().execute();
   }
 }
