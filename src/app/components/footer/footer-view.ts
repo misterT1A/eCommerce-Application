@@ -29,7 +29,7 @@ export default class FooterView extends BaseComponent {
   }
 
   private setCategoriesBlock() {
-    const linksWrapper = div([styles.categoriesWrapper]);
+    const wrapper = div([styles.categoriesWrapper]);
     const links = [
       'Bread',
       'Muffins & Cupcakes',
@@ -46,28 +46,27 @@ export default class FooterView extends BaseComponent {
     const catCount = 11;
     for (let i = 0; i < catCount; i += 1) {
       const elem = span([styles.link], links[i]);
-      linksWrapper.append(elem);
+      wrapper.append(elem);
     }
-    const categories = div([styles.block], h2([styles.categoriesTitle], 'CATEGORIES'), linksWrapper);
-    this.linksWrapper.append(categories);
+    const container = div([styles.block, styles.blockFull], h2([styles.categoriesTitle], 'CATEGORIES'), wrapper);
+    this.linksWrapper.append(container);
   }
 
   private setLinksBlock() {
-    const linksWrapper = div([styles.linksWrapper]);
+    const wrapper = div([styles.linksWrapper]);
     const links = ['Home', 'Catalog', 'About Us'];
     const catCount = 3;
     for (let i = 0; i < catCount; i += 1) {
       const elem = span([styles.link], links[i]);
-      linksWrapper.append(elem);
+      wrapper.append(elem);
     }
-    const categories = div([styles.block], h2([styles.categoriesTitle], 'LINKS '), linksWrapper);
-    this.linksWrapper.append(categories);
-
-    linksWrapper.addListener('click', (e: Event) => this.LinksHandler(e));
+    const container = div([styles.block, styles.blockHalf], h2([styles.categoriesTitle], 'LINKS '), wrapper);
+    this.linksWrapper.append(container);
+    wrapper.addListener('click', (e: Event) => this.LinksHandler(e));
   }
 
   private setContactBlock() {
-    const linksWrapper = div([styles.linksWrapper]);
+    const wrapper = div([styles.linksWrapper]);
     const links = [
       div(
         [styles.contactLink],
@@ -90,10 +89,10 @@ export default class FooterView extends BaseComponent {
     const catCount = 3;
     for (let i = 0; i < catCount; i += 1) {
       const linkBlock = div([styles.contactItem], svgArr[i], links[i]);
-      linksWrapper.append(linkBlock);
+      wrapper.append(linkBlock);
     }
-    const categories = div([styles.block], h2([styles.categoriesTitle], 'CONTACTS '), linksWrapper);
-    this.linksWrapper.append(categories);
+    const container = div([styles.block, styles.blockHalf], h2([styles.categoriesTitle], 'CONTACTS '), wrapper);
+    this.linksWrapper.append(container);
   }
 
   private aboutBlock() {
@@ -102,6 +101,7 @@ export default class FooterView extends BaseComponent {
     const courseLogo = svg('./assets/img/rss-logo.svg#svgElem', styles.aboutLogo);
 
     this.aboutWrapper.appendChildren([year, nameCourse, courseLogo]);
+    // return [year, nameCourse, courseLogo];
   }
   // TODO categories handler
   // private categoriesHandler() {}

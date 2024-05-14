@@ -9,13 +9,20 @@
 .wrapper {
   padding: 0 0 20px 0;
   width: 100%;
-  @include flex(flex-start, space-between, row);
   border-bottom: 2px solid $footer_links_color;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .block {
   @include flex(flex-start, space-between, column);
   gap: 20px;
+  justify-self: center;
+  align-self: first baseline;
+}
+
+.block:last-child {
+  justify-self: flex-end;
 }
 
 .categoriesTitle {
@@ -83,6 +90,57 @@
 .aboutLogo {
   width: 130px;
   height: 47px;
+}
+
+@media screen and (max-width: 1000px) {
+  .wrapper {
+    grid-template-columns: repeat(2, 1fr);
+    grid-row-gap: 40px;
+  }
+
+  .block {
+    justify-self: first baseline;
+  }
+
+  .block:first-child {
+    width: 100%;
+  }
+
+  .block:last-child {
+    justify-self: first baseline;
+  }
+
+  .categoriesWrapper {
+    width: 100%;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
+
+  .blockFull {
+    grid-column: 1 / span 2;
+  }
+
+  .blockHalf {
+    grid-column: span 1;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .block:first-child {
+    display: none;
+  }
+
+  .aboutWrapper {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .wrapper {
+    grid-template-columns: 1fr;
+    grid-row-gap: 20px;
+  }
 }
 
 @media not all and (hover: none) {
