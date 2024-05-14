@@ -13,25 +13,29 @@ export default class App {
 
   protected wrapper: BaseComponent;
 
-  protected header: HeaderController;
+  protected headerController: HeaderController;
 
   protected main: BaseComponent;
 
-  protected footer: FooterController;
+  protected footerController: FooterController;
 
   constructor() {
     this.router = new Router(this.createsRoutes());
 
     this.wrapper = new BaseComponent({ tag: 'section', className: styles.section });
-    this.header = new HeaderController(this.router);
+    this.headerController = new HeaderController(this.router);
     this.main = new BaseComponent({ tag: 'main', className: styles.main });
-    this.footer = new FooterController(this.router);
+    this.footerController = new FooterController(this.router);
 
     this.controller = null;
   }
 
   public showContent(parent: HTMLElement) {
-    this.wrapper.appendChildren([this.header.getView.getNode(), this.main.getNode(), this.footer.getView.getNode()]);
+    this.wrapper.appendChildren([
+      this.headerController.getView.getNode(),
+      this.main.getNode(),
+      this.footerController.getView.getNode(),
+    ]);
     parent.append(this.wrapper.getNode());
   }
 
