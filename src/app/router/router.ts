@@ -23,6 +23,7 @@ export default class Router {
       this.navigate('error');
       return;
     }
+
     route.callBack();
     if (!popstate) {
       window.history.pushState(null, '', `/${url}`);

@@ -1,4 +1,5 @@
-import HeaderController from '@components/header/controller';
+import FooterController from '@components/footer/footer-controller';
+import HeaderController from '@components/header/header_controller';
 import BaseComponent from '@utils/base-component';
 
 import styles from './_app_style.scss';
@@ -12,30 +13,39 @@ export default class App {
 
   protected wrapper: BaseComponent;
 
-  protected header: HeaderController;
+  protected headerController: HeaderController;
 
   protected main: BaseComponent;
 
+  protected footerController: FooterController;
+
   constructor() {
+    this.router = new Router(this.createsRoutes());
+
     this.wrapper = new BaseComponent({ tag: 'section', className: styles.section });
-    this.header = new HeaderController();
+    this.headerController = new HeaderController(this.router);
     this.main = new BaseComponent({ tag: 'main', className: styles.main });
+    this.footerController = new FooterController(this.router);
 
     this.controller = null;
-
-    this.router = new Router(this.createsRoutes());
   }
 
   public showContent(parent: HTMLElement) {
-    this.wrapper.appendChildren([this.header.getView.getNode(), this.main.getNode()]);
+    this.wrapper.appendChildren([
+      this.headerController.getView.getNode(),
+      this.main.getNode(),
+      this.footerController.getView.getNode(),
+    ]);
     parent.append(this.wrapper.getNode());
   }
 
   private createsRoutes(): IRoute[] {
     return [
       {
-        path: Pages.START,
-        callBack: async () => {},
+        path: Pages.MAIN,
+        callBack: async () => {
+          this.deleteContent();
+        },
       },
       {
         path: Pages.LOGIN,
@@ -54,10 +64,6 @@ export default class App {
           this.controller = new RegistrationController();
           this.setContent();
         },
-      },
-      {
-        path: Pages.MAIN,
-        callBack: () => {},
       },
       {
         path: Pages.ERROR,
