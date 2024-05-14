@@ -38,7 +38,7 @@ export default class App {
   private createsRoutes(): IRoute[] {
     return [
       {
-        path: Pages.START,
+        path: Pages.MAIN,
         callBack: async () => {
           this.deleteContent();
         },
@@ -60,10 +60,6 @@ export default class App {
           this.controller = new RegistrationController();
           this.setContent();
         },
-      },
-      {
-        path: Pages.MAIN,
-        callBack: () => {},
       },
       {
         path: Pages.ERROR,

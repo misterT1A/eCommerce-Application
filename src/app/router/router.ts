@@ -19,7 +19,6 @@ export default class Router {
     // const pathForFind = request.resource === '' ? request.path : `${request.path}/${id}`;
 
     const route = this.routes.find((routeItem) => routeItem.path === url);
-
     if (!route) {
       this.navigate('error');
       return;

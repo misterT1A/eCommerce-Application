@@ -56,13 +56,13 @@ export default class BurgerMenu extends BaseComponent {
 
     switch (target) {
       case 'HOME':
-        this.router.navigate(Pages.START);
+        this.router.navigate(Pages.MAIN);
         break;
       case 'CATALOG':
-        // this.router.navigate(Pages.REG);
+        // this.router.navigate(Pages.);
         break;
       case 'ABOUT US':
-        // this.router.navigate(Pages.REG);
+        // this.router.navigate(Pages.);
         break;
       default:
         break;

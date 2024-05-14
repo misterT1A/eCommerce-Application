@@ -114,7 +114,7 @@ export default class FooterView extends BaseComponent {
 
     switch (target) {
       case 'Home':
-        this.router.navigate(Pages.START);
+        this.router.navigate(Pages.MAIN);
         break;
       case 'Catalog':
         // this.router.navigate(Pages.CATALOG);
