@@ -1,3 +1,4 @@
+import FooterController from '@components/footer/footer-controller';
 import HeaderController from '@components/header/header_controller';
 import BaseComponent from '@utils/base-component';
 
@@ -16,18 +17,21 @@ export default class App {
 
   protected main: BaseComponent;
 
+  protected footer: FooterController;
+
   constructor() {
     this.router = new Router(this.createsRoutes());
 
     this.wrapper = new BaseComponent({ tag: 'section', className: styles.section });
     this.header = new HeaderController(this.router);
     this.main = new BaseComponent({ tag: 'main', className: styles.main });
+    this.footer = new FooterController(this.router);
 
     this.controller = null;
   }
 
   public showContent(parent: HTMLElement) {
-    this.wrapper.appendChildren([this.header.getView.getNode(), this.main.getNode()]);
+    this.wrapper.appendChildren([this.header.getView.getNode(), this.main.getNode(), this.footer.getView.getNode()]);
     parent.append(this.wrapper.getNode());
   }
 
@@ -35,7 +39,9 @@ export default class App {
     return [
       {
         path: Pages.START,
-        callBack: async () => {},
+        callBack: async () => {
+          this.deleteContent();
+        },
       },
       {
         path: Pages.LOGIN,

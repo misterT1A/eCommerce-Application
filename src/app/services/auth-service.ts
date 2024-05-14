@@ -157,7 +157,7 @@ class AuthenticationService {
 
   public logout(): void {
     localStorage.removeItem(`${Session.AUTH}-${this.PROJECT_KEY}`);
-    localStorage.removeItem('logged');
+    localStorage.removeItem('loggedIn');
     // localStorage.clear();
     this.sessionStateHandler();
     console.log('logout');

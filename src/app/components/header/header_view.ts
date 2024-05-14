@@ -1,4 +1,5 @@
 import logo from '@assets/headerLogo.svg';
+import AuthService from '@services/auth-service';
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
@@ -64,17 +65,19 @@ export default class HeaderView extends BaseComponent {
   }
 
   private setDropMenu() {
+    const isAuthorized = AuthService.isAuthorized();
+
     const props: Props[] = [
       { tag: 'li', className: menuStyle.userName, textContent: 'J. DOE' },
       {
         tag: 'li',
         className: menuStyle.links,
-        textContent: 'Log In',
+        textContent: isAuthorized ? 'Log out' : 'Log In',
       },
       {
         tag: 'li',
         className: menuStyle.links,
-        textContent: 'Sign Up',
+        textContent: isAuthorized ? 'My Account' : 'Sign Up',
       },
     ];
     props.forEach((prop) => {
@@ -113,7 +116,7 @@ export default class HeaderView extends BaseComponent {
 
   private changeTextNotLoginned() {
     const logInTitle = this.dropMenu.getChildren[1];
-    const signTitle = this.dropMenu.getChildren[1];
+    const signTitle = this.dropMenu.getChildren[2];
     signTitle.setTextContent('Sign Up');
     logInTitle.setTextContent('Log in');
   }
@@ -124,7 +127,6 @@ export default class HeaderView extends BaseComponent {
     if (!target) {
       return;
     }
-    // to do check for login
 
     switch (target) {
       case 'Log In':
@@ -138,7 +140,7 @@ export default class HeaderView extends BaseComponent {
         break;
       case 'Log out':
         this.changeTextNotLoginned();
-        // todo log out
+        AuthService.logout();
         break;
       default:
         break;
