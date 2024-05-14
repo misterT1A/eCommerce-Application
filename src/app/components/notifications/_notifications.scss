@@ -1,0 +1,9 @@
+.notifications__container {
+  display: fixed;
+  bottom: 20px;
+  right: 20px;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
