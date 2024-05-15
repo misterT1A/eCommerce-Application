@@ -10,7 +10,7 @@ class RegistrationView extends BaseComponent<HTMLFormElement> {
   public fields: IRegistrationFormFields = {
     firstName: new FormField('First Name', 'text'),
     lastName: new FormField('Last Name', 'text'),
-    date: new FormField('Date of Birtdth', 'date'),
+    date: new FormField('Date of Birth', 'date'),
     email: new FormField('Email', 'email'),
     password: new FormField('Password', 'password'),
     addresses: new AddressesFieldset(),

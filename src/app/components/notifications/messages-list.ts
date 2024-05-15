@@ -5,11 +5,11 @@ class MessagesList {
 
   constructor(
     private callback: () => void,
-    private listsize = 0
+    private listSize = 0
   ) {}
 
   public add(message: MessageView) {
-    this.listsize += 1;
+    this.listSize += 1;
     this.list.add(message);
     message.setCloseCallback(() => this.remove(message));
   }
@@ -18,13 +18,13 @@ class MessagesList {
     if (this.list.has(message)) {
       message.remove();
       this.list.delete(message);
-      this.listsize -= 1;
+      this.listSize -= 1;
       this.callback();
     }
   }
 
   public get size(): number {
-    return this.listsize;
+    return this.listSize;
   }
 }
 
