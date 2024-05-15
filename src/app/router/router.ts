@@ -1,5 +1,7 @@
 import AuthService from '@services/auth-service';
 
+import Pages from './pages';
+
 export default class Router {
   protected routes: IRoute[];
 
@@ -18,9 +20,13 @@ export default class Router {
     // const request = this.parseUrl(url);
     // const pathForFind = request.resource === '' ? request.path : `${request.path}/${id}`;
 
+    if (AuthService.isAuthorized() && [Pages.LOGIN, Pages.REG].includes(url)) {
+      this.navigate(Pages.MAIN);
+    }
+
     const route = this.routes.find((routeItem) => routeItem.path === url);
     if (!route) {
-      this.navigate('error');
+      this.navigate(Pages.ERROR);
       return;
     }
 

@@ -1,5 +1,10 @@
 import Controller from '@components/controller';
+// import HeaderController from '@components/header/header_controller';
+import type HeaderController from '@components/header/header_controller';
 import AuthService from '@services/auth-service';
+import Pages from '@src/app/router/pages';
+// import type Router from '@src/app/router/router';
+import type Router from '@src/app/router/router';
 
 import style from './_login-form.scss';
 import LoginView from './login-view';
@@ -10,8 +15,13 @@ export interface IFormValidatorResult {
 }
 
 export default class LoginController extends Controller<LoginView> {
-  constructor() {
+  constructor(
+    private router: Router,
+    private headerController: HeaderController
+  ) {
     super(new LoginView());
+    this.router = router;
+    this.headerController = headerController;
     this.initListeners();
   }
 
@@ -105,11 +115,18 @@ export default class LoginController extends Controller<LoginView> {
     return result;
   }
 
-  protected submit(): void {
+  protected submit() {
     const userEmail = this.getView.getNode().elements[0] as HTMLInputElement;
     const userPass = this.getView.getNode().elements[1] as HTMLInputElement;
 
     // AuthService call
-    AuthService.login(userEmail.value, userPass.value);
+    AuthService.login(userEmail.value, userPass.value).then((res) => {
+      if (res.success) {
+        this.router.navigate(Pages.MAIN);
+        this.headerController.changeTextLoggined();
+      } else {
+        // TODO ApiMessageHandler.show(res.message)
+      }
+    });
   }
 }
