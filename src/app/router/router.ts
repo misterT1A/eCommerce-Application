@@ -52,7 +52,7 @@ export default class Router {
     this.navigate(path, true);
   }
 
-  private getCurrentPath() {
+  public getCurrentPath() {
     return window.location.pathname.slice(1);
   }
 }
