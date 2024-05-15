@@ -50,8 +50,8 @@ export default class App {
       {
         path: Pages.LOGIN,
         callBack: async () => {
-          const { default: Controller } = await import('@components/login-form/login-controller');
-          this.controller = new Controller();
+          const { default: LoginController } = await import('@components/login-form/login-controller');
+          this.controller = new LoginController(this.router, this.headerController);
           this.setContent();
         },
       },
