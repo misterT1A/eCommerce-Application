@@ -1,9 +1,7 @@
 import Controller from '@components/controller';
-// import HeaderController from '@components/header/header_controller';
 import type HeaderController from '@components/header/header_controller';
 import AuthService from '@services/auth-service';
 import Pages from '@src/app/router/pages';
-// import type Router from '@src/app/router/router';
 import type Router from '@src/app/router/router';
 
 import style from './_login-form.scss';
@@ -19,7 +17,7 @@ export default class LoginController extends Controller<LoginView> {
     private router: Router,
     private headerController: HeaderController
   ) {
-    super(new LoginView());
+    super(new LoginView(router));
     this.router = router;
     this.headerController = headerController;
     this.initListeners();

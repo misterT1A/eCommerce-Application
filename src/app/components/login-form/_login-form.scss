@@ -86,3 +86,9 @@ input:focus {
   color: $main-color-error;
   font-size: 12px;
 }
+
+.link-container {
+  display: flex;
+  justify-content: center;
+  gap: 3%;
+}
