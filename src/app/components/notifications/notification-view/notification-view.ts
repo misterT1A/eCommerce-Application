@@ -4,7 +4,7 @@ import { button, div, h2, p, svg } from '@utils/elements';
 import styles from './_notifications.scss';
 
 enum DefaultNotificationTitle {
-  error = 'Error occured!',
+  error = 'Error occurred!',
   success = 'Success!',
   info = 'Info:',
   warning = 'Attention!',

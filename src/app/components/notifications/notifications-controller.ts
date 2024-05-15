@@ -30,8 +30,8 @@ class Notifications {
    *    in milliseconds. This property is optional, and if not provided, it will be set to 15000ms.
    * _________
    * @example
-   * notificator.showMessage({messageType: 'error', text: 'error text'});
-   * notificator.showMessage({messageType: 'success', title: 'Account was created!', text: 'some text ...'});
+   * notificationEmitter.showMessage({messageType: 'error', text: 'error text'});
+   * notificationEmitter.showMessage({messageType: 'success', title: 'Account was created!', text: 'some text ...'});
    */
 
   public showMessage(props: INotificationProps) {
@@ -52,6 +52,6 @@ class Notifications {
   }
 }
 
-const notificator = new Notifications();
+const notificationEmitter = new Notifications();
 
-export default notificator;
+export default notificationEmitter;
