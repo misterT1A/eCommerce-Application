@@ -1,5 +1,6 @@
 import Controller from '@components/controller';
 import type HeaderController from '@components/header/header_controller';
+import notificationEmitter from '@components/notifications/notifications-controller';
 import AuthService from '@services/auth-service';
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
@@ -120,10 +121,11 @@ export default class LoginController extends Controller<LoginView> {
     // AuthService call
     AuthService.login(userEmail.value, userPass.value).then((res) => {
       if (res.success) {
+        notificationEmitter.showMessage({ messageType: 'success', text: 'You successfully Logged in!' });
         this.router.navigate(Pages.MAIN);
         this.headerController.changeTextLoggined();
       } else {
-        // TODO ApiMessageHandler.show(res.message)
+        notificationEmitter.showMessage({ messageType: 'error', text: res.message });
       }
     });
   }
