@@ -139,45 +139,36 @@ class AuthenticationService {
   }
 
   public async login(email: string, password: string): Promise<ILoginResult> {
+    this.logout();
     return new Promise<ILoginResult>((resolve) => {
       const root = this.createRoot(this.getPasswordFlowClient(email, password));
-      try {
-        root
-          .login()
-          .post({
-            body: {
-              email,
-              password,
-            },
-          })
-          .execute()
-          .then(() => {
-            this.root = root;
-
-            resolve({
-              success: true,
-              message: 'OK',
-            });
-            localStorage.setItem('loggedIn', 'true');
-            // Uncomment to delete previous anon session
-            // localStorage.removeItem(`${Session.ANON}-${this.PROJECT_KEY}`);
-            console.log('login');
+      root
+        .login()
+        .post({
+          body: {
+            email,
+            password,
+          },
+        })
+        .execute()
+        .then(() => {
+          this.root = root;
+          resolve({
+            success: true,
+            message: 'OK',
           });
-      } catch (e: unknown | Error) {
-        resolve({
-          success: false,
-          message: e instanceof Error ? e.message : 'Unexpected error',
+          localStorage.setItem('loggedIn', 'true');
+          console.log('login');
+          // Uncomment to delete previous anon session
+          // localStorage.removeItem(`${Session.ANON}-${this.PROJECT_KEY}`);
+        })
+        .catch((e: Error) => {
+          resolve({
+            success: false,
+            message: e.message || 'Unexpected error',
+          });
         });
-      }
     });
-  }
-
-  public logout(): void {
-    localStorage.removeItem(`${Session.AUTH}-${this.PROJECT_KEY}`);
-    localStorage.removeItem('loggedIn');
-    // localStorage.clear();
-    this.sessionStateHandler();
-    console.log('logout');
   }
 
   public async signUp(customerDraft: CustomerDraft) {
@@ -198,6 +189,14 @@ class AuthenticationService {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  public logout(): void {
+    localStorage.removeItem(`${Session.AUTH}-${this.PROJECT_KEY}`);
+    localStorage.removeItem('loggedIn');
+    // localStorage.clear();
+    this.sessionStateHandler();
+    console.log('logout');
   }
 
   public isAuthorized() {
