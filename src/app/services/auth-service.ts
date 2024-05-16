@@ -162,7 +162,6 @@ class AuthenticationService {
           // localStorage.removeItem(`${Session.ANON}-${this.PROJECT_KEY}`);
         })
         .catch((e: Error) => {
-          console.log(e);
           resolve({
             success: false,
             message: e.message || 'Unexpected error',
