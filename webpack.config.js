@@ -3,7 +3,7 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const DotenvWebpackPlugin = require('dotenv-webpack');
-const EslingPlugin = require('eslint-webpack-plugin');
+const EslintPlugin = require('eslint-webpack-plugin');
 const postCss = require('postcss-preset-env');
 const CopyPlugin = require('copy-webpack-plugin');
 
@@ -99,9 +99,9 @@ module.exports = ({ mode }) => {
       new HtmlWebpackPlugin({
         template: path.resolve(__dirname, './src/index.html'),
         filename: 'index.html',
-        // favicon: path.resolve(__dirname, ''),
+        favicon: path.resolve(__dirname, './src/favicon.ico'),
       }),
-      new EslingPlugin({ extensions: 'ts' }),
+      new EslintPlugin({ extensions: 'ts' }),
       new MiniCssExtractPlugin({
         filename: '[name].css',
         chunkFilename: '[id].css',
