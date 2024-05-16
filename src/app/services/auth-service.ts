@@ -139,6 +139,7 @@ class AuthenticationService {
   }
 
   public async login(email: string, password: string): Promise<ILoginResult> {
+    this.logout();
     return new Promise<ILoginResult>((resolve) => {
       const root = this.createRoot(this.getPasswordFlowClient(email, password));
       root
