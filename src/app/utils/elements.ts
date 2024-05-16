@@ -88,11 +88,40 @@ export const li = (classList: string[], ...children: ChildType[]) => {
  * @param {string} classname - The class name to add to the SVG element.
  * @returns {SVGSVGElement} - The SVG element.
  */
-export const svg = (url: string, classname: string): SVGSVGElement => {
+export const svg = (url: string, className?: string): SVGSVGElement => {
   const svgContainer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svgContainer.classList.add(classname);
+  if (className) {
+    svgContainer.classList.add(className);
+  }
   const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
   use.setAttribute('href', url);
   svgContainer.append(use);
   return svgContainer;
+};
+
+export const a = (
+  classList: string[],
+  props: { href?: string; text?: string; isExternal?: boolean; icon?: SVGSVGElement; navigate?: () => void }
+) => {
+  const anchorComponent = new BaseComponent<HTMLAnchorElement>({
+    tag: 'a',
+    href: props.href,
+    target: props.isExternal ? '_blanc' : '_self',
+  });
+  if (props.text) {
+    anchorComponent.setTextContent(props.text);
+  }
+  if (!props.isExternal) {
+    anchorComponent.addListener('click', (e) => {
+      e.preventDefault();
+      if (props.navigate) {
+        props.navigate();
+      }
+    });
+  }
+  if (props.icon) {
+    anchorComponent.append(props.icon);
+  }
+  anchorComponent.addClass(...classList);
+  return anchorComponent;
 };

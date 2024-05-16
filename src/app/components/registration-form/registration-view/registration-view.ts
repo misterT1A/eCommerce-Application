@@ -1,8 +1,9 @@
 import FormField from '@components/form-ui-elements/formField';
 import AddressesFieldset from '@components/registration-form/registration-view/addressFieldset';
+import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
-import { button, div, h2, p } from '@utils/elements';
+import { a, button, div, h2, p } from '@utils/elements';
 
 import styles from './_registrationForm.scss';
 import type { IRegistrationFormFields } from '../registrationTypes';
@@ -31,6 +32,15 @@ class RegistrationView extends BaseComponent<HTMLFormElement> {
       this.fields.password,
       this.fields.addresses,
       this.button,
+      div(
+        [styles.form__footer],
+        p([styles.form__formText], 'Already have an account?'),
+        a([styles.form__formLink], {
+          href: './login',
+          text: 'Login',
+          navigate: () => this.router.navigate(Pages.LOGIN),
+        })
+      ),
     ]);
     this.disableButton();
   }

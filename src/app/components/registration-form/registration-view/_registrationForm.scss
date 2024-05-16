@@ -150,3 +150,29 @@ $main-color-error: #d82700;
   background-color: transparent;
   border-radius: 50px;
 }
+
+.form__footer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.form__formLink {
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    transition: 0.2s;
+    width: 100%;
+    height: 1px;
+    left: 0;
+    bottom: -2px;
+    transform: scaleX(0);
+    background-color: #000000;
+  }
+  @media (hover: hover) {
+    &:hover::after {
+      transform: scaleX(1);
+    }
+  }
+}
