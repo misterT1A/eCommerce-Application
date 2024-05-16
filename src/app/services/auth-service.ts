@@ -10,6 +10,8 @@ import type {
 } from '@commercetools/sdk-client-v2';
 import { ClientBuilder } from '@commercetools/sdk-client-v2';
 
+import { processErrorResponse } from '@utils/errors-handling';
+
 import { tokenCacheAnon, tokenCacheAuth } from './token-cache';
 
 enum Session {
@@ -182,21 +184,18 @@ class AuthenticationService {
 
   public async signUp(customerDraft: CustomerDraft) {
     try {
-      await this.root
+      const customerResponse = await this.root
         .customers()
         .post({
           body: customerDraft,
         })
-        .execute()
-        .then(() => {
-          // TODO: implement auto-login after account creation
-          console.log(`Account was created! login: ${customerDraft.email} password: ${customerDraft.password}`);
-          // TODO Redirect to main page
-          // Show message after signup success
-        })
-        .catch((error) => console.log(error));
-    } catch (error) {
-      console.log(error);
+        .execute();
+      if (customerResponse.statusCode === 201) {
+        return await this.login(customerDraft.email, customerDraft.password ?? '');
+      }
+      return { success: false, message: 'Failed to create an account.' };
+    } catch (errorResponse: unknown) {
+      return processErrorResponse(errorResponse);
     }
   }
 
