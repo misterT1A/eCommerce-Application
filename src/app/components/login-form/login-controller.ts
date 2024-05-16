@@ -125,7 +125,11 @@ export default class LoginController extends Controller<LoginView> {
         this.router.navigate(Pages.MAIN);
         this.headerController.changeTextLoggined();
       } else {
-        notificationEmitter.showMessage({ messageType: 'error', text: res.message });
+        notificationEmitter.showMessage({
+          messageType: 'error',
+          title: 'Invalid email or password!',
+          text: res.message,
+        });
       }
     });
   }
