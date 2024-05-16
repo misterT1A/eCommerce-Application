@@ -44,7 +44,9 @@ export default class App {
       {
         path: Pages.MAIN,
         callBack: async () => {
-          this.deleteContent();
+          const { default: MainController } = await import('@components/main/main-controller');
+          this.controller = new MainController(this.router);
+          this.setContent();
         },
       },
       {

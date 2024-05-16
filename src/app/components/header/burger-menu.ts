@@ -50,20 +50,16 @@ export default class BurgerMenu extends BaseComponent {
   private navigate(e: Event) {
     this.toggleMenu();
     const target = (e.target as HTMLElement)?.textContent;
-    if (!target) {
-      return;
-    }
-
     switch (target) {
       case 'HOME':
         this.router.navigate(Pages.MAIN);
         break;
-      case 'CATALOG':
-        // this.router.navigate(Pages.);
-        break;
-      case 'ABOUT US':
-        // this.router.navigate(Pages.);
-        break;
+      // case 'CATALOG':
+      //   // this.router.navigate(Pages.);
+      //   break;
+      // case 'ABOUT US':
+      //   // this.router.navigate(Pages.);
+      //   break;
       default:
         break;
     }
