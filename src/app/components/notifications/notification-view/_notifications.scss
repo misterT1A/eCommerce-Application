@@ -13,6 +13,7 @@ $color-notification-info: #4dcaff;
   align-items: center;
   justify-content: end;
   gap: 10px;
+  z-index: 100;
   @media (width <= 400px) {
     right: 0;
     left: 0;

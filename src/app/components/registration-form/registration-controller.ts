@@ -1,5 +1,6 @@
 import Controller from '@components/controller';
 import FormField from '@components/form-ui-elements/formField';
+import notificationEmitter from '@components/notifications/notifications-controller';
 import AuthService from '@services/auth-service';
 import RegistrationValidator from '@services/registrationValidationService/registrationValidator';
 import type BaseComponent from '@utils/base-component';
@@ -79,7 +80,19 @@ class RegistrationController extends Controller<RegistrationView> {
     if (!customerDraft) {
       return;
     }
-    AuthService.signUp(customerDraft);
+    AuthService.signUp(customerDraft).then((response) => {
+      if (response.success) {
+        // handle success account creation
+        notificationEmitter.showMessage({
+          messageType: 'success',
+          title: 'Account created!',
+          text: 'Access your profile to control your personal information and preferences.',
+        });
+      } else {
+        const errors = response.errors ? response.errors : [response.message];
+        errors.forEach((text) => notificationEmitter.showMessage({ messageType: 'error', text }));
+      }
+    });
   }
 }
 
