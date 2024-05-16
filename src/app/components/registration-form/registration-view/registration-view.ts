@@ -1,5 +1,6 @@
 import FormField from '@components/form-ui-elements/formField';
 import AddressesFieldset from '@components/registration-form/registration-view/addressFieldset';
+import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
 import { button, div, h2, p } from '@utils/elements';
 
@@ -18,7 +19,7 @@ class RegistrationView extends BaseComponent<HTMLFormElement> {
 
   public button: BaseComponent<HTMLButtonElement>;
 
-  constructor() {
+  constructor(private router: Router) {
     super({ tag: 'form', action: '', className: styles.form });
     this.button = button([styles.form__button], 'CREATE', { type: 'button' });
     this.appendChildren([
