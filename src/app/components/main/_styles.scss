@@ -1,0 +1,36 @@
+.main {
+  width: 100%;
+  @include flex(center, center, row);
+  gap: 20px;
+}
+
+.links {
+  position: relative;
+  cursor: pointer;
+
+  font-size: 20px;
+  font-weight: 400;
+
+  &::after {
+    position: absolute;
+    top: 120%;
+    left: 50%;
+    z-index: 2;
+    display: block;
+    content: '';
+    width: 0;
+    height: 2px;
+    background-color: $header_dropmenu_borderLinks_color;
+    transition: all 0.3s linear;
+
+    transform: translateX(-50%);
+    opacity: 0;
+  }
+}
+
+@media not all and (hover: none) {
+  .links:hover::after {
+    width: 100%;
+    opacity: 1;
+  }
+}
