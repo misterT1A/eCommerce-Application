@@ -84,7 +84,6 @@ export default class HeaderView extends BaseComponent {
       const element = new BaseComponent(prop);
       this.dropMenu.append(element);
     });
-
     this.dropMenu.addListener('click', (e: Event) => this.navigate(e));
 
     this.append(this.dropMenu);
@@ -108,17 +107,23 @@ export default class HeaderView extends BaseComponent {
   }
 
   public changeTextLoggined() {
-    const logInTitle = this.dropMenu.getChildren[1];
-    const signTitle = this.dropMenu.getChildren[2];
-    logInTitle.setTextContent('Log out');
-    signTitle.setTextContent('My Account');
+    // const logInTitle = this.dropMenu.getChildren[1];
+    // const signTitle = this.dropMenu.getChildren[2];
+    // logInTitle.setTextContent('Log out');
+    // signTitle.setTextContent('My Account');
+    this.changeTextNotLoginned();
+    const logOutTitle = new BaseComponent({ tag: 'li', className: menuStyle.links, textContent: 'Log out' });
+    this.dropMenu.append(logOutTitle);
   }
 
   private changeTextNotLoginned() {
-    const logInTitle = this.dropMenu.getChildren[1];
-    const signTitle = this.dropMenu.getChildren[2];
-    signTitle.setTextContent('Sign Up');
-    logInTitle.setTextContent('Log In');
+    // const logInTitle = this.dropMenu.getChildren[1];
+    // const signTitle = this.dropMenu.getChildren[2];
+    // signTitle.setTextContent('Sign Up');
+    // logInTitle.setTextContent('Log In');
+    const logOutTitle = this.dropMenu.getChildren[3];
+    logOutTitle?.destroy();
+    this.dropMenu.getChildren.splice(3, 1);
   }
 
   private navigate(e: Event) {

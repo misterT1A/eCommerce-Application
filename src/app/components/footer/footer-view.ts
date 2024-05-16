@@ -108,20 +108,16 @@ export default class FooterView extends BaseComponent {
 
   private LinksHandler(e: Event) {
     const target = (e.target as HTMLElement)?.textContent;
-    if (!target) {
-      return;
-    }
-
     switch (target) {
       case 'Home':
         this.router.navigate(Pages.MAIN);
         break;
-      case 'Catalog':
-        // this.router.navigate(Pages.CATALOG);
-        break;
-      case 'About Us':
-        // this.router.navigate(Pages.ABOUT);
-        break;
+      // case 'Catalog':
+      //   // this.router.navigate(Pages.CATALOG);
+      //   break;
+      // case 'About Us':
+      //   // this.router.navigate(Pages.ABOUT);
+      // break;
       default:
         break;
     }

@@ -22,6 +22,7 @@ export default class Router {
 
     if (AuthService.isAuthorized() && [Pages.LOGIN, Pages.REG].includes(url)) {
       this.navigate(Pages.MAIN);
+      return;
     }
 
     const route = this.routes.find((routeItem) => routeItem.path === url);
