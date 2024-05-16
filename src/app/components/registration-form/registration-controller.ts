@@ -1,8 +1,11 @@
 import Controller from '@components/controller';
 import FormField from '@components/form-ui-elements/formField';
+import type HeaderController from '@components/header/header_controller';
 import notificationEmitter from '@components/notifications/notifications-controller';
 import AuthService from '@services/auth-service';
 import RegistrationValidator from '@services/registrationValidationService/registrationValidator';
+import Pages from '@src/app/router/pages';
+import type Router from '@src/app/router/router';
 import type BaseComponent from '@utils/base-component';
 import { assertsArrayOfStrings } from '@utils/is-array-of-strings';
 
@@ -12,8 +15,11 @@ import RegistrationView from './registration-view/registration-view';
 class RegistrationController extends Controller<RegistrationView> {
   private formData: IRegistrationFormData | null = null;
 
-  constructor() {
-    super(new RegistrationView());
+  constructor(
+    private router: Router,
+    private headerController: HeaderController
+  ) {
+    super(new RegistrationView(router));
     this.setListeners();
   }
 
@@ -88,6 +94,8 @@ class RegistrationController extends Controller<RegistrationView> {
           title: 'Account created!',
           text: 'Access your profile to control your personal information and preferences.',
         });
+        this.router.navigate(Pages.MAIN);
+        this.headerController.changeTextLoggined();
       } else {
         const errors = response.errors ? response.errors : [response.message];
         errors.forEach((text) => notificationEmitter.showMessage({ messageType: 'error', text }));

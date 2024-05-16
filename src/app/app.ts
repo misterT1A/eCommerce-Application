@@ -63,7 +63,7 @@ export default class App {
           const { default: RegistrationController } = await import(
             '@components/registration-form/registration-controller'
           );
-          this.controller = new RegistrationController();
+          this.controller = new RegistrationController(this.router, this.headerController);
           this.setContent();
         },
       },
