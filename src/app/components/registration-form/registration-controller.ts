@@ -37,6 +37,7 @@ class RegistrationController extends Controller<RegistrationView> {
 
   // TODO isolate address checks from main registration fields
   // move validate function to helpers
+
   private isValidForm(errorsObject: IRegistrationErrors | object) {
     const { fields } = this.getView;
     const validate = (errorsObj: IRegistrationErrors | object, fs: Record<string, BaseComponent>) => {
@@ -72,6 +73,13 @@ class RegistrationController extends Controller<RegistrationView> {
   private validateForm() {
     this.getView.disableButton();
     this.formData = this.getView.getValues();
+    this.view.fields.addresses.offCommon();
+    if (
+      this.formData.addresses.billingAddress?.commonAddress ||
+      this.formData.addresses.shippingAddress?.commonAddress
+    ) {
+      this.view.fields.addresses.setCommon();
+    }
     const errorsObj = RegistrationValidator.processFormData(this.formData);
     if (this.isValidForm(errorsObj)) {
       this.getView.unlockButton();
@@ -86,6 +94,7 @@ class RegistrationController extends Controller<RegistrationView> {
     if (!customerDraft) {
       return;
     }
+    this.getView.disableButton();
     AuthService.signUp(customerDraft).then((response) => {
       if (response.success) {
         // handle success account creation
@@ -99,6 +108,7 @@ class RegistrationController extends Controller<RegistrationView> {
       } else {
         const errors = response.errors ? response.errors : [response.message];
         errors.forEach((text) => notificationEmitter.showMessage({ messageType: 'error', text }));
+        this.getView.unlockButton();
       }
     });
   }

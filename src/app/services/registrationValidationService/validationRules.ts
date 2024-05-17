@@ -5,7 +5,7 @@ const REGISTRATION_VALIDATION_RULES = {
   lastName: [
     { rule: 'Last name must contain letters A-Z and no special characters or numbers', pattern: /^[a-zA-Z]+$/ },
   ],
-  email: [{ rule: 'Should be a properly formatted email address.', pattern: /^\S+@\S+\.\S+$/ }],
+  email: [{ rule: 'Should be a properly formatted email address.', pattern: /^[\w.-]+@([\w-]+\.)+[\w-]{2,4}$/ }],
   password: [
     { rule: 'Password should contain minimum 8 characters', pattern: /.{8,}$/ },
     { rule: 'Should contain at least 1 uppercase and lowercase letter', pattern: /(?=.*[A-Z])(?=.*[a-z])/ },

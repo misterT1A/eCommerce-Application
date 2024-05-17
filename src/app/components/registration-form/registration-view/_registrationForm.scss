@@ -83,6 +83,18 @@ $main-color-error: #d82700;
       transform: translate(-50%);
     }
   }
+  &_common {
+    .form__addressesTogglerBar {
+      opacity: 0;
+    }
+    .form__addressesToggler {
+      pointer-events: none;
+    }
+    .form__addressesTogglerLabelRight,
+    .form__addressesTogglerLabelLeft {
+      color: $main-color-accent;
+    }
+  }
 }
 
 .form__addressesTitle {

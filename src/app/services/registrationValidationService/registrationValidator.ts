@@ -58,11 +58,23 @@ class RegistrationValidator {
       if (typeof value === 'string') {
         result = { ...result, ...Object.fromEntries([[key, this.validateField(value, key)]]) };
       } else if (typeof value === 'object' && value !== null) {
-        result = {
-          ...result,
-          ...Object.fromEntries([['billingAddress', this.processAddressFormData(value.billingAddress)]]),
-          ...Object.fromEntries([['shippingAddress', this.processAddressFormData(value.shippingAddress)]]),
-        };
+        if (formData.addresses.billingAddress?.commonAddress) {
+          result = {
+            ...result,
+            ...Object.fromEntries([['billingAddress', this.processAddressFormData(value.billingAddress)]]),
+          };
+        } else if (formData.addresses.shippingAddress?.commonAddress) {
+          result = {
+            ...result,
+            ...Object.fromEntries([['shippingAddress', this.processAddressFormData(value.shippingAddress)]]),
+          };
+        } else {
+          result = {
+            ...result,
+            ...Object.fromEntries([['billingAddress', this.processAddressFormData(value.billingAddress)]]),
+            ...Object.fromEntries([['shippingAddress', this.processAddressFormData(value.shippingAddress)]]),
+          };
+        }
       }
     });
     return result;
