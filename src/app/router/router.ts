@@ -20,7 +20,7 @@ export default class Router {
     // const request = this.parseUrl(url);
     // const pathForFind = request.resource === '' ? request.path : `${request.path}/${id}`;
 
-    if (AuthService.isAuthorized() && [Pages.LOGIN, Pages.REG].includes(url)) {
+    if (AuthService.isAuthorized() && [Pages.LOGIN].includes(url)) {
       this.navigate(Pages.MAIN);
       return;
     }
