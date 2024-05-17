@@ -67,11 +67,11 @@ export default class BurgerMenu extends BaseComponent {
       {
         tag: 'li',
         className: styles.menuBtn,
-        textContent: 'Log out',
+        textContent: 'Log Out',
       },
     ];
     props.forEach((prop) => {
-      if (prop.textContent !== 'Log out') {
+      if (prop.textContent !== 'Log Out') {
         const element = new BaseComponent(prop);
         wrapper.append(element);
       } else if (isAuthorized) {
@@ -97,7 +97,7 @@ export default class BurgerMenu extends BaseComponent {
   public changeTextLoggined() {
     this.changeTextNotLoginned();
     const userWrapper = this.contentWrapper.getChildren[1];
-    const logOutTitle = new BaseComponent({ tag: 'li', className: styles.menuBtn, textContent: 'Log out' });
+    const logOutTitle = new BaseComponent({ tag: 'li', className: styles.menuBtn, textContent: 'Log Out' });
     userWrapper.append(logOutTitle);
   }
 
@@ -130,7 +130,7 @@ export default class BurgerMenu extends BaseComponent {
       // case 'My Account':
       //   // TODO for account
       //   break;
-      case 'Log out':
+      case 'Log Out':
         this.changeTextNotLoginned();
         this.changeTextCallback();
         AuthService.logout();

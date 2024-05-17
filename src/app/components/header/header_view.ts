@@ -82,11 +82,11 @@ export default class HeaderView extends BaseComponent {
       {
         tag: 'li',
         className: menuStyle.links,
-        textContent: 'Log out',
+        textContent: 'Log Out',
       },
     ];
     props.forEach((prop) => {
-      if (prop.textContent !== 'Log out') {
+      if (prop.textContent !== 'Log Out') {
         const element = new BaseComponent(prop);
         wrapper.append(element);
       } else if (isAuthorized) {
@@ -119,7 +119,7 @@ export default class HeaderView extends BaseComponent {
     // logInTitle.setTextContent('Log out');
     // signTitle.setTextContent('My Account');
     this.changeTextNotLoginned();
-    const logOutTitle = new BaseComponent({ tag: 'li', className: menuStyle.links, textContent: 'Log out' });
+    const logOutTitle = new BaseComponent({ tag: 'li', className: menuStyle.links, textContent: 'Log Out' });
     this.dropMenu.getChildren[0].append(logOutTitle);
 
     this.burgerMenu.changeTextLoggined();
@@ -154,7 +154,7 @@ export default class HeaderView extends BaseComponent {
       case 'My Account':
         // TODO for account
         break;
-      case 'Log out':
+      case 'Log Out':
         this.changeTextNotLoginned();
         AuthService.logout();
         break;
