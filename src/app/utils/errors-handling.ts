@@ -51,26 +51,25 @@ export function getErrorsMessages(errorResp: ErrorResponse): string[] {
  * @param {unknown} error - The error to process
  */
 export function processErrorResponse(error: unknown) {
-  const errorResponse = (error as ClientResponse).body;
-  try {
-    if (isErrorResponse(errorResponse)) {
-      if ((error as ClientResponse).statusCode === 400) {
-        return {
-          success: false,
-          message: `Error`,
-          errors: getErrorsMessages(errorResponse),
-        };
-      }
-    }
+  if (!isClientResponse(error)) {
     return {
       success: false,
-      message: `Unexpected error: ${(error as ErrorResponse)?.message ?? error}`,
-      errors: [`${(error as ErrorResponse)?.message}` ?? error],
-    };
-  } catch (e: unknown | Error) {
-    return {
-      success: false,
-      message: `Unexpected error: ${e}`,
+      message: `Unexpected error: ${error}`,
     };
   }
+  const errorResponse: unknown = error.body;
+  if (isErrorResponse(errorResponse)) {
+    if ((error as ClientResponse).statusCode === 400) {
+      return {
+        success: false,
+        message: `Error`,
+        errors: getErrorsMessages(errorResponse),
+      };
+    }
+  }
+  return {
+    success: false,
+    message: `Unexpected error: ${error}`,
+    errors: [`${error}`],
+  };
 }
