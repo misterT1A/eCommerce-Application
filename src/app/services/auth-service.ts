@@ -122,26 +122,20 @@ class AuthenticationService {
   }
 
   public sessionStateHandler(): void {
-    let apiRoot = this.getRoot();
-
-    if (this.getRefreshTokenFromStorage(Session.AUTH) !== '') {
-      apiRoot = createApiBuilderFromCtpClient(this.getRefreshClient(Session.AUTH)).withProjectKey({
-        projectKey: this.PROJECT_KEY,
-      });
+    if (this.getRefreshTokenFromStorage(Session.AUTH)) {
+      this.root = this.createRoot(this.getRefreshClient(Session.AUTH));
       console.log('customer session is restored');
-    } else if (this.getRefreshTokenFromStorage(Session.ANON) !== '') {
-      apiRoot = createApiBuilderFromCtpClient(this.getRefreshTokenFromStorage(Session.ANON)).withProjectKey({
-        projectKey: this.PROJECT_KEY,
-      });
+    } else if (this.getRefreshTokenFromStorage(Session.ANON)) {
+      this.root = this.createRoot(this.getRefreshClient(Session.ANON));
       console.log('anon session is restored');
     } else {
-      apiRoot.get().execute();
+      this.root = this.createRoot(this.getAnonymousClient());
+      this.root.get().execute();
       console.log('new anon session started');
     }
   }
 
   public async login(email: string, password: string): Promise<ILoginResult> {
-    this.logout();
     return new Promise<ILoginResult>((resolve) => {
       const root = this.createRoot(this.getPasswordFlowClient(email, password));
       root
@@ -159,10 +153,9 @@ class AuthenticationService {
             success: true,
             message: 'OK',
           });
+          localStorage.removeItem(`${Session.ANON}-${this.PROJECT_KEY}`);
           localStorage.setItem('loggedIn', 'true');
           console.log('login');
-          // Uncomment to delete previous anon session
-          // localStorage.removeItem(`${Session.ANON}-${this.PROJECT_KEY}`);
         })
         .catch((e: Error) => {
           resolve({
@@ -174,6 +167,9 @@ class AuthenticationService {
   }
 
   public async signUp(customerDraft: CustomerDraft) {
+    if (this.isAuthorized()) {
+      this.logout();
+    }
     try {
       const customerResponse = await this.root
         .customers()
@@ -191,9 +187,9 @@ class AuthenticationService {
   }
 
   public logout(): void {
-    localStorage.removeItem(`${Session.AUTH}-${this.PROJECT_KEY}`);
-    localStorage.removeItem('loggedIn');
-    // localStorage.clear();
+    localStorage.clear();
+    // localStorage.removeItem(`${Session.AUTH}-${this.PROJECT_KEY}`);
+    // localStorage.removeItem('loggedIn');
     this.sessionStateHandler();
     console.log('logout');
   }
