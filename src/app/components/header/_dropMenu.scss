@@ -4,10 +4,12 @@
   top: 0;
   left: 0;
   width: 100%;
+  visibility: hidden;
 }
 
 .backWrapper.wrapperActive {
   height: 100vh;
+  visibility: visible;
 }
 
 .wrapper {
