@@ -2,21 +2,40 @@ import type { BaseAddress, CustomerDraft } from '@commercetools/platform-sdk';
 
 import { COUNTRIES_PATTERNS } from '@services/registrationValidationService/validCountries';
 
+const formAddress = (address: IAddressData): BaseAddress => ({
+  country: COUNTRIES_PATTERNS[address.country]?.code,
+  city: address.city,
+  postalCode: address.zipCode,
+  streetName: address.street,
+});
+
+function setCommonAddress(address: IAddressData) {
+  let res = {
+    shippingAddresses: [0],
+    billingAddresses: [0],
+  };
+  if (address.defaultAddress) {
+    res = Object.assign(res, { defaultBillingAddress: 0 });
+    res = Object.assign(res, { defaultShippingAddress: 0 });
+  }
+  return res;
+}
+
 export function prepareAddresses(formData: IRegistrationFormData) {
   const billingAddress = formData?.addresses.billingAddress;
   const shippingAddress = formData?.addresses.shippingAddress;
-  const formAddress = (address: IAddressData): BaseAddress => ({
-    country: COUNTRIES_PATTERNS[address.country].code,
-    city: address.city,
-    postalCode: address.zipCode,
-    streetName: address.street,
-  });
   const addresses: BaseAddress[] = [];
-  if (shippingAddress) {
+  if (shippingAddress && !billingAddress?.commonAddress) {
     addresses.push(formAddress(shippingAddress));
   }
-  if (billingAddress) {
+  if (billingAddress && !shippingAddress?.commonAddress) {
     addresses.push(formAddress(billingAddress));
+  }
+  if (billingAddress?.commonAddress) {
+    return { addresses, ...setCommonAddress(billingAddress) };
+  }
+  if (shippingAddress?.commonAddress) {
+    return { addresses, ...setCommonAddress(shippingAddress) };
   }
   let res = {
     addresses,
@@ -28,12 +47,6 @@ export function prepareAddresses(formData: IRegistrationFormData) {
   }
   if (billingAddress?.defaultAddress) {
     res = Object.assign(res, { defaultBillingAddress: 1 });
-  }
-  if (billingAddress?.commonAddress) {
-    res.shippingAddresses.push(1);
-  }
-  if (shippingAddress?.commonAddress) {
-    res.billingAddresses.push(0);
   }
   return res;
 }
