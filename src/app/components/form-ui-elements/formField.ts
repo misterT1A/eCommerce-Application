@@ -22,7 +22,7 @@ class FormField extends BaseComponent {
    */
   constructor(name: string, type: string, required = true) {
     super({ tag: 'div', className: styles.form__field }, label([styles.form__inputLabel], name));
-    this.input = input([styles.form__input], { type, value: '', required });
+    this.input = input([styles.form__input], { type, value: '', required, autocomplete: undefined });
     this.errors = div([styles.form__errors]);
     this.inputWrapper = div([styles.form__inputWrapper], this.input);
     if (type === 'password') {
