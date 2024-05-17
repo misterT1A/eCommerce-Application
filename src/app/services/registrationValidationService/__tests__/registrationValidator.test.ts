@@ -105,15 +105,110 @@ describe('RegistrationValidator address fields', () => {
   it('validates zipCode field for France', () => {
     const errors = RegistrationValidator.validateField('ksdjfh', 'zipCode', 'France');
     expect(errors).toContain(COUNTRIES_PATTERNS.France.rule);
+    const validFRPostalCode = RegistrationValidator.validateField('12 345', 'zipCode', 'France');
+    expect(validFRPostalCode).toEqual([]);
   });
 
   it('validates zipCode field for Belgium', () => {
     const errors = RegistrationValidator.validateField('invalid', 'zipCode', 'Belgium');
     expect(errors).toContain(COUNTRIES_PATTERNS.Belgium.rule);
+    const validBEPostalCode = RegistrationValidator.validateField('1234', 'zipCode', 'Belgium');
+    expect(validBEPostalCode).toEqual([]);
   });
 
   it('validates zipCode field without country', () => {
     const errors = RegistrationValidator.validateField('invalid', 'zipCode');
     expect(errors).toContain('Select country');
+  });
+});
+
+describe('RegistrationValidator process data method', () => {
+  const commonAddress: IAddressData = {
+    defaultAddress: false,
+    commonAddress: true,
+    city: 'sdas',
+    street: 'asd',
+    country: 'Belgium',
+    zipCode: '1111',
+  };
+
+  const validAddress: IAddressData = {
+    defaultAddress: false,
+    commonAddress: false,
+    city: 'sdas',
+    street: 'asd',
+    country: 'Belgium',
+    zipCode: '1111',
+  };
+
+  const formData: IRegistrationFormData = {
+    email: 'KKKKK@kk.dd',
+    password: 'sdfsKKK2222q',
+    firstName: 'string',
+    lastName: 'string',
+    date: '2001-03-02',
+    addresses: {
+      shippingAddress: validAddress,
+      billingAddress: validAddress,
+    },
+  };
+
+  const formDataCommon: IRegistrationFormData = {
+    email: 'KKKKK@kk.dd',
+    password: 'sdfsKKK2222q',
+    firstName: 'string',
+    lastName: 'string',
+    date: '2001-03-02',
+    addresses: {
+      shippingAddress: commonAddress,
+      billingAddress: validAddress,
+    },
+  };
+
+  const errorsAddress = {
+    defaultAddress: false,
+    commonAddress: false,
+    city: [],
+    street: [],
+    country: [],
+    zipCode: [],
+  };
+
+  const errorsAddressCommon = {
+    defaultAddress: false,
+    commonAddress: true,
+    city: [],
+    street: [],
+    country: [],
+    zipCode: [],
+  };
+
+  const errors: IRegistrationErrors = {
+    firstName: [],
+    lastName: [],
+    date: [],
+    email: [],
+    password: [],
+    billingAddress: errorsAddress,
+    shippingAddress: errorsAddress,
+  };
+
+  const errorsCommon = {
+    firstName: [],
+    lastName: [],
+    date: [],
+    email: [],
+    password: [],
+    shippingAddress: errorsAddressCommon,
+  };
+
+  it('Should process valid form data', () => {
+    const res = RegistrationValidator.processFormData(formData);
+    expect(res).toEqual(errors);
+  });
+
+  it('Should process valid form data if one field set as common', () => {
+    const res = RegistrationValidator.processFormData(formDataCommon);
+    expect(res).toEqual(errorsCommon);
   });
 });
