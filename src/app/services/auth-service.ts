@@ -122,12 +122,10 @@ class AuthenticationService {
   }
 
   public sessionStateHandler(): void {
-    // let apiRoot = this.getRoot();
-
-    if (this.getRefreshTokenFromStorage(Session.AUTH) !== '') {
+    if (this.getRefreshTokenFromStorage(Session.AUTH)) {
       this.root = this.createRoot(this.getRefreshClient(Session.AUTH));
       console.log('customer session is restored');
-    } else if (this.getRefreshTokenFromStorage(Session.ANON) !== '') {
+    } else if (this.getRefreshTokenFromStorage(Session.ANON)) {
       this.root = this.createRoot(this.getRefreshClient(Session.ANON));
       console.log('anon session is restored');
     } else {
@@ -189,7 +187,6 @@ class AuthenticationService {
   }
 
   public logout(): void {
-    // Uncomment to delete previous anon session
     localStorage.clear();
     // localStorage.removeItem(`${Session.AUTH}-${this.PROJECT_KEY}`);
     // localStorage.removeItem('loggedIn');
