@@ -1,6 +1,6 @@
 export const COUNTRIES_PATTERNS = {
   UK: {
-    rule: 'Postal code for GB shold be in format A(A)N(A/N)NAA (A[A]N[A/N] NAA).',
+    rule: 'Postal code for GB should be in format A(A)N(A/N)NAA (A[A]N[A/N] NAA).',
     code: 'GB',
     pattern: /^[A-Z]{1,2}[0-9R][0-9A-Z]?\\s*[0-9][A-Z-[CIKMOV]]{2}$/,
   },
