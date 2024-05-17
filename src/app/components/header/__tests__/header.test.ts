@@ -76,7 +76,7 @@ describe('Header', () => {
 
     burgerMenu['navigate'](mockEvent as unknown as Event);
 
-    expect(navigateSpy).toHaveBeenCalledWith(Pages.MAIN);
+    expect(navigateSpy).toHaveBeenCalledWith(Pages.LOGIN);
   });
 
   test('should navigate from burger menu to home page when "Sign Up" is clicked', () => {
@@ -85,7 +85,7 @@ describe('Header', () => {
 
     burgerMenu['navigate'](mockEvent as unknown as Event);
 
-    expect(navigateSpy).toHaveBeenCalledWith(Pages.MAIN);
+    expect(navigateSpy).toHaveBeenCalledWith(Pages.REG);
   });
 
   test('should not navigate from burger menu for unknown link', () => {

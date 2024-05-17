@@ -140,9 +140,6 @@ export default class HeaderView extends BaseComponent {
   private navigate(e: Event) {
     this.showDropMenu();
     const target = (e.target as HTMLElement)?.textContent;
-    if (!target) {
-      return;
-    }
 
     switch (target) {
       case 'Log In':
