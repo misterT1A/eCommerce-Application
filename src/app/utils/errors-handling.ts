@@ -1,17 +1,30 @@
 import type { ClientResponse } from '@commercetools/platform-sdk';
 import type { ErrorResponse } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/error';
 
-import { isTypeOf } from './asserts-object';
+import { hasFields, isTypeOf } from './asserts-object';
 
 const errorResponseTemplate = {
   statusCode: 400,
   message: 'string',
   errors: ['string'],
-};
+} as const;
+
+const clientResponseTemplate = {
+  body: {},
+  statusCode: 400,
+} as const;
+
+export function isClientResponse(v: unknown): v is ClientResponse {
+  return hasFields(v, clientResponseTemplate);
+}
+
+export function isErrorResponse(v: unknown): v is ErrorResponse {
+  return isTypeOf(v, errorResponseTemplate);
+}
 
 export function assertIsErrorResponse(value: unknown): asserts value is ErrorResponse {
   if (!isTypeOf(value, errorResponseTemplate)) {
-    throw new Error('Invalid data shape. ErrorResponse should contain "statusCode" and "message" fields');
+    throw new Error(`${value}`);
   }
 }
 
@@ -39,20 +52,20 @@ export function getErrorsMessages(errorResp: ErrorResponse): string[] {
  */
 export function processErrorResponse(error: unknown) {
   const errorResponse = (error as ClientResponse).body;
-  console.log(errorResponse);
   try {
-    assertIsErrorResponse(errorResponse);
-    if ((error as ClientResponse).statusCode === 400) {
-      return {
-        success: false,
-        message: `Error`,
-        errors: getErrorsMessages(errorResponse as ErrorResponse),
-      };
+    if (isErrorResponse(errorResponse)) {
+      if ((error as ClientResponse).statusCode === 400) {
+        return {
+          success: false,
+          message: `Error`,
+          errors: getErrorsMessages(errorResponse),
+        };
+      }
     }
     return {
       success: false,
-      message: `Unexpected error: ${errorResponse.message}`,
-      errors: [`${errorResponse.message}`],
+      message: `Unexpected error: ${(error as ErrorResponse)?.message ?? error}`,
+      errors: [`${(error as ErrorResponse)?.message}` ?? error],
     };
   } catch (e: unknown | Error) {
     return {

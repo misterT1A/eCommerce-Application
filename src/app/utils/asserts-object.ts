@@ -42,3 +42,15 @@ export function assertsObjectIsTypeOf<T extends ObjectType>(object: unknown, tem
     throw new Error('Invalid data shape!');
   }
 }
+
+export function hasFields<T extends ObjectType>(object: unknown, template: T): boolean {
+  if (typeof object !== 'object' || object === null) {
+    return false;
+  }
+  return Object.keys(template as ObjectType).every((key) => {
+    if (!(key in (object as ObjectType))) {
+      return false;
+    }
+    return true;
+  });
+}
