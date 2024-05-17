@@ -1,3 +1,15 @@
+.backWrapper {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  left: 0;
+}
+
+.backWrapper.wrapperActive {
+  width: 100%;
+  height: 100vh;
+}
+
 .wrapper {
   width: 170px;
   border: 1px solid $header_dropmenu_border_color;
@@ -16,8 +28,8 @@
 }
 
 .show {
-  top: 105%;
-  z-index: 2;
+  top: 130px;
+  z-index: 100;
   opacity: 1;
 }
 
@@ -65,9 +77,9 @@
   }
 }
 
-@media screen and (max-width: 650px) {
-  .wrapper {
-    padding: 10px;
+@media screen and (max-width: 1000px) {
+  .backWrapper {
+    display: none;
   }
 }
 

@@ -1,4 +1,3 @@
-import AuthService from '@services/auth-service';
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import type { Props } from '@utils/base-component';
@@ -17,8 +16,6 @@ export default class MainView extends BaseComponent {
   }
 
   private setContent() {
-    const isAuthorized = AuthService.isAuthorized();
-
     const props: Props[] = [
       {
         tag: 'li',
@@ -30,22 +27,10 @@ export default class MainView extends BaseComponent {
         className: styles.links,
         textContent: 'Sign Up',
       },
-      {
-        tag: 'li',
-        className: styles.links,
-        textContent: 'Log out',
-      },
     ];
     props.forEach((prop) => {
-      if (prop.textContent === 'Log out') {
-        if (isAuthorized) {
-          const element = new BaseComponent(prop);
-          this.append(element);
-        }
-      } else {
-        const element = new BaseComponent(prop);
-        this.append(element);
-      }
+      const element = new BaseComponent(prop);
+      this.append(element);
     });
     this.addListener('click', (e: Event) => this.navigate(e));
   }
@@ -75,10 +60,6 @@ export default class MainView extends BaseComponent {
       // case 'My Account':
       //   // TODO for account
       //   break;
-      case 'Log out':
-        this.changeTextNotLoginned();
-        AuthService.logout();
-        break;
       default:
         break;
     }

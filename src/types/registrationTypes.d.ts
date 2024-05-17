@@ -10,8 +10,8 @@ interface IRegistrationFormData {
   date: string;
 
   addresses: {
-    shippingAddress: IAddressData;
-    billingAddress: IAddressData;
+    shippingAddress?: IAddressData;
+    billingAddress?: IAddressData;
   };
 }
 
