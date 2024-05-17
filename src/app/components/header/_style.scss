@@ -7,18 +7,28 @@
   background-color: $header_background_color;
 }
 
+.bodyHidden {
+  overflow: hidden;
+}
+
 .burgerBtn {
   display: none;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 44px;
+  width: 50px;
+  height: 50px;
+
+  background-color: $header_background_color;
+  border-radius: 50%;
 
   cursor: pointer;
+
+  transition: background 0.3s;
 }
 
 .burgerBtnIcon {
   position: relative;
+  top: -2px;
   width: 33px;
   height: 5px;
   background-color: $header_menuBtn_color;
@@ -82,7 +92,8 @@
   display: none;
 }
 
-.svglogo {
+.userlogo,
+.basketLogo {
   cursor: pointer;
   transition: all 0.3s;
 
@@ -101,6 +112,12 @@
 @media screen and (max-width: 1000px) {
   .burgerBtn {
     display: flex;
+    position: relative;
+    z-index: 100;
+  }
+
+  .userlogo {
+    display: none;
   }
 }
 
@@ -118,7 +135,8 @@
     gap: 10px;
   }
 
-  .svglogo {
+  .userlogo,
+  .basketLogo {
     width: 25px;
     height: 25px;
 

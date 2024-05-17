@@ -1,3 +1,13 @@
+// .backgroundWrapper {
+//   // position: absolute;
+
+//   // top: 130px;
+//   // left: 0;
+//   // right: 0;
+//   // bottom: 0;
+//   // background-color: rgba($color: $header_menuBtn_color, $alpha: 0.5)
+// }
+
 .menuBlock {
   @include flex(center, space-between, row);
   gap: 20px;
@@ -7,7 +17,18 @@
 }
 
 .menuBlock.menuBlockActive {
-  left: 1%;
+  // left: 0;
+  transform: translateX(0);
+}
+
+.menuWrapper,
+.userWrapper {
+  @include flex(center, space-between, row);
+  gap: 20px;
+}
+
+.userWrapper {
+  display: none;
 }
 
 .menuBtn {
@@ -36,12 +57,36 @@
 }
 
 @media screen and (max-width: 1000px) {
-  .menuBlock {
-    padding: 20px 20px;
+  .backgroundWrapper.wrapperActive {
     position: absolute;
-    z-index: 10;
-    top: 136px;
-    left: -50%;
+    z-index: 5;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background-color: rgba($color: $header_menuBtn_color, $alpha: 0.5);
+  }
+
+  .menuWrapper,
+  .userWrapper {
+    @include flex(center, space-between, column);
+    gap: 20px;
+    padding: 0 0 10px 0;
+    border-bottom: 1px solid $header_border_color;
+  }
+
+  .userWrapper {
+    display: flex;
+  }
+
+  .menuBlock {
+    padding: 20px 90px;
+    position: fixed;
+    height: 100vh;
+    z-index: 20;
+    top: 130px;
+    left: 0;
+    transform: translateX(-100%);
     background-color: #fff;
 
     flex-direction: column;
@@ -51,17 +96,26 @@
     border: 1px solid $header_dropmenu_border_color;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   }
-}
 
-@media screen and (max-width: 650px) {
-  .menuBlock {
-    top: 75px;
+  .menuBtn {
+    position: relative;
+    font-size: 25px;
   }
-}
 
-@media not all and (hover: none) {
-  .menuBtn:hover::after {
-    width: 100%;
-    opacity: 1;
+  @media screen and (max-width: 650px) {
+    .menuBlock {
+      top: 70px;
+    }
+
+    .backgroundWrapper.wrapperActive {
+      top: 0;
+    }
+  }
+
+  @media not all and (hover: none) {
+    .menuBtn:hover::after {
+      width: 100%;
+      opacity: 1;
+    }
   }
 }
