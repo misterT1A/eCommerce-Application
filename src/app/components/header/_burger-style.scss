@@ -7,7 +7,13 @@
 }
 
 .menuBlock.menuBlockActive {
-  transform: translateX(0);
+  transform: translateX(100%);
+}
+
+@media screen and (min-width: 1000px) {
+  .menuBlock.menuBlockActive {
+    transform: translateX(0);
+  }
 }
 
 .menuWrapper,
@@ -74,8 +80,8 @@
     height: 100vh;
     z-index: 20;
     top: 130px;
-    left: 0;
-    transform: translateX(-100%);
+    right: 100%;
+    transform: translateX(0);
     background-color: #fff;
 
     flex-direction: column;
