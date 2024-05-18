@@ -36,7 +36,6 @@ class AddressesFieldset extends BaseComponent {
   private clearTogglerStatus() {
     this.removeClass(styles.form__addresses_shipping);
     this.removeClass(styles.form__addresses_billing);
-    this.removeClass(styles.form__addresses_common);
   }
 
   public setStatus(status: 'shipping' | 'billing') {
@@ -47,6 +46,14 @@ class AddressesFieldset extends BaseComponent {
 
   public toggleAddress() {
     this.setStatus(this.state === 'shipping' ? 'billing' : 'shipping');
+  }
+
+  public setCommon() {
+    this.addClass(styles.form__addresses_common);
+  }
+
+  public offCommon() {
+    this.removeClass(styles.form__addresses_common);
   }
 
   public getValue() {
