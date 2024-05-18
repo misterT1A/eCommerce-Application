@@ -23,7 +23,7 @@ export default class HeaderView extends BaseComponent {
     super({ tag: 'header', className: styles.header });
     this.router = router;
 
-    this.dropMenu = new BaseComponent({ className: menuStyle.backWrapper });
+    this.dropMenu = new BaseComponent({ className: menuStyle.wrapper });
     this.burgerBtn = new BaseComponent({ classList: styles.burgerBtn });
     this.burgerMenu = new BurgerMenu(router, this.burgerBtn, this.changeTextNotLoginned.bind(this));
 
@@ -66,7 +66,7 @@ export default class HeaderView extends BaseComponent {
 
   private setDropMenu() {
     const isAuthorized = AuthService.isAuthorized();
-    const wrapper = new BaseComponent({ tag: 'ul', className: menuStyle.wrapper });
+    // const wrapper = new BaseComponent({ tag: 'ul', className: menuStyle.wrapper });
     const props: Props[] = [
       { tag: 'li', className: menuStyle.userName, textContent: 'J. DOE' },
       {
@@ -88,13 +88,13 @@ export default class HeaderView extends BaseComponent {
     props.forEach((prop) => {
       if (prop.textContent !== 'Log Out') {
         const element = new BaseComponent(prop);
-        wrapper.append(element);
+        this.dropMenu.append(element);
       } else if (isAuthorized) {
         const element = new BaseComponent(prop);
-        wrapper.append(element);
+        this.dropMenu.append(element);
       }
     });
-    this.dropMenu.append(wrapper);
+    // this.dropMenu.append(wrapper);
     this.dropMenu.addListener('click', (e: Event) => this.navigate(e));
 
     this.append(this.dropMenu);
@@ -106,7 +106,7 @@ export default class HeaderView extends BaseComponent {
 
     icon.classList.toggle(styles.userlogoActive);
     menu.classList.toggle(menuStyle.wrapperActive);
-    this.dropMenu.getChildren[0].getNode().classList.toggle(menuStyle.show);
+    this.dropMenu.getNode().classList.toggle(menuStyle.show);
   }
 
   private showBurgerMenu() {
@@ -120,7 +120,7 @@ export default class HeaderView extends BaseComponent {
     // signTitle.setTextContent('My Account');
     this.changeTextNotLoginned();
     const logOutTitle = new BaseComponent({ tag: 'li', className: menuStyle.links, textContent: 'Log Out' });
-    this.dropMenu.getChildren[0].append(logOutTitle);
+    this.dropMenu.append(logOutTitle);
 
     this.burgerMenu.changeTextLoggined();
   }
@@ -130,9 +130,9 @@ export default class HeaderView extends BaseComponent {
     // const signTitle = this.dropMenu.getChildren[2];
     // signTitle.setTextContent('Sign Up');
     // logInTitle.setTextContent('Log In');
-    const logOutTitle = this.dropMenu.getChildren[0].getChildren[3];
+    const logOutTitle = this.dropMenu.getChildren[3];
     logOutTitle?.destroy();
-    this.dropMenu.getChildren[0].getChildren.splice(3, 1);
+    this.dropMenu.getChildren.splice(3, 1);
 
     this.burgerMenu.changeTextNotLoginned();
   }
