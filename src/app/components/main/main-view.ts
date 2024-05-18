@@ -35,18 +35,6 @@ export default class MainView extends BaseComponent {
     this.addListener('click', (e: Event) => this.navigate(e));
   }
 
-  public changeTextLoggined() {
-    this.changeTextNotLoginned();
-    const logOutTitle = new BaseComponent({ tag: 'li', className: styles.links, textContent: 'Log out' });
-    this.append(logOutTitle);
-  }
-
-  private changeTextNotLoginned() {
-    const logOutTitle = this.getChildren[2];
-    logOutTitle?.destroy();
-    this.getChildren.splice(3, 1);
-  }
-
   private navigate(e: Event) {
     const target = (e.target as HTMLElement)?.textContent;
 
@@ -57,9 +45,6 @@ export default class MainView extends BaseComponent {
       case 'Sign Up':
         this.router.navigate(Pages.REG);
         break;
-      // case 'My Account':
-      //   // TODO for account
-      //   break;
       default:
         break;
     }

@@ -105,6 +105,11 @@
   }
 }
 
+.userlogo {
+  position: relative;
+  z-index: 12;
+}
+
 @media screen and (max-width: 1000px) {
   .burgerBtn {
     display: flex;
