@@ -66,7 +66,7 @@ export default class LoginController extends Controller<LoginView> {
     return result.success;
   }
 
-  protected submit() {
+  protected submit(): void {
     const userEmail = this.getView.getNode().elements[0] as HTMLInputElement;
     const userPass = this.getView.getNode().elements[1] as HTMLInputElement;
 
