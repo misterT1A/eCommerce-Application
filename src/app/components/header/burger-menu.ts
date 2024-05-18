@@ -28,6 +28,7 @@ export default class BurgerMenu extends BaseComponent {
     this.setUserBlock();
     this.append(this.contentWrapper);
     this.addListener('click', (e: Event) => this.navigate(e));
+    window.addEventListener('resize', () => this.resizeHandeler());
   }
 
   private setMenuContent() {
@@ -82,12 +83,22 @@ export default class BurgerMenu extends BaseComponent {
     this.contentWrapper.append(wrapper);
   }
 
+  private resizeHandeler() {
+    const width = window.innerWidth;
+
+    if (width > 1000 && this.burgerBtn.getNode().classList.contains(mainStyles.burgerBtn_active)) {
+      document.body.classList.remove(styles.bodyHidden);
+    } else if (this.burgerBtn.getNode().classList.contains(mainStyles.burgerBtn_active)) {
+      document.body.classList.add(styles.bodyHidden);
+    }
+  }
+
   public toggleMenu() {
     this.burgerBtn.getNode().classList.toggle(mainStyles.burgerBtn_active);
     this.contentWrapper.getNode().classList.toggle(styles.menuBlockActive);
     this.getNode().classList.toggle(styles.wrapperActive);
 
-    if (document.body.classList.contains(mainStyles.bodyHidden)) {
+    if (document.body.classList.contains(styles.bodyHidden)) {
       document.body.classList.remove(styles.bodyHidden);
     } else {
       document.body.classList.add(styles.bodyHidden);
