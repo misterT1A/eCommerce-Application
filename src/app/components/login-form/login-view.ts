@@ -8,7 +8,7 @@ import style from './_login-form.scss';
 export default class LoginView extends BaseComponent<HTMLFormElement> {
   public linkContainer: BaseComponent;
 
-  public constructor(router: Router) {
+  constructor(router: Router) {
     super({ tag: 'form', noValidate: true, className: style['login-form'], action: '#' });
     this.linkContainer = div(
       [style['link-container']],
