@@ -6,6 +6,10 @@
   transition: all 0.3s linear;
 }
 
+.bodyHidden {
+  overflow: hidden;
+}
+
 .menuBlock.menuBlockActive {
   transform: translateX(0);
 }
@@ -42,6 +46,12 @@
 
     transform: translateX(-50%);
     opacity: 0;
+  }
+}
+
+@media screen and (min-width: 1000px) {
+  .bodyHidden {
+    overflow: auto;
   }
 }
 

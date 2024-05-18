@@ -88,9 +88,9 @@ export default class BurgerMenu extends BaseComponent {
     this.getNode().classList.toggle(styles.wrapperActive);
 
     if (document.body.classList.contains(mainStyles.bodyHidden)) {
-      document.body.classList.remove(mainStyles.bodyHidden);
+      document.body.classList.remove(styles.bodyHidden);
     } else {
-      document.body.classList.add(mainStyles.bodyHidden);
+      document.body.classList.add(styles.bodyHidden);
     }
   }
 
