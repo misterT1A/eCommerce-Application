@@ -3,6 +3,11 @@ interface IFormValidatorResult {
   errors: string[];
 }
 
+interface ILoginData {
+  email: string;
+  password: string;
+}
+
 interface ILoginResult {
   success: true | false;
   message: string;

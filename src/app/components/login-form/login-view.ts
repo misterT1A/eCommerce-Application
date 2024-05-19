@@ -1,24 +1,25 @@
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
-import { div, h2, p, span } from '@utils/elements';
+import { a, button, div, h2, p, span } from '@utils/elements';
+import isNotNullable from '@utils/is-non-nullable';
 
 import style from './_login-form.scss';
 
 export default class LoginView extends BaseComponent<HTMLFormElement> {
-  public linkContainer: BaseComponent;
+  private linkContainer: BaseComponent;
 
-  constructor(router: Router) {
+  private button: BaseComponent<HTMLButtonElement>;
+
+  constructor(private router: Router) {
     super({ tag: 'form', noValidate: true, className: style['login-form'], action: '#' });
     this.linkContainer = div(
       [style['link-container']],
       span([style.plug], "Don't have an account?"),
-      new BaseComponent<HTMLAnchorElement>({
-        tag: 'a',
-        textContent: 'Register',
-        onclick: () => {
-          router.navigate(Pages.REG);
-        },
+      a([style['form-link']], {
+        href: './registration',
+        text: 'Register',
+        navigate: () => this.router.navigate(Pages.REG),
       })
     );
     this.appendChildren([
@@ -26,7 +27,8 @@ export default class LoginView extends BaseComponent<HTMLFormElement> {
       p([style['form-text']], 'Please, enter your email and password'),
     ]);
     this.renderFormContent();
-    this.append(this.linkContainer);
+    this.button = button([style.button], 'LOGIN', { type: 'submit' });
+    this.appendChildren([this.button, this.linkContainer]);
   }
 
   protected renderFormContent(): void {
@@ -59,8 +61,6 @@ export default class LoginView extends BaseComponent<HTMLFormElement> {
     });
 
     this.append(this.createInputContainer('Password', passwordInput, passwordEye));
-
-    this.append(this.createSubmitButton());
   }
 
   protected createInputContainer(title: string, ...elements: BaseComponent[]): BaseComponent<HTMLLabelElement> {
@@ -78,12 +78,24 @@ export default class LoginView extends BaseComponent<HTMLFormElement> {
     );
   }
 
-  protected createSubmitButton() {
-    return new BaseComponent<HTMLButtonElement>({
-      tag: 'button',
-      className: style.button,
-      type: 'submit',
-      textContent: 'Login',
-    });
+  public disableButton(): void {
+    this.button.getNode().disabled = true;
+  }
+
+  public enableButton(): void {
+    this.button.getNode().disabled = false;
+  }
+
+  public getFormValues(): ILoginData | null {
+    const userEmail = this.getNode().querySelector('input[name="email"]') as HTMLInputElement;
+    const userPass = this.getNode().querySelector('input[name="password"]') as HTMLInputElement;
+
+    if (isNotNullable(userEmail) && isNotNullable(userPass)) {
+      return {
+        email: userEmail.value,
+        password: userPass.value,
+      } as ILoginData;
+    }
+    return null;
   }
 }

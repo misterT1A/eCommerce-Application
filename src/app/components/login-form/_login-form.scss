@@ -1,6 +1,6 @@
 input,
 button {
-  border: 1px solid black;
+  border: 1px solid #000000;
 }
 
 input:focus {
@@ -91,4 +91,24 @@ input:focus {
   display: flex;
   justify-content: center;
   gap: 3%;
+}
+
+.form-link {
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    transition: 0.2s;
+    width: 100%;
+    height: 1px;
+    left: 0;
+    bottom: -2px;
+    transform: scaleX(0);
+    background-color: #000000;
+  }
+  @media (hover: hover) {
+    &:hover::after {
+      transform: scaleX(1);
+    }
+  }
 }
