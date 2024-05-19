@@ -1,3 +1,5 @@
+import type { CustomerDraft } from '@commercetools/platform-sdk';
+
 import Controller from '@components/controller';
 import FormField from '@components/form-ui-elements/formField';
 import type HeaderController from '@components/header/header_controller';
@@ -86,18 +88,20 @@ class RegistrationController extends Controller<RegistrationView> {
     }
   }
 
-  private submitForm() {
+  public submitForm() {
     if (!this.formData) {
       return;
     }
     const customerDraft = prepareCustomerDraft(this.formData);
-    if (!customerDraft) {
-      return;
+    if (customerDraft) {
+      this.sendRequest(customerDraft);
     }
+  }
+
+  private async sendRequest(customerDraft: CustomerDraft) {
     this.getView.disableButton();
     AuthService.signUp(customerDraft).then((response) => {
       if (response.success) {
-        // handle success account creation
         notificationEmitter.showMessage({
           messageType: 'success',
           title: 'Account created!',
