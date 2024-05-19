@@ -10,6 +10,8 @@ import style from './_login-form.scss';
 import LoginView from './login-view';
 
 export default class LoginController extends Controller<LoginView> {
+  private loginData: ILoginData | null = null;
+
   constructor(
     private router: Router,
     private headerController: HeaderController
@@ -67,11 +69,13 @@ export default class LoginController extends Controller<LoginView> {
   }
 
   protected submit(): void {
-    const userEmail = this.getView.getNode().elements[0] as HTMLInputElement;
-    const userPass = this.getView.getNode().elements[1] as HTMLInputElement;
+    this.loginData = this.getView.getFormValues();
+    if (!this.loginData) {
+      return;
+    }
 
-    // AuthService call
-    AuthService.login(userEmail.value, userPass.value).then((res) => {
+    this.getView.disableButton();
+    AuthService.login(this.loginData.email, this.loginData.password).then((res) => {
       if (res.success) {
         notificationEmitter.showMessage({ messageType: 'success', text: 'You successfully Logged in!' });
         this.router.navigate(Pages.MAIN);
@@ -79,9 +83,9 @@ export default class LoginController extends Controller<LoginView> {
       } else {
         notificationEmitter.showMessage({
           messageType: 'error',
-          title: 'Invalid email or password!',
-          text: res.message,
+          text: `Invalid email or password! ${res.message}`,
         });
+        this.getView.enableButton();
       }
     });
   }
