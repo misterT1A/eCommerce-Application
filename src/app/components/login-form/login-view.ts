@@ -1,24 +1,22 @@
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
-import { div, h2, p, span } from '@utils/elements';
+import { a, div, h2, p, span } from '@utils/elements';
 
 import style from './_login-form.scss';
 
 export default class LoginView extends BaseComponent<HTMLFormElement> {
   public linkContainer: BaseComponent;
 
-  constructor(router: Router) {
+  constructor(private router: Router) {
     super({ tag: 'form', noValidate: true, className: style['login-form'], action: '#' });
     this.linkContainer = div(
       [style['link-container']],
       span([style.plug], "Don't have an account?"),
-      new BaseComponent<HTMLAnchorElement>({
-        tag: 'a',
-        textContent: 'Register',
-        onclick: () => {
-          router.navigate(Pages.REG);
-        },
+      a([style['form-link']], {
+        href: './registration',
+        text: 'Register',
+        navigate: () => this.router.navigate(Pages.REG),
       })
     );
     this.appendChildren([
