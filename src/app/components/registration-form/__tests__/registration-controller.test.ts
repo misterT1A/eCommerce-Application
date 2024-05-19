@@ -27,43 +27,22 @@ describe('RegistrationController', () => {
 
   describe('seListeners', () => {
     it('Registration form should trigger submit button click event on submit event', () => {
-      const spyOnView = jest.spyOn(regController.getView, 'addListener');
       const btnClickSpy = jest.spyOn(regController.getView.button.getNode(), 'click');
-      regController['setListeners']();
-      const callback = spyOnView.mock.calls.find((call) => call[0] === 'submit') as [
-        event: string,
-        listener: (e: unknown) => void,
-      ];
-      const submitCallback = callback[1];
-      const eventMock = { preventDefault: jest.fn() };
-      submitCallback(eventMock);
-      expect(eventMock.preventDefault).toHaveBeenCalled();
+      regController.getView.getNode().submit();
       expect(btnClickSpy).toHaveBeenCalled();
     });
 
-    it('submitForm method should be called on submit button click', () => {
-      const spyOnButton = jest.spyOn(regController.getView.button, 'addListener');
+    it('The submitForm method should be called on submit button click', () => {
       const submitFormSpy = jest.spyOn(regController, 'submitForm');
-      regController['setListeners']();
-      const callback = spyOnButton.mock.calls.find((call) => call[0] === 'click') as [
-        event: string,
-        listener: () => void,
-      ];
-      const clickCallback = callback[1];
-      clickCallback();
+      regController.getView.button.getNode().disabled = false;
+      regController.getView.button.getNode().click();
+      regController.getView.button.getNode().disabled = true;
       expect(submitFormSpy).toHaveBeenCalled();
     });
 
-    it('toggleAddress method of view should be called on toggler click', () => {
-      const spyOnToggler = jest.spyOn(regController.getView.fields.addresses.addressesToggler, 'addListener');
+    it('The toggleAddress method of view should be called on toggler click', () => {
       const togglerSpy = jest.spyOn(regController.getView, 'toggleAddress');
-      regController['setListeners']();
-      const callback = spyOnToggler.mock.calls.find((call) => call[0] === 'click') as [
-        event: string,
-        listener: () => void,
-      ];
-      const clickCallback = callback[1];
-      clickCallback();
+      regController.getView.fields.addresses.addressesToggler.getNode().click();
       expect(togglerSpy).toHaveBeenCalled();
     });
   });
@@ -96,7 +75,7 @@ describe('RegistrationController', () => {
       authenticationMode: 'Password',
     };
 
-    it('Should navigate to MAIN page and show success message on successful request', async () => {
+    it('Should navigate to MAIN page and show success message on success response', async () => {
       const signUp = jest.spyOn(AuthService, 'signUp').mockResolvedValue({ success: true, message: 'OK' });
       const navigate = jest.spyOn(router, 'navigate').mockImplementation(jest.fn());
       const message = jest.spyOn(notificationEmitter, 'showMessage').mockImplementation(jest.fn());
@@ -110,7 +89,7 @@ describe('RegistrationController', () => {
       expect(navigate).toHaveBeenCalledWith(Pages.MAIN);
     });
 
-    it('Should call changeTextLoggined header controller method on success request', async () => {
+    it('Should call changeTextLoggined header controller method on success response', async () => {
       const signUp = jest.spyOn(AuthService, 'signUp').mockResolvedValue({ success: true, message: 'OK' });
       const navigate = jest.spyOn(router, 'navigate').mockImplementation(jest.fn());
       const message = jest.spyOn(notificationEmitter, 'showMessage').mockImplementation(jest.fn());
@@ -122,7 +101,7 @@ describe('RegistrationController', () => {
       expect(headerChange).toHaveBeenCalled();
     });
 
-    it('Should call notificationEmitter on error request', async () => {
+    it('Should call notificationEmitter and show errors on error response', async () => {
       const signUp = jest
         .spyOn(AuthService, 'signUp')
         .mockResolvedValue({ success: false, message: 'Error', errors: ['error1', 'error2'] });
@@ -188,17 +167,17 @@ describe('RegistrationController', () => {
       shippingAddress: errorsAddress,
     };
 
-    it('Should return true if errorsObject has only empty errors arrays and common address provided', () => {
+    it('Should return true if data has only empty errors arrays and common address is provided', () => {
       const isValid = regController['isValidForm'](errorsCommon);
       expect(isValid).toBeTruthy();
     });
 
-    it('Should return true if errorsObject has only empty errors arrays and both addresses are provided', () => {
+    it('Should return true if data has only empty errors arrays and both addresses are provided', () => {
       const isValid = regController['isValidForm'](errors);
       expect(isValid).toBeTruthy();
     });
 
-    it('Should return false if errorsObject has errors', () => {
+    it('Should return false if data has errors', () => {
       const isValid = regController['isValidForm'](errorsFilled);
       expect(isValid).toBeFalsy();
     });

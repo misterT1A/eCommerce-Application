@@ -34,12 +34,12 @@ describe('RegistrationView', () => {
     expect(registrationView.button).toBeDefined();
   });
 
-  it('Should disable the button', () => {
+  it('Should disable the button on disableButton method call', () => {
     registrationView.disableButton();
     expect(registrationView.button.getNode().disabled).toBe(true);
   });
 
-  it('Should unlock the button', () => {
+  it('Should unlock the button on unlockButton method call', () => {
     registrationView.unlockButton();
     expect(registrationView.button.getNode().disabled).toBe(false);
   });
@@ -110,13 +110,13 @@ describe('RegistrationView', () => {
     jest.clearAllMocks();
   });
 
-  it('Should initialize with correct elements', () => {
+  it('Should initialize AddressesFieldset with shippingAddress and billingAddress fieldsets', () => {
     expect(addressesFieldset.addressesToggler).toBeDefined();
     expect(addressesFieldset.shippingAddress).toBeInstanceOf(AddressField);
     expect(addressesFieldset.billingAddress).toBeInstanceOf(AddressField);
   });
 
-  it('Should toggle billing and shipping address visibility', () => {
+  it('Should toggle billing and shipping address visibility on toggleAddress call', () => {
     addressesFieldset.setStatus('shipping');
     addressesFieldset.toggleAddress();
     expect(addressesFieldset.getNode().classList.contains(styles.form__addresses_billing)).toBe(true);
@@ -124,14 +124,14 @@ describe('RegistrationView', () => {
     expect(addressesFieldset.getNode().classList.contains(styles.form__addresses_shipping)).toBe(true);
   });
 
-  it('Should set billing and shipping address visibility', () => {
+  it('Should set current address visibility (billing or shipping) on setStatus call', () => {
     addressesFieldset.setStatus('billing');
     expect(addressesFieldset.getNode().classList.contains(styles.form__addresses_billing)).toBe(true);
     addressesFieldset.setStatus('shipping');
     expect(addressesFieldset.getNode().classList.contains(styles.form__addresses_shipping)).toBe(true);
   });
 
-  it('Should get correct values from address fields', () => {
+  it('Should return correct values from address fields on getValue call', () => {
     const mockAddressData = {
       city: 'City',
       street: 'Street',

@@ -37,9 +37,6 @@ class RegistrationController extends Controller<RegistrationView> {
     this.getView.addListener('input', () => this.validateForm());
   }
 
-  // TODO isolate address checks from main registration fields
-  // move validate function to helpers
-
   private isValidForm(errorsObject: IRegistrationErrors | object) {
     const { fields } = this.getView;
     const validate = (errorsObj: IRegistrationErrors | object, fs: Record<string, BaseComponent>) => {

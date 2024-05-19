@@ -87,7 +87,8 @@ describe('RegistrationController', () => {
     it('Should validate form data via RegistrationValidator', () => {
       const spyOnView = jest.spyOn(regController.getView, 'getValues').mockReturnValue(formData);
       const spyOnRegValidator = jest.spyOn(RegistrationValidator, 'processFormData');
-      regController['validateForm']();
+      const event = new CustomEvent('input');
+      regController.getView.getNode().dispatchEvent(event);
       expect(spyOnView).toHaveBeenCalled();
       expect(spyOnRegValidator).toHaveBeenCalledWith(formData);
     });
@@ -95,14 +96,16 @@ describe('RegistrationController', () => {
     it('Should change addresses toggler appearance if one of address set as common', () => {
       const spyOnView = jest.spyOn(regController.getView, 'getValues').mockReturnValue(formDataCommon);
       const spyOnSetCommon = jest.spyOn(regController.getView.fields.addresses, 'setCommon');
-      regController['validateForm']();
+      const event = new CustomEvent('input');
+      regController.getView.getNode().dispatchEvent(event);
       expect(spyOnView).toHaveBeenCalled();
       expect(spyOnSetCommon).toHaveBeenCalled();
     });
 
     it('Should lock button if provided data is invalid', () => {
       const spyOnView = jest.spyOn(regController.getView, 'getValues').mockReturnValue(formDataCommon);
-      regController['validateForm']();
+      const event = new CustomEvent('input');
+      regController.getView.getNode().dispatchEvent(event);
       expect(spyOnView).toHaveBeenCalled();
       const isLocked = regController.getView.button.getNode().disabled;
       expect(isLocked).toBeTruthy();
@@ -111,7 +114,8 @@ describe('RegistrationController', () => {
     it('Should unlock button if provided data is valid', () => {
       const spyOnView = jest.spyOn(regController.getView, 'getValues').mockReturnValue(formData);
       const spyOnRegValidator = jest.spyOn(RegistrationValidator, 'processFormData').mockReturnValue(errorsCommon);
-      regController['validateForm']();
+      const event = new CustomEvent('input');
+      regController.getView.getNode().dispatchEvent(event);
       expect(spyOnView).toHaveBeenCalled();
       expect(spyOnRegValidator).toHaveBeenCalled();
       const isLocked = regController.getView.button.getNode().disabled;
