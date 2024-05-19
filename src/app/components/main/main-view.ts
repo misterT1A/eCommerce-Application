@@ -9,7 +9,7 @@ export default class MainView extends BaseComponent {
   protected router: Router;
 
   constructor(router: Router) {
-    super({ tag: 'main', className: styles.main });
+    super({ tag: 'ul', className: styles.main });
     this.router = router;
 
     this.setContent();
