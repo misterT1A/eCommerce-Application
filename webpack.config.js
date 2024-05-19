@@ -99,7 +99,7 @@ module.exports = ({ mode }) => {
       new HtmlWebpackPlugin({
         template: path.resolve(__dirname, './src/index.html'),
         filename: 'index.html',
-        favicon: path.resolve(__dirname, './src/assets/headerLogo.svg'),
+        favicon: path.resolve(__dirname, './src/favicon.ico'),
       }),
       new EslintPlugin({ extensions: 'ts' }),
       new MiniCssExtractPlugin({
