@@ -15,8 +15,8 @@ function setCommonAddress(address: IAddressData) {
     billingAddresses: [0],
   };
   if (address.defaultAddress) {
-    res = Object.assign(res, { defaultBillingAddress: 0 });
-    res = Object.assign(res, { defaultShippingAddress: 0 });
+    res = { ...res, ...{ defaultBillingAddress: 0 } };
+    res = { ...res, ...{ defaultShippingAddress: 0 } };
   }
   return res;
 }
@@ -43,10 +43,10 @@ export function prepareAddresses(formData: IRegistrationFormData) {
     billingAddresses: [1],
   };
   if (shippingAddress?.defaultAddress) {
-    res = Object.assign(res, { defaultShippingAddress: 0 });
+    res = { ...res, ...{ defaultShippingAddress: 0 } };
   }
   if (billingAddress?.defaultAddress) {
-    res = Object.assign(res, { defaultBillingAddress: 1 });
+    res = { ...res, ...{ defaultBillingAddress: 1 } };
   }
   return res;
 }
@@ -59,7 +59,6 @@ export function prepareCustomerDraft(formData: IRegistrationFormData): CustomerD
     lastName: formData.lastName,
     dateOfBirth: new Date(formData.date).toISOString().split('T')[0],
     ...prepareAddresses(formData),
-    // anonymousId: , --
     authenticationMode: 'Password',
   };
 }
