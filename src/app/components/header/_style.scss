@@ -7,10 +7,6 @@
   background-color: $header_background_color;
 }
 
-.bodyHidden {
-  overflow: hidden;
-}
-
 .burgerBtn {
   display: none;
   align-items: center;
@@ -107,6 +103,11 @@
   &Active {
     fill: $header_menuBtn_color;
   }
+}
+
+.userlogo {
+  position: relative;
+  z-index: 12;
 }
 
 @media screen and (max-width: 1000px) {

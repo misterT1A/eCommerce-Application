@@ -2,16 +2,12 @@ import Controller from '@components/controller';
 import type HeaderController from '@components/header/header_controller';
 import notificationEmitter from '@components/notifications/notifications-controller';
 import AuthService from '@services/auth-service';
+import LoginValidator from '@services/loginValidationService/loginValidator';
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 
 import style from './_login-form.scss';
 import LoginView from './login-view';
-
-export interface IFormValidatorResult {
-  success: boolean;
-  errors: string[];
-}
 
 export default class LoginController extends Controller<LoginView> {
   constructor(
@@ -48,7 +44,7 @@ export default class LoginController extends Controller<LoginView> {
     });
   }
 
-  public validateInput(input: HTMLInputElement): boolean {
+  protected validateInput(input: HTMLInputElement): boolean {
     const errorSpan = input.parentNode?.querySelector(`.${style['error-container']}`) as HTMLElement;
     let result: IFormValidatorResult = {
       success: true,
@@ -57,10 +53,10 @@ export default class LoginController extends Controller<LoginView> {
 
     switch (input.name) {
       case 'email':
-        result = this.validateEmail(input.value);
+        result = LoginValidator.validateEmail(input.value);
         break;
       case 'password':
-        result = this.validatePassword(input.value);
+        result = LoginValidator.validatePassword(input.value);
         break;
       default:
         break;
@@ -70,51 +66,7 @@ export default class LoginController extends Controller<LoginView> {
     return result.success;
   }
 
-  protected validateEmail(email: string): IFormValidatorResult {
-    const result: IFormValidatorResult = {
-      success: true,
-      errors: [],
-    };
-
-    const emailRegex = /^\s*[\w-.]+@([\w-]+\.)+[\w-]{2,4}\s*$/g;
-    if (!emailRegex.test(email)) {
-      result.errors.push('Email address must be properly formatted (e.g., user@example.com)');
-    }
-
-    if (email !== email.trim()) {
-      result.errors.push('Email address must not contain leading or trailing whitespace');
-    }
-
-    result.success = result.errors.length < 1;
-    return result;
-  }
-
-  protected validatePassword(password: string): IFormValidatorResult {
-    const result: IFormValidatorResult = {
-      success: true,
-      errors: [],
-    };
-    if (password.length < 8) {
-      result.errors.push('Password must be at least 8 characters long');
-    }
-    if (password.toLocaleLowerCase() === password) {
-      result.errors.push('Password must contain at least one uppercase letter');
-    }
-    if (password.toUpperCase() === password) {
-      result.errors.push('Password must contain at least one lowercase letter');
-    }
-    if (!/\d/.test(password)) {
-      result.errors.push('Password must contain at least one digit');
-    }
-    if (password !== password.trim()) {
-      result.errors.push('Password must not contain leading or trailing whitespace');
-    }
-
-    result.success = result.errors.length < 1;
-    return result;
-  }
-
-  protected submit() {
+  protected submit(): void {
     const userEmail = this.getView.getNode().elements[0] as HTMLInputElement;
     const userPass = this.getView.getNode().elements[1] as HTMLInputElement;
 
