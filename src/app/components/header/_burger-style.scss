@@ -100,21 +100,21 @@
     position: relative;
     font-size: 25px;
   }
+}
 
-  @media screen and (max-width: 650px) {
-    .menuBlock {
-      top: 70px;
-    }
-
-    .backgroundWrapper.wrapperActive {
-      top: 0;
-    }
+@media screen and (max-width: 650px) {
+  .menuBlock {
+    top: 70px;
   }
 
-  @media not all and (hover: none) {
-    .menuBtn:hover::after {
-      width: 100%;
-      opacity: 1;
-    }
+  .backgroundWrapper.wrapperActive {
+    top: 0;
+  }
+}
+
+@media not all and (hover: none) {
+  .menuBtn:hover::after {
+    width: 100%;
+    opacity: 1;
   }
 }
