@@ -3,7 +3,6 @@ import AuthService from '@services/auth-service';
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
-import type { Props } from '@utils/base-component';
 import { svg } from '@utils/elements';
 
 import menuStyle from './_dropMenu.scss';
