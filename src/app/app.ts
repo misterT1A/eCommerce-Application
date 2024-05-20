@@ -1,7 +1,6 @@
 import FooterController from '@components/footer/footer-controller';
 import HeaderController from '@components/header/header_controller';
 import BaseComponent from '@utils/base-component';
-// import throttle from '@utils/throttle';
 
 import styles from './_app_style.scss';
 import Pages from './router/pages';
@@ -83,7 +82,7 @@ export default class App {
     ];
   }
 
-  private setContent() {
+  private async setContent() {
     this.deleteContent();
     this.controller?.showContent(this.main);
     this.main.removeClass(styles.main_hide);
