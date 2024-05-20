@@ -23,7 +23,7 @@ class MessageView extends BaseComponent<HTMLElement> {
     const messageTitle = h2([styles.notification__title], props.title ?? DefaultNotificationTitle[props.messageType]);
     this.appendChildren([
       div(
-        [styles.notification__heaher],
+        [styles.notification__header],
         svg(`./assets/img/notif-${props.messageType}.svg#icon`, styles.notification__headerIcon),
         messageTitle,
         this.closeButton
