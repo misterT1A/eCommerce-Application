@@ -1,4 +1,3 @@
-import type { Props } from './base-component';
 import BaseComponent from './base-component';
 
 type ChildType = BaseComponent | HTMLElement | SVGSVGElement | null;

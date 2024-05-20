@@ -1,13 +1,6 @@
-export type Props<T extends HTMLElement = HTMLElement> = Partial<T> & {
-  tag?: keyof HTMLElementTagNameMap;
-  data?: DOMStringMap;
-};
-
-type ListenerType = (e: Event) => void;
-
 type ChildType = BaseComponent | HTMLElement | SVGSVGElement | null;
 
-export default class BaseComponent<T extends HTMLElement = HTMLElement> {
+export default class BaseComponent<T extends HTMLElement = HTMLElement> implements IBaseComponent {
   protected node: T;
 
   protected listeners: Record<string, ListenerType[]> = {};
