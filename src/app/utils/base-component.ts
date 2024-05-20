@@ -1,6 +1,6 @@
 type ChildType = BaseComponent | HTMLElement | SVGSVGElement | null;
 
-export default class BaseComponent<T extends HTMLElement = HTMLElement> implements IBaseComponent {
+export default class BaseComponent<T extends HTMLElement = HTMLElement> implements IBaseComponent<T> {
   protected node: T;
 
   protected listeners: Record<string, ListenerType[]> = {};
