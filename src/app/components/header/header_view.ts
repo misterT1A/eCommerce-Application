@@ -66,7 +66,6 @@ export default class HeaderView extends BaseComponent {
 
   private setDropMenu() {
     const isAuthorized = AuthService.isAuthorized();
-    // const wrapper = new BaseComponent({ tag: 'ul', className: menuStyle.wrapper });
     const props: Props[] = [
       { tag: 'li', className: menuStyle.userName, textContent: 'J. DOE' },
       {
@@ -94,7 +93,6 @@ export default class HeaderView extends BaseComponent {
         this.dropMenu.append(element);
       }
     });
-    // this.dropMenu.append(wrapper);
     this.dropMenu.addListener('click', (e: Event) => this.navigate(e));
 
     this.append(this.dropMenu);
