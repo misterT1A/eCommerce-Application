@@ -1,0 +1,155 @@
+.header {
+  position: relative;
+  width: 100%;
+  padding: 0 60px;
+  height: 130px;
+  @include flex(center, space-between, row);
+  background-color: $header_background_color;
+}
+
+.burgerBtn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+
+  background-color: $header_background_color;
+  border-radius: 50%;
+
+  cursor: pointer;
+
+  transition: background 0.3s;
+}
+
+.burgerBtnIcon {
+  position: relative;
+  top: -2px;
+  width: 33px;
+  height: 5px;
+  background-color: $header_menuBtn_color;
+  border-radius: 10px;
+
+  transition: all 0.3s linear;
+
+  &::after {
+    top: 10px;
+  }
+
+  &::before {
+    top: -10px;
+  }
+}
+
+.burgerBtnIcon::after,
+.burgerBtnIcon::before {
+  position: absolute;
+  z-index: 2;
+  width: 33px;
+  height: 5px;
+  content: '';
+  background-color: $header_menuBtn_color;
+  transition: all 0.3s linear;
+  border-radius: 10px;
+}
+
+.burgerBtn.burgerBtn_active {
+  .burgerBtnIcon {
+    height: 0px;
+  }
+
+  .burgerBtnIcon::after {
+    top: 0;
+    transform: rotate(-45deg);
+  }
+
+  .burgerBtnIcon::before {
+    top: 0;
+    transform: rotate(45deg);
+  }
+}
+
+.menuBlock {
+  @include flex(center, space-between, row);
+  gap: 20px;
+}
+
+.logo {
+  width: 345px;
+  height: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.userCheckbox {
+  display: none;
+}
+
+.userlogo,
+.basketLogo {
+  cursor: pointer;
+  transition: all 0.3s;
+
+  &Fill {
+    transition: all 0.4s;
+    width: 30px;
+    height: 30px;
+    fill: $header_background_color;
+  }
+
+  &Active {
+    fill: $header_menuBtn_color;
+  }
+}
+
+.userlogo {
+  position: relative;
+  z-index: 12;
+}
+
+@media screen and (max-width: 1000px) {
+  .burgerBtn {
+    display: flex;
+    position: relative;
+    z-index: 100;
+  }
+
+  .userlogo {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .header {
+    height: 70px;
+    padding: 0 15px;
+  }
+
+  .logo {
+    width: 200px;
+  }
+
+  .menuBlock {
+    gap: 10px;
+  }
+
+  .userlogo,
+  .basketLogo {
+    width: 25px;
+    height: 25px;
+
+    &Fill {
+      transition: all 0.4s;
+      width: 25px;
+      height: 25px;
+      fill: $header_background_color;
+    }
+
+    &Active {
+      fill: $header_menuBtn_color;
+    }
+  }
+}
