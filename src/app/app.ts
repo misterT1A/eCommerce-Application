@@ -45,6 +45,7 @@ export default class App {
         path: Pages.MAIN,
         callBack: async () => {
           const { default: MainController } = await import('@components/main/main-controller');
+          await this.hideMain();
           this.controller = new MainController(this.router);
           this.setContent();
         },
@@ -53,6 +54,7 @@ export default class App {
         path: Pages.LOGIN,
         callBack: async () => {
           const { default: LoginController } = await import('@components/login-form/login-controller');
+          await this.hideMain();
           this.controller = new LoginController(this.router, this.headerController);
           this.setContent();
         },
@@ -63,6 +65,7 @@ export default class App {
           const { default: RegistrationController } = await import(
             '@components/registration-form/registration-controller'
           );
+          await this.hideMain();
           this.controller = new RegistrationController(this.router, this.headerController);
           this.setContent();
         },
@@ -71,6 +74,7 @@ export default class App {
         path: Pages.ERROR,
         callBack: async () => {
           const { default: Controller } = await import('@components/404/404_controller');
+          await this.hideMain();
           this.controller = new Controller(this.router);
           this.setContent();
         },
@@ -81,6 +85,15 @@ export default class App {
   private setContent() {
     this.deleteContent();
     this.controller?.showContent(this.main);
+    this.main.removeClass(styles.main_hide);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  private async hideMain() {
+    this.main.addClass(styles.main_hide);
+    await new Promise((res) => {
+      setTimeout(() => res(true), 300);
+    });
   }
 
   private deleteContent() {

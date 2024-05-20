@@ -112,6 +112,10 @@ module.exports = ({ mode }) => {
             from: 'src/assets',
             to: 'assets/img',
           },
+          {
+            from: 'netlify',
+            to: './',
+          },
         ],
       }),
     ],
