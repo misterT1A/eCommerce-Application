@@ -1,20 +1,21 @@
+import { div } from '@utils/elements';
 import Queue from '@utils/queue';
 
 import MessagesList from './messages-list';
+import styles from './notification-view/_notifications.scss';
 import MessageView from './notification-view/notification-view';
-import NotificationContainer from './notification-view/notifications-container';
 
 class Notifications {
   private pendingNotifications: Queue<MessageView>;
 
   private activeNotifications: MessagesList;
 
-  private messagesContainer: NotificationContainer;
+  private messagesContainer: IBaseComponent;
 
   constructor() {
     this.activeNotifications = new MessagesList(() => this.handlePendingQueue());
     this.pendingNotifications = new Queue();
-    this.messagesContainer = new NotificationContainer();
+    this.messagesContainer = div([styles.notifications__container]);
     document.body.append(this.messagesContainer.getNode());
   }
 

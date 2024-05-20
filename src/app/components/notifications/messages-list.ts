@@ -1,15 +1,11 @@
 import type MessageView from './notification-view/notification-view';
 
 class MessagesList {
-  private list: WeakSet<MessageView> = new Set();
+  private list: Set<MessageView> = new Set();
 
-  constructor(
-    private callback: () => void,
-    private listSize = 0
-  ) {}
+  constructor(private callback: () => void) {}
 
   public add(message: MessageView) {
-    this.listSize += 1;
     this.list.add(message);
     message.setCloseCallback(() => this.remove(message));
   }
@@ -18,13 +14,12 @@ class MessagesList {
     if (this.list.has(message)) {
       message.remove();
       this.list.delete(message);
-      this.listSize -= 1;
       this.callback();
     }
   }
 
   public get size(): number {
-    return this.listSize;
+    return this.list.size;
   }
 }
 

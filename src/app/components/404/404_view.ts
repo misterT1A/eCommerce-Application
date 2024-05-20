@@ -1,5 +1,4 @@
 import type Router from '@src/app/router/router';
-import type { Props } from '@utils/base-component';
 import BaseComponent from '@utils/base-component';
 
 import styles from './_style.scss';
