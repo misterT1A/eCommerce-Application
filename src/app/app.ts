@@ -82,7 +82,7 @@ export default class App {
     ];
   }
 
-  private async setContent() {
+  private setContent() {
     this.deleteContent();
     this.controller?.showContent(this.main);
     this.main.removeClass(styles.main_hide);
