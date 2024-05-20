@@ -1,7 +1,6 @@
 import AuthService from '@services/auth-service';
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
-import type { Props } from '@utils/base-component';
 import BaseComponent from '@utils/base-component';
 import { div } from '@utils/elements';
 
