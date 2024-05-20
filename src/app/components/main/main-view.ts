@@ -34,7 +34,7 @@ export default class MainView extends BaseComponent {
         [styles.main__section],
         div(
           [styles.main__sectionText],
-          h2([styles.main__sectionTitle], 'Enjoy breakfast with brioches'),
+          h2([styles.main__sectionTitle], 'Enjoy breakfast with brioches!'),
           ul([styles.main__sectionLinks], ...props.map((prop) => new BaseComponent<HTMLLIElement>(prop)))
         )
       )
