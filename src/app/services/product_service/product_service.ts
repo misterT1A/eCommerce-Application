@@ -2,7 +2,7 @@ import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk';
 
 import AuthService from '@services/auth-service';
 
-export default class ProductsService {
+class GetProductsService {
   protected root: ByProjectKeyRequestBuilder;
 
   constructor() {
@@ -31,3 +31,6 @@ export default class ProductsService {
     return this.root.products().withKey({ key: name }).get().execute();
   }
 }
+
+const ProductService = new GetProductsService();
+export default ProductService;
