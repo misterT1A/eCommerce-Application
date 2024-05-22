@@ -13,7 +13,7 @@ class RegistrationView extends BaseComponent<HTMLFormElement> {
     firstName: new FormField('First Name', 'text'),
     lastName: new FormField('Last Name', 'text'),
     date: new FormField('Date of Birth', 'date'),
-    email: new FormField('Email', 'email'),
+    email: new FormField('Email', 'text'),
     password: new FormField('Password', 'password'),
     addresses: new AddressesFieldset(),
   } as const;
