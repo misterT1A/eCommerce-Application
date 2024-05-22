@@ -34,9 +34,6 @@ $main-color-error: #d82700;
   border-radius: 5px;
   height: 40px;
   background-color: transparent;
-  background-image: url(../../../assets/arrow.svg);
-  background-repeat: no-repeat;
-  background-position: calc(100% - 10px);
   cursor: pointer;
 }
 
@@ -46,10 +43,11 @@ $main-color-error: #d82700;
   display: flex;
   flex-direction: column;
   width: 100%;
+  max-height: 200px;
   list-style: none;
   background-color: $color-white;
-  top: calc(100% - 10px);
-  overflow: hidden;
+  top: calc(100% - 3px);
+  overflow: auto;
   border-radius: 0 0 5px 5px;
   border: $color-dark-gray 1px solid;
   border-top: none;
@@ -235,4 +233,105 @@ $main-color-error: #d82700;
 
 .form__inputLabel {
   font-weight: 700;
+}
+
+.form__toggler {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.form__inputToggler {
+  display: none;
+}
+
+.form__togglerLabel {
+  font-weight: 700;
+}
+
+.form__inputTogglerContainer {
+  display: flex;
+  cursor: pointer;
+}
+
+.form__inputTogglerBase {
+  display: block;
+  padding: 4px;
+  background-color: $color-dark-gray;
+  width: 35px;
+  height: 22px;
+  border-radius: 20px;
+  transition: 0.2s;
+}
+
+.form__inputTogglerMark {
+  display: block;
+  height: 100%;
+  width: 50%;
+  background-color: #ffffff;
+  border-radius: 50%;
+  transition: 0.2s;
+}
+
+.form__inputToggler:checked ~ .form__inputTogglerBase .form__inputTogglerMark {
+  transform: translateX(100%);
+}
+
+.form__inputToggler:checked ~ .form__inputTogglerBase {
+  background-color: #aa4e41;
+}
+
+.form__selectionTag {
+  background-color: #9c9c9c;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 20px;
+  gap: 3px;
+  border-radius: 20px;
+  padding: 3px 5px;
+}
+
+.form__selectionContainer {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+  overflow-x: hidden;
+  border: 1px solid $color-dark-gray;
+  border-radius: 5px;
+  padding: 0px 10px;
+  cursor: pointer;
+}
+
+.form__selectionOverlay {
+  display: none;
+}
+
+.form__selectionIcon {
+  position: absolute;
+  top: calc(50% - 7px);
+  right: 10px;
+  width: 15px;
+  height: 15px;
+  transition: 0.2s;
+}
+
+.form__selection_show {
+  .form__selectionOverlay {
+    position: fixed;
+    display: block;
+    inset: 0 0 0 0;
+  }
+  .form__selectionIcon {
+    transform: rotate(180deg);
+  }
+}
+
+.form__tagIcon {
+  width: 12px;
+  height: 12px;
+  fill: #ffffff;
 }
