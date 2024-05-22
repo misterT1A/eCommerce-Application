@@ -71,6 +71,15 @@ export default class App {
         },
       },
       {
+        path: Pages.CATALOG,
+        callBack: async () => {
+          const { default: CatalogController } = await import('@components/catalog/catalog-controller');
+          await this.hideMain();
+          this.controller = new CatalogController(this.router);
+          this.setContent();
+        },
+      },
+      {
         path: Pages.ERROR,
         callBack: async () => {
           const { default: Controller } = await import('@components/404/404_controller');
