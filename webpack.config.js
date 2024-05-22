@@ -25,7 +25,7 @@ module.exports = ({ mode }) => {
           loader: 'html-loader',
         },
         {
-          test: /\.(c|sa|sc)ss$/i,
+          test: /\.(sa|sc)ss$/i,
           exclude: /\.module\.(c|sa|sc)ss$/i,
           use: [
             isDevMode ? 'style-loader' : MiniCssExtractPlugin.loader,
@@ -55,6 +55,11 @@ module.exports = ({ mode }) => {
               },
             },
           ],
+        },
+        {
+          test: /\.css$/,
+          use: ['style-loader', 'css-loader'],
+          include: /node_modules/,
         },
         {
           test: /\.ts$/i,
