@@ -34,11 +34,11 @@ export default class BurgerMenu extends BaseComponent {
     const wrapper = div([styles.menuWrapper]);
     const props: Props[] = [
       { tag: 'span', textContent: 'HOME', className: styles.menuBtn },
-      // {
-      //   tag: 'span',
-      //   textContent: 'CATALOG',
-      //   className: styles.menuBtn,
-      // },
+      {
+        tag: 'span',
+        textContent: 'CATALOG',
+        className: styles.menuBtn,
+      },
       // {
       //   tag: 'span',
       //   textContent: 'ABOUT US',
@@ -125,9 +125,9 @@ export default class BurgerMenu extends BaseComponent {
       case 'HOME':
         this.router.navigate(Pages.MAIN);
         break;
-      // case 'CATALOG':
-      //   // this.router.navigate(Pages.);
-      //   break;
+      case 'CATALOG':
+        this.router.navigate(Pages.CATALOG);
+        break;
       // case 'ABOUT US':
       //   // this.router.navigate(Pages.);
       //   break;

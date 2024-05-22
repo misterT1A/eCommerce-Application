@@ -54,7 +54,7 @@ export default class FooterView extends BaseComponent {
 
   private setLinksBlock() {
     const wrapper = div([styles.linksWrapper]);
-    const links = ['Home'];
+    const links = ['Home', 'Catalog'];
     const catCount = 3;
     for (let i = 0; i < catCount; i += 1) {
       const elem = span([styles.link], links[i]);
@@ -112,9 +112,9 @@ export default class FooterView extends BaseComponent {
       case 'Home':
         this.router.navigate(Pages.MAIN);
         break;
-      // case 'Catalog':
-      //   // this.router.navigate(Pages.CATALOG);
-      //   break;
+      case 'Catalog':
+        this.router.navigate(Pages.CATALOG);
+        break;
       // case 'About Us':
       //   // this.router.navigate(Pages.ABOUT);
       // break;
