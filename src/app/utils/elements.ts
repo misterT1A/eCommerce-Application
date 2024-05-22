@@ -51,9 +51,12 @@ export const label = (classList: string[], text: string, ...children: ChildType[
 };
 
 export const span = (classList: string[], text: string, ...children: ChildType[]) => {
-  const spanComponent = new BaseComponent<HTMLSpanElement>({ tag: 'span' }, ...children);
+  const spanComponent = new BaseComponent<HTMLSpanElement>({ tag: 'span' });
   spanComponent.setTextContent(text);
   spanComponent.addClass(...classList);
+  if (children) {
+    spanComponent.appendChildren(children);
+  }
   return spanComponent;
 };
 
