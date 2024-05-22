@@ -27,7 +27,7 @@ export default class Router {
 
     const route = this.routes.find((routeItem) => routeItem.path === url);
     if (!route) {
-      this.navigate(Pages.ERROR);
+      this.navigate(Pages.ERROR, true);
       return;
     }
 

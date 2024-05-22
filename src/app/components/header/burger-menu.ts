@@ -39,11 +39,11 @@ export default class BurgerMenu extends BaseComponent {
         textContent: 'CATALOG',
         className: styles.menuBtn,
       },
-      {
-        tag: 'span',
-        textContent: 'ABOUT US',
-        className: styles.menuBtn,
-      },
+      // {
+      //   tag: 'span',
+      //   textContent: 'ABOUT US',
+      //   className: styles.menuBtn,
+      // },
     ];
     props.forEach((prop) => wrapper.append(new BaseComponent(prop)));
     this.contentWrapper.append(wrapper);
@@ -125,9 +125,9 @@ export default class BurgerMenu extends BaseComponent {
       case 'HOME':
         this.router.navigate(Pages.MAIN);
         break;
-      // case 'CATALOG':
-      //   // this.router.navigate(Pages.);
-      //   break;
+      case 'CATALOG':
+        this.router.navigate(Pages.CATALOG);
+        break;
       // case 'ABOUT US':
       //   // this.router.navigate(Pages.);
       //   break;
