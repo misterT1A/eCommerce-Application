@@ -1,5 +1,10 @@
+import AirDatepicker from 'air-datepicker';
+import localeEn from 'air-datepicker/locale/en';
+
 import BaseComponent from '@utils/base-component';
-import { button, div, input, label, p, span } from '@utils/elements';
+import { button, div, input, label, p } from '@utils/elements';
+import 'air-datepicker/air-datepicker.css';
+import isMobile from '@utils/is-mobile-device';
 
 import styles from './_form-ui-elements.scss';
 
@@ -13,6 +18,8 @@ class FormField extends BaseComponent {
   private errors: BaseComponent<HTMLElement>;
 
   private inputWrapper: BaseComponent<HTMLElement>;
+
+  private datePicker: AirDatepicker | null = null;
 
   /**
    * Creates an instance of FormField.
@@ -31,14 +38,28 @@ class FormField extends BaseComponent {
       this.inputWrapper.appendChildren([togglerPasswordVisibility]);
     }
     if (type === 'date') {
+      this.input.getNode().type = 'text';
+      this.input.getNode().placeholder = 'MM/DD/YYYY';
+      this.input.getNode().setAttribute('inputmode', 'none');
+      this.input.getNode().onkeydown = () => false;
+      this.datePicker = new AirDatepicker(this.input.getNode(), {
+        selectedDates: [new Date()],
+        locale: localeEn,
+        dateFormat: 'MM/dd/yyyy',
+        isMobile: isMobile(),
+        autoClose: true,
+        onSelect: () => {
+          this.input.getNode().dispatchEvent(new Event('input', { bubbles: true }));
+        },
+      });
       this.inputWrapper.addClass(styles.form__inputWrapper_date);
-      const currentDate = `${new Date().toLocaleDateString()}`;
-      const dateLabel = span([styles.form__inputDateLabel], currentDate);
-      this.input.getNode().value = currentDate;
-      this.input.addListener('input', () =>
-        dateLabel.setTextContent(`${new Date(this.getValue()).toLocaleDateString()}`)
-      );
-      this.inputWrapper.append(dateLabel);
+      // const currentDate = `${new Date().toLocaleDateString()}`;
+      // const dateLabel = span([styles.form__inputDateLabel], currentDate);
+      // this.input.getNode().value = currentDate;
+      // this.input.addListener('input', () =>
+      //   dateLabel.setTextContent(`${new Date(this.getValue()).toLocaleDateString()}`)
+      // );
+      // this.inputWrapper.append(dateLabel);
     }
     this.appendChildren([this.inputWrapper, this.errors]);
   }
@@ -68,6 +89,11 @@ class FormField extends BaseComponent {
     } else {
       this.errors.append(p([styles.form__inputError], 'Required'));
     }
+  }
+
+  public destroy(): void {
+    this.datePicker?.destroy();
+    super.destroy();
   }
 }
 

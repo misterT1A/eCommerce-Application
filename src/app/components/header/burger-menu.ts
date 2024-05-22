@@ -34,16 +34,16 @@ export default class BurgerMenu extends BaseComponent {
     const wrapper = div([styles.menuWrapper]);
     const props: Props[] = [
       { tag: 'span', textContent: 'HOME', className: styles.menuBtn },
-      {
-        tag: 'span',
-        textContent: 'CATALOG',
-        className: styles.menuBtn,
-      },
-      {
-        tag: 'span',
-        textContent: 'ABOUT US',
-        className: styles.menuBtn,
-      },
+      // {
+      //   tag: 'span',
+      //   textContent: 'CATALOG',
+      //   className: styles.menuBtn,
+      // },
+      // {
+      //   tag: 'span',
+      //   textContent: 'ABOUT US',
+      //   className: styles.menuBtn,
+      // },
     ];
     props.forEach((prop) => wrapper.append(new BaseComponent(prop)));
     this.contentWrapper.append(wrapper);

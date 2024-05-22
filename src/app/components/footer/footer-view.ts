@@ -54,7 +54,7 @@ export default class FooterView extends BaseComponent {
 
   private setLinksBlock() {
     const wrapper = div([styles.linksWrapper]);
-    const links = ['Home', 'Catalog', 'About Us'];
+    const links = ['Home'];
     const catCount = 3;
     for (let i = 0; i < catCount; i += 1) {
       const elem = span([styles.link], links[i]);
