@@ -57,9 +57,9 @@ export default class Card extends BaseComponent {
     const countNum = p([styles.count_Num], '1');
     const countWrapper = div([styles.count_wrapper], countMinus, countNum, countPlus);
 
-    const buyBtn = button([styles.buy_btn], 'Buy');
+    // const buyBtn = button([styles.buy_btn], 'Buy');
 
-    return div([styles.pay_block], price, countWrapper, buyBtn);
+    return div([styles.pay_block], price, countWrapper);
   }
 
   private handler(e: Event) {
