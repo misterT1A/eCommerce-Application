@@ -53,13 +53,6 @@ class FormField extends BaseComponent {
         },
       });
       this.inputWrapper.addClass(styles.form__inputWrapper_date);
-      // const currentDate = `${new Date().toLocaleDateString()}`;
-      // const dateLabel = span([styles.form__inputDateLabel], currentDate);
-      // this.input.getNode().value = currentDate;
-      // this.input.addListener('input', () =>
-      //   dateLabel.setTextContent(`${new Date(this.getValue()).toLocaleDateString()}`)
-      // );
-      // this.inputWrapper.append(dateLabel);
     }
     this.appendChildren([this.inputWrapper, this.errors]);
   }

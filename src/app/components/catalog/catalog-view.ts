@@ -2,7 +2,7 @@ import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
 
 import styles from './_style.scss';
-import FilterBlock from './filters-block';
+import FilterBlock from './filter-block';
 
 export default class CatalogView extends BaseComponent {
   protected router: Router;
