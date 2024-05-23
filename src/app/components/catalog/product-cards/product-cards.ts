@@ -1,4 +1,4 @@
-import type { ClientResponse, ProductPagedQueryResponse } from '@commercetools/platform-sdk';
+import type { ClientResponse, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
 
 import BaseComponent from '@utils/base-component';
 
@@ -10,16 +10,16 @@ export default class ProductCards extends BaseComponent {
     super({ className: styles.product_wrapper });
   }
 
-  public setContent(data: ClientResponse<ProductPagedQueryResponse>) {
+  public setContent(data: ClientResponse<ProductProjectionPagedQueryResponse>) {
     const products = data.body.results;
 
     products.forEach((product) => {
-      const price = product.masterData.current.masterVariant.prices?.[0];
+      const price = product.masterVariant.prices?.[0];
 
       const props: ICardProps = {
-        img: product.masterData.current.masterVariant.images as IImgCard[],
-        title: product.masterData.current.name.en,
-        description: product.masterData.current.description?.en as string,
+        img: product.masterVariant.images as IImgCard[],
+        title: product.name.en,
+        description: product.description?.en as string,
         price: price ? price.value.centAmount : 0,
       };
 

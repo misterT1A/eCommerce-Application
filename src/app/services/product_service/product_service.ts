@@ -11,7 +11,7 @@ class GetProductsService {
 
   public getAllProduct() {
     return this.root
-      .products()
+      .productProjections()
       .get({ queryArgs: { limit: 100 } })
       .execute();
   }
