@@ -16,7 +16,7 @@ class GetProductsService {
       .execute();
   }
 
-  public getProduct() {
+  public getCategoty() {
     // return this.root
     //   .productProjections()
     //   .search()

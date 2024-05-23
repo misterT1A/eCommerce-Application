@@ -2,7 +2,7 @@ import type { ClientResponse, ProductPagedQueryResponse } from '@commercetools/p
 
 import BaseComponent from '@utils/base-component';
 
-import styles from './_style.scss';
+import styles from './_product-style.scss';
 import Card from '../card-element/card-element-view';
 
 export default class ProductCards extends BaseComponent {
@@ -11,7 +11,6 @@ export default class ProductCards extends BaseComponent {
   }
 
   public setContent(data: ClientResponse<ProductPagedQueryResponse>) {
-    console.log(data);
     const products = data.body.results;
 
     products.forEach((product) => {

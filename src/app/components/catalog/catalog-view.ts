@@ -1,7 +1,7 @@
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
 
-import styles from './_style.scss';
+import styles from './_catalog_style.scss';
 import ProductCards from './product-cards/product-cards';
 
 export default class CatalogView extends BaseComponent {
