@@ -1,4 +1,4 @@
-import type { ClientResponse, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
+import type { ProductProjection } from '@commercetools/platform-sdk';
 
 import BaseComponent from '@utils/base-component';
 
@@ -10,8 +10,11 @@ export default class ProductCards extends BaseComponent {
     super({ className: styles.product_wrapper });
   }
 
-  public setContent(data: ClientResponse<ProductProjectionPagedQueryResponse>) {
-    const products = data.body.results;
+  public setProducts(products: ProductProjection[]) {
+    this.destroyChildren();
+    if (!products) {
+      return;
+    }
 
     products.forEach((product) => {
       const price = product.masterVariant.prices?.[0];
