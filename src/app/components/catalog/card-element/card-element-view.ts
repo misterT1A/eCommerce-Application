@@ -1,3 +1,5 @@
+import type { Price } from '@commercetools/platform-sdk';
+
 import BaseComponent from '@utils/base-component';
 import { button, div, h2, p } from '@utils/elements';
 import setLoader from '@utils/loader/loader-view';
@@ -50,7 +52,16 @@ export default class Card extends BaseComponent {
   }
 
   private createPayBlock(props: ICardProps): BaseComponent {
-    const price = p([styles.price], setPrice(props.price));
+    const priceObj = props.price as Price;
+
+    const price = new BaseComponent({ textContent: setPrice(priceObj.value.centAmount) });
+
+    if (priceObj.discounted) {
+      price.addClass(styles.price_throgh);
+      price.append(p([styles.price_discount], setPrice(priceObj.discounted.value.centAmount)));
+    } else {
+      price.addClass(styles.price);
+    }
 
     const countMinus = p([styles.count_minus], '-');
     const countPlus = p([styles.count_plus], '+');
@@ -71,12 +82,12 @@ export default class Card extends BaseComponent {
       case '-':
         changeCount((e.target as HTMLElement).parentElement, false);
         break;
-      case 'READ MORE':
-        // this.router.navigate(Pages.);
-        break;
-      case 'Buy':
-        // this.router.navigate(Pages.);
-        break;
+      // case 'READ MORE':
+      //   // this.router.navigate(Pages.);
+      //   break;
+      // case 'Buy':
+      // this.router.navigate(Pages.);
+      // break;
       default:
         break;
     }

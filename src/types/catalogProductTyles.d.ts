@@ -2,7 +2,7 @@ interface ICardProps {
   img: IImgCard[];
   title: string;
   description: string;
-  price?: number;
+  price: Price | undefined;
 }
 
 interface IImgCard {
