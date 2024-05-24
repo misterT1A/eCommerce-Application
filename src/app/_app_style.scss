@@ -12,7 +12,7 @@
   min-height: 70vh;
   padding: 60px;
   transition: 0.3s;
-  @include flex(center, center, column);
+  @include flex(center, flex-start, column);
 
   @media (width <=500px) {
     padding: 20px;

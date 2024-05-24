@@ -1,6 +1,7 @@
 import type { ProductProjection } from '@commercetools/platform-sdk';
 
 import BaseComponent from '@utils/base-component';
+import { h2 } from '@utils/elements';
 
 import styles from './_product-style.scss';
 import Card from '../card-element/card-element-view';
@@ -11,23 +12,48 @@ export default class ProductCards extends BaseComponent {
   }
 
   public setProducts(products: ProductProjection[]) {
-    this.destroyChildren();
     if (!products) {
       return;
     }
 
-    products.forEach((product) => {
-      const price = product.masterVariant.prices?.[0];
+    this.hideBlock().then(() => {
+      this.showBlock();
 
-      const props: ICardProps = {
-        img: product.masterVariant.images as IImgCard[],
-        title: product.name.en,
-        description: product.description?.en as string,
-        price: price ? price.value.centAmount : 0,
-      };
+      if (products.length === 0) {
+        this.showNotFoundTitle();
+        return;
+      }
 
-      const card = new Card(props);
-      this.append(card);
+      products.forEach((product) => {
+        const price = product.masterVariant.prices?.[0];
+
+        const props: ICardProps = {
+          img: product.masterVariant.images as IImgCard[],
+          title: product.name.en,
+          description: product.description?.en as string,
+          price,
+        };
+
+        const card = new Card(props);
+        this.append(card);
+      });
     });
+  }
+
+  private showNotFoundTitle() {
+    const title = h2([styles.title_noFound], 'No products were found according to applied filters');
+    this.append(title);
+  }
+
+  private async hideBlock() {
+    this.addClass(styles.hide);
+    await new Promise((res) => {
+      setTimeout(() => res(true), 200);
+    });
+  }
+
+  private showBlock() {
+    this.removeClass(styles.hide);
+    this.destroyChildren();
   }
 }

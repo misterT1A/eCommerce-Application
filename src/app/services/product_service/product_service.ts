@@ -17,18 +17,29 @@ class GetProductsService {
   }
 
   public getCategoty() {
-    // return this.root
-    //   .productProjections()
-    //   .search()
-    //   // .get({ queryArgs: { filter: `categories.id:subtree("not-sweets")` } })
-    //   .get({queryArgs: {}})
-    //   .execute();
-
     return this.root.categories().withKey({ key: 'baguettes' }).get().execute();
   }
 
   public getProductByName(name: string) {
     return this.root.products().withKey({ key: name }).get().execute();
+  }
+
+  public getFilteredProducts(attr?: string[]) {
+    const arr = [];
+    if (attr) {
+      arr.push(...attr);
+    }
+    return this.root
+      .productProjections()
+      .search()
+      .get({
+        queryArgs: {
+          priceCurrency: 'EUR',
+          filter: arr,
+          limit: 100,
+        },
+      })
+      .execute();
   }
 }
 
