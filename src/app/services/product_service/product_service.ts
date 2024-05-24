@@ -30,6 +30,31 @@ class GetProductsService {
   public getProductByName(name: string) {
     return this.root.products().withKey({ key: name }).get().execute();
   }
+
+  public getDiscountedProducts() {
+    return this.root
+      .productProjections()
+      .search()
+      .get({
+        queryArgs: {
+          priceCurrency: 'EUR',
+          filter: 'variants.scopedPriceDiscounted:true',
+        },
+      })
+      .execute();
+  }
+
+  public getProductsByAttribute(attr: string) {
+    return this.root
+      .productProjections()
+      .search()
+      .get({
+        queryArgs: {
+          filter: `variants.attributes.${attr}:true`,
+        },
+      })
+      .execute();
+  }
 }
 
 const ProductService = new GetProductsService();
