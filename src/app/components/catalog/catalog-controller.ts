@@ -20,7 +20,6 @@ export default class CatalogController extends Controller<CatalogView> {
   // the ResProducts type can be supplemented with your own responsive option
   private changeProducts(res: ResProducts) {
     const products: ProductProjection[] = res.body.results;
-    console.log(res.body.results);
     // pass only the array of products
     this.view.getProductCardView.setProducts(products);
   }

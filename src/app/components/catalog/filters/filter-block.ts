@@ -6,8 +6,15 @@ import styles from './_filters.scss';
 import type ProductCards from '../product-cards/product-cards';
 
 enum Attributes {
-  VEGAN = 'Vegan',
-  KIDS = 'ForKids',
+  VEGAN = 'variants.attributes.Vegan:true',
+  KIDS = 'variants.attributes.ForKids:true',
+  SALE = 'variants.scopedPriceDiscounted:true',
+}
+
+interface IAttributes {
+  sale?: string;
+  vegan?: string;
+  kids?: string;
 }
 
 export default class FilterBlock extends BaseComponent {
@@ -16,6 +23,8 @@ export default class FilterBlock extends BaseComponent {
   private veganFilter: Toggler;
 
   private forKidsFilter: Toggler;
+
+  private attributes: IAttributes = {};
 
   constructor(private productCardsBlock: ProductCards) {
     super({ tag: 'div', className: styles.filterBlock });
@@ -26,23 +35,23 @@ export default class FilterBlock extends BaseComponent {
     this.initListeners();
   }
 
-  public initListeners() {
+  private initListeners() {
     this.salesFilter.addListener('change', () => {
-      if (this.salesFilter.getValue()) {
-        ProductService.getDiscountedProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
-      }
+      this.handleFilterChange('sale', this.salesFilter, Attributes.SALE);
     });
+
     this.veganFilter.addListener('change', () => {
-      if (this.veganFilter.getValue()) {
-        ProductService.getProductsByAttribute(Attributes.VEGAN).then((data) =>
-          this.productCardsBlock.setProducts(data.body.results)
-        );
-      }
+      this.handleFilterChange('vegan', this.veganFilter, Attributes.VEGAN);
     });
     this.forKidsFilter.addListener('change', () => {
-      ProductService.getProductsByAttribute(Attributes.KIDS).then((data) =>
-        this.productCardsBlock.setProducts(data.body.results)
-      );
+      this.handleFilterChange('kids', this.forKidsFilter, Attributes.KIDS);
     });
+  }
+
+  private handleFilterChange(attributeKey: keyof IAttributes, filter: Toggler, attributeValue: Attributes) {
+    this.attributes[attributeKey] = filter.getValue() ? attributeValue : '';
+    ProductService.getFilteredProducts(Object.values(this.attributes)).then((data) =>
+      this.productCardsBlock.setProducts(data.body.results)
+    );
   }
 }

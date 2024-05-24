@@ -31,26 +31,19 @@ class GetProductsService {
     return this.root.products().withKey({ key: name }).get().execute();
   }
 
-  public getDiscountedProducts() {
+  public getFilteredProducts(attr?: string[]) {
+    const arr = [];
+    if (attr) {
+      arr.push(...attr);
+    }
     return this.root
       .productProjections()
       .search()
       .get({
         queryArgs: {
           priceCurrency: 'EUR',
-          filter: 'variants.scopedPriceDiscounted:true',
-        },
-      })
-      .execute();
-  }
-
-  public getProductsByAttribute(attr: string) {
-    return this.root
-      .productProjections()
-      .search()
-      .get({
-        queryArgs: {
-          filter: `variants.attributes.${attr}:true`,
+          filter: arr,
+          limit: 100,
         },
       })
       .execute();
