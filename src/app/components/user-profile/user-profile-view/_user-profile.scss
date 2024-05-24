@@ -8,28 +8,221 @@ $main-color-error: #d82700;
 
 .profile {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: minmax(200px, 350px) 1fr;
   grid-column-gap: 0px;
   grid-row-gap: 0px;
   padding: 20px;
+  gap: 15px;
   background-color: $color-light;
   border-radius: 20px;
+  max-width: 1024px;
 }
 
 .profile__title {
   grid-area: 1 / 1 / 2 / 3;
   font-size: 33px;
   color: $main-color-accent;
+  text-align: center;
 }
 .profile__userInfo {
   grid-area: 2 / 1 / 3 / 2;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
   padding: 20px;
   border-radius: 20px;
   background-color: #ffffff;
+  min-width: 250px;
+  .profile__button {
+    margin-top: auto;
+  }
 }
 .profile__userAddresses {
   grid-area: 2 / 2 / 3 / 3;
   padding: 20px;
   border-radius: 20px;
   background-color: #ffffff;
+}
+
+.profile__userInfoHeader {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #aa4e41;
+  text-transform: capitalize;
+}
+
+@media (width <= 970px) {
+  .profile__userInfo {
+    grid-area: 2 / 1 / 3 / 3;
+  }
+  .profile__userAddresses {
+    grid-area: 3 / 1 / 4 / 3;
+  }
+  .profile__button {
+    max-width: 200px;
+  }
+}
+
+.profile__userInfoCircle {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #aa4e41;
+  border-radius: 50%;
+  border: 1px solid #aa4e41;
+  font-size: 20px;
+}
+
+.profile__userInfoName {
+  font-size: 20px;
+}
+
+.profile__userInfoDataLabel {
+  font-weight: 700;
+}
+
+.profile__userInfoDataWrapper,
+.profile__userInfoIdWrapper {
+  display: flex;
+  font-size: 14px;
+  gap: 5px;
+}
+
+.profile__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: 1px solid #aa4e41;
+  border-radius: 20px;
+  padding: 7px;
+  color: #aa4e41;
+  transition: 0.2s;
+}
+
+@media (hover: hover) {
+  .profile__button:hover {
+    color: #ffffff;
+    background-color: #aa4e41;
+  }
+}
+
+.profile__userAddresses {
+  display: grid;
+  grid-template-columns: minmax(200px, 300px) minmax(250px, 350px);
+  gap: 15px;
+}
+
+.profile__addressesTitle {
+  grid-area: 1 / 1 / 2 / 3;
+  height: 22px;
+  border-bottom: 1px solid #aa4e41;
+  color: #aa4e41;
+}
+
+.profile__addressesList {
+  grid-area: 2 / 1 / 3 / 2;
+  display: flex;
+  flex-direction: column;
+  background-color: #faf9f9;
+  padding: 15px;
+  border-radius: 10px;
+  gap: 5px;
+}
+
+.profile__addressContainer {
+  grid-area: 2 / 2 / 4 / 3;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.profile__addressesControls {
+  grid-area: 3 / 1 / 4 / 2;
+  display: flex;
+  flex-direction: column;
+  align-self: end;
+  gap: 5px;
+}
+
+.profile__addressToggler {
+  color: #707070;
+  font-weight: 700;
+  background-color: transparent;
+  text-align: left;
+  cursor: pointer;
+  &_active {
+    color: #aa4e41;
+  }
+}
+
+@media (width <= 768px) {
+  .profile__userAddresses {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .profile__addressesList {
+    grid-area: 2 / 1 / 3 / 3;
+  }
+
+  .profile__addressContainer {
+    grid-area: 3 / 1 / 4 / 3;
+  }
+
+  .profile__addressesControls {
+    grid-area: 4 / 1 / 5 / 3;
+  }
+}
+
+.profile__addressToggler_active {
+  color: #aa4e41;
+}
+
+.profile__addressesListItem {
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile__addressesListItemText {
+  font-size: 14px;
+  &_small {
+    font-size: 12px;
+  }
+}
+
+.profile__addressesListItem_active {
+  color: #aa4e41;
+  border: 1px solid #aa4e41;
+  border-radius: 10px;
+}
+
+.profile__addressTag {
+  font-size: 10px;
+  color: #ffffff;
+  background-color: #aa4e41;
+  padding: 3px 5px;
+  border-radius: 20px;
+}
+
+.profile__addressesField {
+  font-size: 14px;
+}
+
+.profile__addressTagsWrapper {
+  display: flex;
+  gap: 5px;
+}
+
+.profile__addressButtonsWrapper {
+  display: flex;
+  gap: 5px;
+  margin-top: auto;
+  .profile__button {
+    flex-grow: 1;
+  }
 }
