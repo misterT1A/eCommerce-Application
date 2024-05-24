@@ -2,6 +2,7 @@ import Controller from '@components/controller';
 import type HeaderController from '@components/header/header_controller';
 import notificationEmitter from '@components/notifications/notifications-controller';
 import AuthService from '@services/auth-service';
+import MyCustomer from '@services/customer-service/myCustomer';
 import LoginValidator from '@services/loginValidationService/loginValidator';
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
@@ -75,11 +76,12 @@ export default class LoginController extends Controller<LoginView> {
     }
 
     this.getView.disableButton();
-    AuthService.login(this.loginData.email, this.loginData.password).then((res) => {
+    AuthService.login(this.loginData.email, this.loginData.password).then(async (res) => {
       if (res.success) {
         notificationEmitter.showMessage({ messageType: 'success', text: 'You successfully Logged in!' });
+        MyCustomer.setCustomer(res.customer);
         this.router.navigate(Pages.MAIN);
-        this.headerController.changeTextLoggined();
+        this.headerController.changeTextLoggined(MyCustomer.firstName);
       } else {
         notificationEmitter.showMessage({
           messageType: 'error',

@@ -1,4 +1,5 @@
 import AuthService from '@services/auth-service';
+// import { updateMyCustomerInfo } from '@services/customer-services/my-customer-service';
 
 import Pages from './pages';
 
@@ -9,10 +10,6 @@ export default class Router {
     this.routes = routes;
 
     window.addEventListener('popstate', this.changeBrowser.bind(this));
-    document.addEventListener('DOMContentLoaded', () => {
-      AuthService.sessionStateHandler();
-      this.navigateToLastPoint();
-    });
   }
 
   public navigate(url: string, popstate = false) {

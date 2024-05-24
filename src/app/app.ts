@@ -1,5 +1,8 @@
 import FooterController from '@components/footer/footer-controller';
 import HeaderController from '@components/header/header_controller';
+import AuthService from '@services/auth-service';
+import { updateMyCustomerInfo } from '@services/customer-service/my-customer-service';
+import MyCustomer from '@services/customer-service/myCustomer';
 import BaseComponent from '@utils/base-component';
 
 import styles from './_app_style.scss';
@@ -28,6 +31,12 @@ export default class App {
     this.footerController = new FooterController(this.router);
 
     this.controller = null;
+    document.addEventListener('DOMContentLoaded', async () => {
+      await AuthService.sessionStateHandler();
+      await updateMyCustomerInfo();
+      this.headerController.updateTextLoggined(MyCustomer.firstName);
+      this.router.navigateToLastPoint();
+    });
   }
 
   public showContent(parent: HTMLElement) {

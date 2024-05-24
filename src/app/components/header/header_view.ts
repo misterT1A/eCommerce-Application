@@ -66,7 +66,7 @@ export default class HeaderView extends BaseComponent {
   private setDropMenu() {
     const isAuthorized = AuthService.isAuthorized();
     const props: Props[] = [
-      { tag: 'li', className: menuStyle.userName, textContent: 'J. DOE' },
+      { tag: 'li', className: menuStyle.userName, textContent: 'ACCOUNT' },
       {
         tag: 'li',
         className: menuStyle.links,
@@ -93,7 +93,7 @@ export default class HeaderView extends BaseComponent {
       }
     });
     this.dropMenu.addListener('click', (e: Event) => this.navigate(e));
-
+    // this.dropMenu.getChildren[0].setTextContent('Account');
     this.append(this.dropMenu);
   }
 
@@ -110,12 +110,13 @@ export default class HeaderView extends BaseComponent {
     this.burgerMenu.toggleMenu();
   }
 
-  public changeTextLoggined() {
+  public changeTextLoggined(name = 'J. Doe') {
     // const logInTitle = this.dropMenu.getChildren[1];
     // const signTitle = this.dropMenu.getChildren[2];
     // logInTitle.setTextContent('Log out');
     // signTitle.setTextContent('My Account');
     this.changeTextNotLoginned();
+    this.dropMenu.getChildren[0].setTextContent(name);
     const logOutTitle = new BaseComponent({ tag: 'li', className: menuStyle.links, textContent: 'Log Out' });
     this.dropMenu.append(logOutTitle);
 
@@ -127,7 +128,9 @@ export default class HeaderView extends BaseComponent {
     // const signTitle = this.dropMenu.getChildren[2];
     // signTitle.setTextContent('Sign Up');
     // logInTitle.setTextContent('Log In');
+    this.dropMenu.getChildren[0].setTextContent('ACCOUNT');
     const logOutTitle = this.dropMenu.getChildren[3];
+    console.log(logOutTitle);
     logOutTitle?.destroy();
     this.dropMenu.getChildren.splice(3, 1);
 
