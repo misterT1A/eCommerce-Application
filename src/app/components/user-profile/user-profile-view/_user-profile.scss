@@ -1,0 +1,35 @@
+$main-color-accent: #aa4e41;
+$color-light: #faf4f4;
+$color-white: #ffffff;
+$color-dark-gray: #707070;
+$color-gray: #d8d8d8;
+$color-light-gray: #efefef;
+$main-color-error: #d82700;
+
+.profile {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  padding: 20px;
+  background-color: $color-light;
+  border-radius: 20px;
+}
+
+.profile__title {
+  grid-area: 1 / 1 / 2 / 3;
+  font-size: 33px;
+  color: $main-color-accent;
+}
+.profile__userInfo {
+  grid-area: 2 / 1 / 3 / 2;
+  padding: 20px;
+  border-radius: 20px;
+  background-color: #ffffff;
+}
+.profile__userAddresses {
+  grid-area: 2 / 2 / 3 / 3;
+  padding: 20px;
+  border-radius: 20px;
+  background-color: #ffffff;
+}
