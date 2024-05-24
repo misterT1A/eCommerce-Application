@@ -33,7 +33,7 @@ class MyCustomer {
     if (!this.firstName || !this.lastName) {
       return '';
     }
-    return `${this.firstName[0].toUpperCase()}. ${this.lastName[0].toUpperCase()}`;
+    return `${this.firstName[0].toUpperCase()}. ${this.lastName.toUpperCase()}`;
   }
 }
 

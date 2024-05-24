@@ -121,7 +121,7 @@ class AuthenticationService {
     return JSON.parse(token).refreshToken;
   }
 
-  public sessionStateHandler(): void {
+  public async sessionStateHandler(): Promise<void> {
     if (this.getRefreshTokenFromStorage(Session.AUTH)) {
       this.root = this.createRoot(this.getRefreshClient(Session.AUTH));
       console.log('customer session is restored');
@@ -130,7 +130,7 @@ class AuthenticationService {
       console.log('anon session is restored');
     } else {
       this.root = this.createRoot(this.getAnonymousClient());
-      this.root.get().execute();
+      await this.root.get().execute();
       console.log('new anon session started');
     }
   }
@@ -147,11 +147,13 @@ class AuthenticationService {
           },
         })
         .execute()
-        .then(() => {
+        .then((result) => {
           this.root = root;
+          console.log(result.body.customer);
           resolve({
             success: true,
             message: 'OK',
+            customer: result.body.customer,
           });
           localStorage.removeItem(`${Session.ANON}-${this.PROJECT_KEY}`);
           localStorage.setItem('loggedIn', 'true');
@@ -166,9 +168,9 @@ class AuthenticationService {
     });
   }
 
-  public async signUp(customerDraft: CustomerDraft) {
+  public async signUp(customerDraft: CustomerDraft): Promise<ILoginResult> {
     if (this.isAuthorized()) {
-      this.logout();
+      await this.logout();
     }
     try {
       const customerResponse = await this.root
@@ -186,11 +188,11 @@ class AuthenticationService {
     }
   }
 
-  public logout(): void {
+  public async logout(): Promise<void> {
     localStorage.clear();
     // localStorage.removeItem(`${Session.AUTH}-${this.PROJECT_KEY}`);
     // localStorage.removeItem('loggedIn');
-    this.sessionStateHandler();
+    await this.sessionStateHandler();
     console.log('logout');
   }
 
