@@ -21,7 +21,7 @@ class GetProductsService {
   }
 
   public getProductByName(name: string) {
-    return this.root.products().withKey({ key: name }).get().execute();
+    return this.root.productProjections().withKey({ key: name }).get().execute();
   }
 
   public getFilteredProducts(attr?: string[]) {

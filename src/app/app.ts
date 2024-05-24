@@ -80,6 +80,15 @@ export default class App {
         },
       },
       {
+        path: Pages.PRODUCT,
+        callBack: async () => {
+          const { default: ProductController } = await import('@components/product-page/product-controller');
+          await this.hideMain();
+          this.controller = new ProductController(this.router);
+          this.setContent();
+        },
+      },
+      {
         path: Pages.ERROR,
         callBack: async () => {
           const { default: Controller } = await import('@components/404/404_controller');
