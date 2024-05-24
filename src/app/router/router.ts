@@ -1,5 +1,4 @@
 import AuthService from '@services/auth-service';
-// import { updateMyCustomerInfo } from '@services/customer-services/my-customer-service';
 
 import Pages from './pages';
 
@@ -19,6 +18,11 @@ export default class Router {
 
     if (AuthService.isAuthorized() && [Pages.LOGIN].includes(url)) {
       this.navigate(Pages.MAIN);
+      return;
+    }
+
+    if (!AuthService.isAuthorized() && [Pages.ACCOUNT].includes(url)) {
+      this.navigate(Pages.LOGIN);
       return;
     }
 

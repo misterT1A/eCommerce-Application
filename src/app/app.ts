@@ -34,7 +34,7 @@ export default class App {
     document.addEventListener('DOMContentLoaded', async () => {
       await AuthService.sessionStateHandler();
       await updateMyCustomerInfo();
-      this.headerController.updateTextLoggined(MyCustomer.firstName);
+      this.headerController.updateTextLoggined(MyCustomer.fullNameShort);
       this.router.navigateToLastPoint();
     });
   }
@@ -92,6 +92,15 @@ export default class App {
         path: Pages.ERROR,
         callBack: async () => {
           const { default: Controller } = await import('@components/404/404_controller');
+          await this.hideMain();
+          this.controller = new Controller(this.router);
+          this.setContent();
+        },
+      },
+      {
+        path: Pages.ACCOUNT,
+        callBack: async () => {
+          const { default: Controller } = await import('@components/user-profile/user-profile-controller');
           await this.hideMain();
           this.controller = new Controller(this.router);
           this.setContent();

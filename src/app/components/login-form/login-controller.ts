@@ -81,7 +81,7 @@ export default class LoginController extends Controller<LoginView> {
         notificationEmitter.showMessage({ messageType: 'success', text: 'You successfully Logged in!' });
         MyCustomer.setCustomer(res.customer);
         this.router.navigate(Pages.MAIN);
-        this.headerController.changeTextLoggined(MyCustomer.firstName);
+        this.headerController.changeTextLoggined(MyCustomer.fullNameShort);
       } else {
         notificationEmitter.showMessage({
           messageType: 'error',

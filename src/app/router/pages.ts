@@ -4,6 +4,7 @@ const Pages = {
   REG: 'registration',
   CATALOG: 'catalog',
   ERROR: 'error',
+  ACCOUNT: 'account',
 };
 
 export default Pages;

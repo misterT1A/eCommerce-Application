@@ -107,7 +107,7 @@ class RegistrationController extends Controller<RegistrationView> {
         });
         MyCustomer.setCustomer(response.customer);
         this.router.navigate(Pages.MAIN);
-        this.headerController.changeTextLoggined(MyCustomer.firstName);
+        this.headerController.changeTextLoggined(MyCustomer.fullNameShort);
       } else {
         const errors = response.errors ? response.errors : [response.message];
         errors.forEach((text) => notificationEmitter.showMessage({ messageType: 'error', text }));
