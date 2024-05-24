@@ -1,0 +1,149 @@
+.wrapper {
+  @include flex(center, space-between, column);
+  padding: 10px;
+  border-radius: 15px;
+  background-color: $header_background_color;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  gap: 15px;
+
+  transition: box-shadow 0.2s linear;
+
+  &:hover {
+    box-shadow: 0px 30px 42px 0px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.img_wrapper {
+  @include flex(center, center, column);
+  max-width: 290px;
+  width: 100%;
+  height: 290px;
+  overflow: hidden;
+  border-radius: 15px;
+  background-color: rgb(170, 125, 125);
+}
+
+.img_Height {
+  width: auto;
+  max-height: 290px;
+}
+
+.img_Width {
+  max-width: 290px;
+  height: auto;
+}
+
+.title {
+  width: 100%;
+  text-align: left;
+  font-weight: 700;
+  font-size: 20px;
+  color: $card_title_color;
+}
+
+.description {
+  width: 100%;
+  font-size: 15px;
+  color: rgb(87, 47, 47);
+  text-align: left;
+}
+
+.read_more_btn,
+.buy_btn {
+  padding: 5px 0;
+  color: $card_read_more_btn_color;
+  font-size: 16px;
+  border: 1px solid $card_read_more_btn_color;
+  border-radius: 20px;
+  background-color: transparent;
+  transition: all 0.3s linear;
+
+  &:active {
+    background-color: $card_read_more_btn_color;
+    color: #fff;
+  }
+}
+
+.read_more_btn {
+  width: 95%;
+}
+
+.buy_btn {
+  max-width: 90px;
+  width: 100%;
+}
+
+.pay_block {
+  @include flex(center, space-between, row);
+  width: 100%;
+  gap: 10px;
+}
+
+.price {
+  font-size: 20px;
+  color: $card_read_more_btn_color;
+  white-space: nowrap;
+}
+
+.count_wrapper {
+  max-width: 80px;
+  width: 100%;
+  height: 35px;
+  @include flex(center, space-between, row);
+
+  border: 1px solid $card_read_more_btn_color;
+  border-radius: 5px;
+  background-color: #fff;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.count_minus,
+.count_plus,
+.count_Num {
+  @include flex(center, center, row);
+  height: 100%;
+  font-size: 14px;
+  color: $card_read_more_btn_color;
+  width: 25px;
+}
+
+.count_minus,
+.count_plus {
+  transition:
+    all,
+    0.2s linear;
+  cursor: pointer;
+
+  &:active {
+    color: #fff;
+    background-color: $card_read_more_btn_color;
+  }
+}
+
+@media not all and (hover: none) {
+  .wrapper {
+    &:hover {
+      box-shadow: 0px 30px 42px 0px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  .read_more_btn,
+  .buy_btn {
+    &:hover {
+      background-color: $card_read_more_btn_color;
+      color: #fff;
+    }
+  }
+
+  .count_minus,
+  .count_plus {
+    &:hover {
+      color: #fff;
+      background-color: $card_read_more_btn_color;
+    }
+  }
+}
