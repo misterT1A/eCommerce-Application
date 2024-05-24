@@ -17,13 +17,6 @@ class GetProductsService {
   }
 
   public getCategoty() {
-    // return this.root
-    //   .productProjections()
-    //   .search()
-    //   // .get({ queryArgs: { filter: `categories.id:subtree("not-sweets")` } })
-    //   .get({queryArgs: {}})
-    //   .execute();
-
     return this.root.categories().withKey({ key: 'baguettes' }).get().execute();
   }
 
