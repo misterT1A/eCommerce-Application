@@ -19,7 +19,7 @@ class GetProductsService {
   public getCategoty() {
     // return this.root
     //   .productProjections()
-    //   .search()
+    //   .search()я
     //   // .get({ queryArgs: { filter: `categories.id:subtree("not-sweets")` } })
     //   .get({queryArgs: {}})
     //   .execute();
