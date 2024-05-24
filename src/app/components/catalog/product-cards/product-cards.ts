@@ -23,7 +23,7 @@ export default class ProductCards extends BaseComponent {
         img: product.masterVariant.images as IImgCard[],
         title: product.name.en,
         description: product.description?.en as string,
-        price: price ? price.value.centAmount : 0,
+        price,
       };
 
       const card = new Card(props);
