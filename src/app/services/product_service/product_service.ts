@@ -30,6 +30,24 @@ class GetProductsService {
   public getProductByName(name: string) {
     return this.root.products().withKey({ key: name }).get().execute();
   }
+
+  public getFilteredProducts(attr?: string[]) {
+    const arr = [];
+    if (attr) {
+      arr.push(...attr);
+    }
+    return this.root
+      .productProjections()
+      .search()
+      .get({
+        queryArgs: {
+          priceCurrency: 'EUR',
+          filter: arr,
+          limit: 100,
+        },
+      })
+      .execute();
+  }
 }
 
 const ProductService = new GetProductsService();
