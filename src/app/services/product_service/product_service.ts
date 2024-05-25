@@ -5,8 +5,14 @@ import AuthService from '@services/auth-service';
 class GetProductsService {
   protected root: ByProjectKeyRequestBuilder;
 
+  protected filters: Set<string>;
+
+  protected sortOrder: string;
+
   constructor() {
     this.root = AuthService.getRoot();
+    this.filters = new Set();
+    this.sortOrder = '';
   }
 
   public getAllProduct() {
@@ -31,24 +37,55 @@ class GetProductsService {
     return this.root.products().withKey({ key: name }).get().execute();
   }
 
-  public getFilteredProducts(attr?: string[], sort?: string[]) {
-    const arr = [];
-    if (attr) {
-      arr.push(...attr);
+  public applyFilter(filter: string) {
+    if (this.filters.has(filter)) {
+      this.filters.delete(filter);
+    } else {
+      this.filters.add(filter);
     }
+  }
+
+  public setSort(sortType: string) {
+    this.sortOrder = sortType;
+  }
+
+  public getFilteredProducts() {
+    // const filtersArr = [];
+    // if (this.filters) {
+    //   filtersArr.push(this.filters);
+    // }
     return this.root
       .productProjections()
       .search()
       .get({
         queryArgs: {
           priceCurrency: 'EUR',
-          filter: arr,
+          filter: Array.from(this.filters),
           limit: 100,
-          sort,
+          // sort: this.sortOrder,
         },
       })
       .execute();
   }
+
+  // public getFilteredProducts(attr?: string[], sort?: string[]) {
+  //   const arr = [];
+  //   if (attr) {
+  //     arr.push(...attr);
+  //   }
+  //   return this.root
+  //     .productProjections()
+  //     .search()
+  //     .get({
+  //       queryArgs: {
+  //         priceCurrency: 'EUR',
+  //         filter: arr,
+  //         limit: 100,
+  //         sort,
+  //       },
+  //     })
+  //     .execute();
+  // }
 }
 
 const ProductService = new GetProductsService();

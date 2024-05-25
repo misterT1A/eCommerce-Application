@@ -14,7 +14,7 @@ export default class CatalogController extends Controller<CatalogView> {
   }
 
   private initContent() {
-    ProductsService.getAllProduct().then((data) => this.changeProducts(data));
+    ProductsService.getFilteredProducts().then((data) => this.changeProducts(data));
   }
 
   // the ResProducts type can be supplemented with your own responsive option

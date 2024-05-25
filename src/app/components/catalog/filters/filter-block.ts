@@ -6,10 +6,10 @@ import BaseComponent from '@utils/base-component';
 import styles from './_filters.scss';
 import type ProductCards from '../product-cards/product-cards';
 
-enum Attributes {
-  VEGAN = 'variants.attributes.Vegan:true',
-  KIDS = 'variants.attributes.ForKids:true',
-  SALE = 'variants.scopedPriceDiscounted:true',
+enum Filters {
+  IS_VEGAN = 'variants.attributes.Vegan:true',
+  IS_KIDS = 'variants.attributes.ForKids:true',
+  IS_SALE = 'variants.scopedPriceDiscounted:true',
 }
 
 enum SORT {
@@ -29,8 +29,6 @@ export default class FilterBlock extends BaseComponent {
 
   private sortSelection: FormSelection;
 
-  private attributes: IProductAttributes = {};
-
   constructor(private productCardsBlock: ProductCards) {
     super({ tag: 'div', className: styles.filterBlock });
     this.salesFilter = new Toggler('On sale');
@@ -43,45 +41,41 @@ export default class FilterBlock extends BaseComponent {
 
   private initListeners() {
     this.salesFilter.addListener('change', () => {
-      this.handleFiltersChange('sale', this.salesFilter, Attributes.SALE);
+      this.handleFiltersChange(Filters.IS_SALE);
     });
-
     this.veganFilter.addListener('change', () => {
-      this.handleFiltersChange('vegan', this.veganFilter, Attributes.VEGAN);
+      this.handleFiltersChange(Filters.IS_VEGAN);
     });
     this.forKidsFilter.addListener('change', () => {
-      this.handleFiltersChange('kids', this.forKidsFilter, Attributes.KIDS);
+      this.handleFiltersChange(Filters.IS_KIDS);
     });
     this.sortSelection.addListener('change', () => {
       this.handleSortChange(this.sortProducts(this.sortSelection.getValue()));
     });
   }
 
-  private handleFiltersChange(attributeKey: keyof IProductAttributes, toggler: Toggler, attributeValue: Attributes) {
-    this.attributes[attributeKey] = toggler.getValue() ? attributeValue : '';
-    ProductService.getFilteredProducts(Object.values(this.attributes)).then((data) =>
-      this.productCardsBlock.setProducts(data.body.results)
-    );
+  private handleFiltersChange(filterValue: Filters) {
+    ProductService.applyFilter(filterValue);
+    ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
   }
 
-  private handleSortChange(value: string[]) {
-    ProductService.getFilteredProducts(Object.values(this.attributes), value).then((data) =>
-      this.productCardsBlock.setProducts(data.body.results)
-    );
+  private handleSortChange(value: string) {
+    ProductService.setSort(value);
+    ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
   }
 
-  private sortProducts(value: string) {
+  private sortProducts(value: string): string {
     switch (value) {
       case SORT.PRICE_DESC:
-        return ['price desc'];
+        return 'price desc';
       case SORT.PRICE_ASC:
-        return ['price asc'];
+        return 'price asc';
       case SORT.A_Z:
-        return ['name.en asc'];
+        return 'name.en asc';
       case SORT.Z_A:
-        return ['name.en desc'];
+        return 'name.en desc';
       default:
-        return [];
+        return '';
     }
   }
 }
