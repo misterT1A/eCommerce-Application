@@ -30,10 +30,14 @@ class GetProductsService {
     return this.root.products().withKey({ key: name }).get().execute();
   }
 
+  public resetFilters() {
+    this.filters.clear();
+    this.searchQuery = '';
+    this.sortOrder = '';
+    return this.getFilteredProducts();
+  }
+
   public setSearchQuery(query: string) {
-    // if (!query) {
-    //   this.searchQuery = '';
-    // }
     this.searchQuery = query;
   }
 
