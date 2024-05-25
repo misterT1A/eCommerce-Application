@@ -64,11 +64,11 @@ export default class BurgerMenu extends BaseComponent {
         className: styles.menuBtn,
         textContent: 'Sign Up',
       },
-      {
-        tag: 'li',
-        className: styles.menuBtn,
-        textContent: 'Log Out',
-      },
+      // {
+      //   tag: 'li',
+      //   className: styles.menuBtn,
+      //   textContent: 'Log Out',
+      // },
     ];
     props.forEach((prop) => {
       if (prop.textContent !== 'Log Out') {
@@ -105,17 +105,17 @@ export default class BurgerMenu extends BaseComponent {
   }
 
   public changeTextLoggined() {
-    this.changeTextNotLoginned();
-    const userWrapper = this.contentWrapper.getChildren[1];
-    const logOutTitle = new BaseComponent({ tag: 'li', className: styles.menuBtn, textContent: 'Log Out' });
-    userWrapper.append(logOutTitle);
+    const links = this.contentWrapper.getChildren[1];
+    links.destroyChildren();
+    links.append(new BaseComponent({ tag: 'li', className: styles.menuBtn, textContent: 'My Account' }));
+    links.append(new BaseComponent({ tag: 'li', className: styles.menuBtn, textContent: 'Log Out' }));
   }
 
   public changeTextNotLoginned() {
-    const userWrapper = this.contentWrapper.getChildren[1];
-    const logoutTitle = userWrapper.getChildren[2];
-    logoutTitle?.destroy();
-    userWrapper.getChildren.splice(2, 1);
+    const links = this.contentWrapper.getChildren[1];
+    links.destroyChildren();
+    links.append(new BaseComponent({ tag: 'li', className: styles.menuBtn, textContent: 'Log In' }));
+    links.append(new BaseComponent({ tag: 'li', className: styles.menuBtn, textContent: 'Sign Up' }));
   }
 
   private navigate(e: Event) {
@@ -137,9 +137,9 @@ export default class BurgerMenu extends BaseComponent {
       case 'Sign Up':
         this.router.navigate(Pages.REG);
         break;
-      // case 'My Account':
-      //   // TODO for account
-      //   break;
+      case 'My Account':
+        this.router.navigate(Pages.ACCOUNT);
+        break;
       case 'Log Out':
         this.changeTextNotLoginned();
         this.changeTextCallback();

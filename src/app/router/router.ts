@@ -9,10 +9,6 @@ export default class Router {
     this.routes = routes;
 
     window.addEventListener('popstate', this.changeBrowser.bind(this));
-    document.addEventListener('DOMContentLoaded', () => {
-      AuthService.sessionStateHandler();
-      this.navigateToLastPoint();
-    });
   }
 
   public navigate(url: string, popstate = false) {
@@ -22,6 +18,11 @@ export default class Router {
 
     if (AuthService.isAuthorized() && [Pages.LOGIN].includes(url)) {
       this.navigate(Pages.MAIN);
+      return;
+    }
+
+    if (!AuthService.isAuthorized() && [Pages.ACCOUNT].includes(url)) {
+      this.navigate(Pages.LOGIN);
       return;
     }
 
