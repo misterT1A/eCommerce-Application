@@ -60,7 +60,7 @@ export default class FilterBlock extends BaseComponent {
   }
 
   private handleSortChange(value: string) {
-    ProductService.setSort(value);
+    ProductService.applySort(value);
     ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
   }
 
