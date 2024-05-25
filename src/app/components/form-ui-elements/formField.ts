@@ -13,7 +13,7 @@ import styles from './_form-ui-elements.scss';
  * @extends BaseComponent
  */
 class FormField extends BaseComponent {
-  private input: BaseComponent<HTMLInputElement>;
+  public input: BaseComponent<HTMLInputElement>;
 
   private errors: BaseComponent<HTMLElement>;
 
@@ -39,8 +39,7 @@ class FormField extends BaseComponent {
     }
     if (type === 'search') {
       this.input.getNode().placeholder = 'Search...';
-      const searchButton = button([styles.form__inputSearch], '', { type: 'button' });
-      // searchButton.addListener('click', () => this.toggleFieldType());
+      const searchButton = button([styles.form__inputSearch], '', { type: 'submit' });
       this.inputWrapper.appendChildren([searchButton]);
     }
     if (type === 'date') {
@@ -69,6 +68,10 @@ class FormField extends BaseComponent {
    */
   public getValue(): string {
     return this.input.getNode().value;
+  }
+
+  public setValue(value: string) {
+    this.input.getNode().value = value;
   }
 
   private toggleFieldType() {
