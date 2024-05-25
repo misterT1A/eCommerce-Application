@@ -37,6 +37,12 @@ class FormField extends BaseComponent {
       togglerPasswordVisibility.addListener('click', () => this.toggleFieldType());
       this.inputWrapper.appendChildren([togglerPasswordVisibility]);
     }
+    if (type === 'search') {
+      this.input.getNode().placeholder = 'Search...';
+      const searchButton = button([styles.form__inputSearch], '', { type: 'button' });
+      // searchButton.addListener('click', () => this.toggleFieldType());
+      this.inputWrapper.appendChildren([searchButton]);
+    }
     if (type === 'date') {
       this.input.getNode().type = 'text';
       this.input.getNode().placeholder = 'MM/DD/YYYY';

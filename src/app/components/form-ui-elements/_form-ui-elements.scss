@@ -137,6 +137,23 @@ $main-color-error: #d82700;
   background-position: center;
 }
 
+.form__inputSearch {
+  position: absolute;
+  top: calc(50% - 15px);
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  border: none;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  background-position: center;
+  background-image: URL(../../../assets/magnifying-glass.svg);
+}
+
+input[type='search']::-webkit-search-cancel-button {
+  display: none;
+}
+
 .form__inputWrapper {
   position: relative;
   .form__inputPasswordToggler {
