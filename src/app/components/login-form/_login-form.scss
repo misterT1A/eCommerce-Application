@@ -58,10 +58,6 @@ input:focus {
   position: relative;
   display: flex;
   flex-direction: column;
-
-  & span {
-    font-weight: 700;
-  }
 }
 
 .input-password-toggler {
