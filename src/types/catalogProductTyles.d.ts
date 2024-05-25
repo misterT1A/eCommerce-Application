@@ -12,3 +12,11 @@ interface IImgCard {
 type ResProducts = ClientResponse<ProductProjectionPagedQueryResponse>;
 // example  union type
 // type ResProducts = ClientResponse<ProductProjectionPagedQueryResponse> | ClientResponse<ProductProjectionPagedQueryResponse>;
+
+interface IProductAttributes {
+  sale?: string;
+  vegan?: string;
+  kids?: string;
+}
+
+interface IFilterOptions {}

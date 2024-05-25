@@ -31,7 +31,7 @@ class GetProductsService {
     return this.root.products().withKey({ key: name }).get().execute();
   }
 
-  public getFilteredProducts(attr?: string[]) {
+  public getFilteredProducts(attr?: string[], sort?: string[]) {
     const arr = [];
     if (attr) {
       arr.push(...attr);
@@ -44,6 +44,7 @@ class GetProductsService {
           priceCurrency: 'EUR',
           filter: arr,
           limit: 100,
+          sort,
         },
       })
       .execute();
