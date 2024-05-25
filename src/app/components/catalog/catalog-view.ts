@@ -25,4 +25,8 @@ export default class CatalogView extends BaseComponent {
   public get getProductCardView() {
     return this.productCardsBlock;
   }
+
+  public get getFilterBlockView() {
+    return this.filterBlock;
+  }
 }
