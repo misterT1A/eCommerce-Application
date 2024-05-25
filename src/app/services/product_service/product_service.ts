@@ -7,11 +7,12 @@ class GetProductsService {
 
   protected filters: Set<string> = new Set();
 
-  protected sortOrder: string;
+  protected sortOrder = '';
+
+  protected searchQuery = '';
 
   constructor() {
     this.root = AuthService.getRoot();
-    this.sortOrder = '';
   }
 
   public getAllProduct() {
@@ -27,6 +28,13 @@ class GetProductsService {
 
   public getProductByName(name: string) {
     return this.root.products().withKey({ key: name }).get().execute();
+  }
+
+  public setSearchQuery(query: string) {
+    // if (!query) {
+    //   this.searchQuery = '';
+    // }
+    this.searchQuery = query;
   }
 
   public applyFilter(filter: string) {
@@ -51,6 +59,8 @@ class GetProductsService {
           filter: Array.from(this.filters),
           limit: 100,
           sort: [this.sortOrder],
+          'text.en': this.searchQuery,
+          fuzzy: true,
         },
       })
       .execute();
