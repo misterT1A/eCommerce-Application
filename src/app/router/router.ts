@@ -30,8 +30,10 @@ export default class Router {
       return;
     }
 
-    if (request.resource) {
+    if (request.resource && request.path === Pages.PRODUCT) {
       route.callBack(request.resource);
+    } else if (request.resource && request.path !== Pages.PRODUCT) {
+      this.navigate(Pages.ERROR, true);
     } else {
       (route.callBack as () => void)();
     }
