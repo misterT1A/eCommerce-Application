@@ -82,9 +82,9 @@ export default class FooterView extends BaseComponent {
       ),
     ];
     const svgArr = [
-      svg('./assets/img/point.svg#svgElem', styles.svgIcon),
-      svg('./assets/img/phone.svg#svgElem', styles.svgIcon),
-      svg('./assets/img/calendar.svg#svgElem', styles.svgIcon),
+      svg('/assets/img/point.svg#svgElem', styles.svgIcon),
+      svg('/assets/img/phone.svg#svgElem', styles.svgIcon),
+      svg('/assets/img/calendar.svg#svgElem', styles.svgIcon),
     ];
     const catCount = 3;
     for (let i = 0; i < catCount; i += 1) {
@@ -98,7 +98,7 @@ export default class FooterView extends BaseComponent {
   private aboutBlock() {
     const year = span([styles.aboutText], '© 2024 Net Ninjas');
     const nameCourse = span([styles.aboutText], 'Rolling Scopes School');
-    const courseLogo = svg('./assets/img/rss-logo.svg#svgElem', styles.aboutLogo);
+    const courseLogo = svg('/assets/img/rss-logo.svg#svgElem', styles.aboutLogo);
 
     this.aboutWrapper.appendChildren([year, nameCourse, courseLogo]);
     // return [year, nameCourse, courseLogo];

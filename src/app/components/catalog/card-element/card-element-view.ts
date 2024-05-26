@@ -1,5 +1,6 @@
 import type { Price } from '@commercetools/platform-sdk';
 
+import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
 import { button, div, h2, p } from '@utils/elements';
 import setLoader from '@utils/loader/loader-view';
@@ -8,7 +9,10 @@ import styles from './_card-style.scss';
 import { changeCount, setPrice, setShortDescription } from './card-model';
 
 export default class Card extends BaseComponent {
-  constructor(props: ICardProps) {
+  constructor(
+    protected props: ICardProps,
+    protected router: Router
+  ) {
     super({ className: styles.wrapper });
 
     this.setContent(props);
@@ -82,9 +86,9 @@ export default class Card extends BaseComponent {
       case '-':
         changeCount((e.target as HTMLElement).parentElement, false);
         break;
-      // case 'READ MORE':
-      //   // this.router.navigate(Pages.);
-      //   break;
+      case 'READ MORE':
+        this.router.navigateToProduct(this.props.key);
+        break;
       // case 'Buy':
       // this.router.navigate(Pages.);
       // break;

@@ -1,5 +1,6 @@
 import type { ProductProjection } from '@commercetools/platform-sdk';
 
+import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
 import { h2 } from '@utils/elements';
 
@@ -7,7 +8,7 @@ import styles from './_product-style.scss';
 import Card from '../card-element/card-element-view';
 
 export default class ProductCards extends BaseComponent {
-  constructor() {
+  constructor(protected router: Router) {
     super({ className: styles.product_wrapper });
   }
 
@@ -28,13 +29,14 @@ export default class ProductCards extends BaseComponent {
         const price = product.masterVariant.prices?.[0];
 
         const props: ICardProps = {
+          key: product.key as string,
           img: product.masterVariant.images as IImgCard[],
           title: product.name.en,
           description: product.description?.en as string,
           price,
         };
 
-        const card = new Card(props);
+        const card = new Card(props, this.router);
         this.append(card);
       });
     });

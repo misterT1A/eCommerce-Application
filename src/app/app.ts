@@ -81,10 +81,10 @@ export default class App {
       },
       {
         path: Pages.PRODUCT,
-        callBack: async () => {
+        callBack: async (productName: string) => {
           const { default: ProductController } = await import('@components/product-page/product-controller');
           await this.hideMain();
-          this.controller = new ProductController(this.router);
+          this.controller = new ProductController(this.router, productName);
           this.setContent();
         },
       },
