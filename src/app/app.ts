@@ -1,5 +1,8 @@
 import FooterController from '@components/footer/footer-controller';
 import HeaderController from '@components/header/header_controller';
+import AuthService from '@services/auth-service';
+import { updateMyCustomerInfo } from '@services/customer-service/my-customer-service';
+import MyCustomer from '@services/customer-service/myCustomer';
 import BaseComponent from '@utils/base-component';
 
 import styles from './_app_style.scss';
@@ -28,6 +31,12 @@ export default class App {
     this.footerController = new FooterController(this.router);
 
     this.controller = null;
+    document.addEventListener('DOMContentLoaded', async () => {
+      await AuthService.sessionStateHandler();
+      await updateMyCustomerInfo();
+      this.headerController.updateTextLoggined(MyCustomer.fullNameShort);
+      this.router.navigateToLastPoint();
+    });
   }
 
   public showContent(parent: HTMLElement) {
@@ -92,6 +101,15 @@ export default class App {
         path: Pages.ERROR,
         callBack: async () => {
           const { default: Controller } = await import('@components/404/404_controller');
+          await this.hideMain();
+          this.controller = new Controller(this.router);
+          this.setContent();
+        },
+      },
+      {
+        path: Pages.ACCOUNT,
+        callBack: async () => {
+          const { default: Controller } = await import('@components/user-profile/user-profile-controller');
           await this.hideMain();
           this.controller = new Controller(this.router);
           this.setContent();

@@ -5,6 +5,7 @@ const Pages = {
   CATALOG: 'catalog',
   PRODUCT: 'product',
   ERROR: 'error',
+  ACCOUNT: 'account',
 };
 
 export default Pages;

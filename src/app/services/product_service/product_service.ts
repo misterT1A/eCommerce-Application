@@ -5,8 +5,13 @@ import AuthService from '@services/auth-service';
 class GetProductsService {
   protected root: ByProjectKeyRequestBuilder;
 
+  protected filters: Set<string> = new Set();
+
+  protected sortOrder: string;
+
   constructor() {
     this.root = AuthService.getRoot();
+    this.sortOrder = '';
   }
 
   public getAllProduct() {
@@ -24,19 +29,28 @@ class GetProductsService {
     return this.root.productProjections().withKey({ key: name }).get().execute();
   }
 
-  public getFilteredProducts(attr?: string[]) {
-    const arr = [];
-    if (attr) {
-      arr.push(...attr);
+  public applyFilter(filter: string) {
+    if (this.filters.has(filter)) {
+      this.filters.delete(filter);
+    } else {
+      this.filters.add(filter);
     }
+  }
+
+  public applySort(sortType: string) {
+    this.sortOrder = sortType;
+  }
+
+  public getFilteredProducts() {
     return this.root
       .productProjections()
       .search()
       .get({
         queryArgs: {
           priceCurrency: 'EUR',
-          filter: arr,
+          filter: Array.from(this.filters),
           limit: 100,
+          sort: [this.sortOrder],
         },
       })
       .execute();

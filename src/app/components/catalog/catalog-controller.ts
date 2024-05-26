@@ -15,7 +15,7 @@ export default class CatalogController extends Controller<CatalogView> {
   }
 
   private initContent() {
-    ProductsService.getAllProduct()
+    ProductsService.getFilteredProducts()
       .then((data) => this.changeProducts(data))
       .catch(() => this.router.navigate(Pages.ERROR, true));
   }
