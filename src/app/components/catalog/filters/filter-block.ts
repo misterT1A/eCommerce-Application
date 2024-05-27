@@ -6,15 +6,10 @@ import BaseComponent from '@utils/base-component';
 import { button } from '@utils/elements';
 
 import styles from './_filters.scss';
+import { FILTERS, SORT } from './constants-filters';
 import type ProductCards from '../product-cards/product-cards';
 
-enum Filters {
-  IS_VEGAN = 'variants.attributes.Vegan:true',
-  IS_KIDS = 'variants.attributes.ForKids:true',
-  IS_SALE = 'variants.scopedPriceDiscounted:true',
-}
-
-enum SORT {
+enum SORT_SELECTION {
   TITLE = 'Sort By',
   PRICE_DESC = 'Descending price',
   PRICE_ASC = 'Ascending price',
@@ -44,8 +39,6 @@ export default class FilterBlock extends BaseComponent {
         this.handleReset();
       },
     });
-    this.searchInput = new FormField('', 'search', false);
-
     this.searchForm = new BaseComponent<HTMLFormElement>(
       { tag: 'form', action: '#' },
       (this.searchInput = new FormField('', 'search', false))
@@ -53,7 +46,12 @@ export default class FilterBlock extends BaseComponent {
     this.salesFilter = new Toggler('On sale');
     this.veganFilter = new Toggler('Vegan');
     this.forKidsFilter = new Toggler('For kids');
-    this.sortSelection = new FormSelection(SORT.TITLE, [SORT.PRICE_DESC, SORT.PRICE_ASC, SORT.A_Z, SORT.Z_A]);
+    this.sortSelection = new FormSelection(SORT_SELECTION.TITLE, [
+      SORT_SELECTION.PRICE_DESC,
+      SORT_SELECTION.PRICE_ASC,
+      SORT_SELECTION.A_Z,
+      SORT_SELECTION.Z_A,
+    ]);
     this.appendChildren([
       this.resetButton,
       this.searchForm,
@@ -63,12 +61,6 @@ export default class FilterBlock extends BaseComponent {
       this.forKidsFilter,
     ]);
     this.initListeners();
-  }
-
-  private updateView() {
-    [this.salesFilter, this.veganFilter, this.forKidsFilter].forEach((filter) => filter.setValue(false));
-    this.searchInput.setValue('');
-    // this.sortSelection.resetCheckedOption();
   }
 
   private initListeners() {
@@ -85,17 +77,30 @@ export default class FilterBlock extends BaseComponent {
       }
     });
     this.salesFilter.addListener('change', () => {
-      this.handleFiltersChange(Filters.IS_SALE);
+      this.handleFiltersChange(FILTERS.IS_SALE);
     });
     this.veganFilter.addListener('change', () => {
-      this.handleFiltersChange(Filters.IS_VEGAN);
+      this.handleFiltersChange(FILTERS.IS_VEGAN);
     });
     this.forKidsFilter.addListener('change', () => {
-      this.handleFiltersChange(Filters.IS_KIDS);
+      this.handleFiltersChange(FILTERS.IS_KIDS);
     });
     this.sortSelection.addListener('change', () => {
       this.handleSortChange(this.sortProducts(this.sortSelection.getValue()));
     });
+  }
+
+  private async handleReset() {
+    this.addClass(styles.inactive);
+    await ProductService.resetFilters().then((data) => this.productCardsBlock.setProducts(data.body.results));
+    this.updateView();
+    this.removeClass(styles.inactive);
+  }
+
+  private updateView() {
+    [this.salesFilter, this.veganFilter, this.forKidsFilter].forEach((filter) => filter.setValue(false));
+    this.searchInput.reset();
+    this.sortSelection.reset();
   }
 
   private handleSearch(query: string) {
@@ -103,7 +108,7 @@ export default class FilterBlock extends BaseComponent {
     ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
   }
 
-  private handleFiltersChange(filterValue: Filters) {
+  private handleFiltersChange(filterValue: string) {
     ProductService.applyFilter(filterValue);
     ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
   }
@@ -113,23 +118,26 @@ export default class FilterBlock extends BaseComponent {
     ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
   }
 
-  private handleReset() {
-    ProductService.resetFilters().then((data) => this.productCardsBlock.setProducts(data.body.results));
-    this.updateView();
-  }
-
   private sortProducts(value: string): string {
     switch (value) {
-      case SORT.PRICE_DESC:
-        return 'price desc';
-      case SORT.PRICE_ASC:
-        return 'price asc';
-      case SORT.A_Z:
-        return 'name.en asc';
-      case SORT.Z_A:
-        return 'name.en desc';
+      case SORT_SELECTION.PRICE_DESC:
+        return SORT.PRICE_DESC;
+      case SORT_SELECTION.PRICE_ASC:
+        return SORT.PRICE_ASC;
+      case SORT_SELECTION.A_Z:
+        return SORT.A_Z;
+      case SORT_SELECTION.Z_A:
+        return SORT.Z_A;
       default:
         return '';
+    }
+  }
+
+  public setValues(values: string[]) {
+    if (values.includes('IS_VEGAN')) {
+      this.veganFilter.setValue(true);
+      const event = new Event('change', { bubbles: true });
+      this.veganFilter.getNode().dispatchEvent(event);
     }
   }
 }
