@@ -74,6 +74,10 @@ class FormField extends BaseComponent {
     return this.input.getNode().value;
   }
 
+  public reset() {
+    this.input.getNode().value = '';
+  }
+
   public setValue(value: string) {
     if (this.type === 'date') {
       const dateValue = new Date(value);
