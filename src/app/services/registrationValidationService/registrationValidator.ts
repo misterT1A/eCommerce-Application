@@ -52,12 +52,12 @@ class RegistrationValidator {
     return today.getFullYear() - birthDate.getFullYear();
   }
 
-  public static processUserInfo(formData: IUserInfoData) {
+  public static processUserInfo(formData: IUserInfoValues) {
     return {
       firstName: this.validateField(formData.firstName, 'firstName'),
-      lastName: this.validateField(formData.firstName, 'lastName'),
+      lastName: this.validateField(formData.lastName, 'lastName'),
       date: this.validateField(formData.date, 'date'),
-      email: this.validateField(formData.firstName, 'email'),
+      email: this.validateField(formData.email, 'email'),
     };
   }
 
