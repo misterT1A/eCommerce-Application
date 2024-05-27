@@ -1,6 +1,6 @@
 interface IRoute {
   path: string;
-  callBack: (() => void) | ((name: string) => void);
+  callBack: (() => void) | ((name: string) => void) | ((name: string[]) => void);
 }
 
 interface IController extends Controller<BaseComponent> {

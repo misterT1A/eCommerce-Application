@@ -8,10 +8,15 @@ import type Router from '@src/app/router/router';
 import CatalogView from './catalog-view';
 
 export default class CatalogController extends Controller<CatalogView> {
-  constructor(protected router: Router) {
+  constructor(
+    protected router: Router,
+    protected filtersParams: string[]
+  ) {
     super(new CatalogView(router));
 
     this.initContent();
+    this.view.getFilterBlockView.setValues(filtersParams || []);
+    console.log(filtersParams);
   }
 
   private initContent() {
