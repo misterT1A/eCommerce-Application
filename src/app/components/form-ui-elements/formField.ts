@@ -70,8 +70,8 @@ class FormField extends BaseComponent {
     return this.input.getNode().value;
   }
 
-  public setValue(value: string) {
-    this.input.getNode().value = value;
+  public reset() {
+    this.input.getNode().value = '';
   }
 
   private toggleFieldType() {

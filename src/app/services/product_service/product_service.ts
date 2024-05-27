@@ -26,6 +26,15 @@ class GetProductsService {
     return this.root.categories().withKey({ key: 'baguettes' }).get().execute();
   }
 
+  //   public getProductsByCategory() {
+  //   this.root
+  //   .productProjections()
+  //   .search()
+  //   .get({queryArgs: {
+  // ... filter.query: categories.id:subtree("id")...
+  // }})
+  //   }
+
   public getProductByName(name: string) {
     return this.root.productProjections().withKey({ key: name }).get().execute();
   }

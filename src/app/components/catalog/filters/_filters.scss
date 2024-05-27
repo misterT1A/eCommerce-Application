@@ -35,3 +35,8 @@ input[type='search'] {
   display: block;
   padding-left: 30px;
 }
+
+.inactive {
+  opacity: 0.4;
+  pointer-events: none;
+}
