@@ -39,8 +39,6 @@ export default class FilterBlock extends BaseComponent {
         this.handleReset();
       },
     });
-    this.searchInput = new FormField('', 'search', false);
-
     this.searchForm = new BaseComponent<HTMLFormElement>(
       { tag: 'form', action: '#' },
       (this.searchInput = new FormField('', 'search', false))
@@ -133,5 +131,9 @@ export default class FilterBlock extends BaseComponent {
       default:
         return '';
     }
+  }
+
+  public setValues(values: string[]) {
+    console.log(values);
   }
 }
