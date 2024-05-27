@@ -96,6 +96,7 @@ module.exports = ({ mode }) => {
     output: {
       filename: 'index.js',
       path: path.resolve(__dirname, './dist'),
+      publicPath: '/',
       clean: true,
       assetModuleFilename: 'assets/[name][ext]',
     },

@@ -92,6 +92,14 @@ class FormSelection extends BaseComponent<HTMLFormElement> {
   public getValue(): string {
     return this.value;
   }
+
+  public reset() {
+    this.inputs.forEach((item) => {
+      const fieldInput = item;
+      fieldInput.getNode().checked = false;
+    });
+    this.updateAppearance();
+  }
 }
 
 export default FormSelection;

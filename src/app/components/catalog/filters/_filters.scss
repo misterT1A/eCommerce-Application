@@ -5,3 +5,38 @@
   gap: 10px;
   padding: 10px;
 }
+
+.reset-btn {
+  padding: 5px 0;
+  color: $card_read_more_btn_color;
+  font-size: 16px;
+  border: 1px solid $card_read_more_btn_color;
+  border-radius: 20px;
+  background-color: transparent;
+  transition: all 0.3s linear;
+  &:hover {
+    background-color: $card_read_more_btn_color;
+    color: #fff;
+  }
+}
+
+input[type='search']::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  position: absolute;
+  right: 0px;
+  height: 15px;
+  width: 15px;
+  margin-left: 0.4em;
+  background-image: URL(../../../../assets/cross.svg);
+  cursor: pointer;
+}
+
+input[type='search'] {
+  display: block;
+  padding-left: 30px;
+}
+
+.inactive {
+  opacity: 0.4;
+  pointer-events: none;
+}

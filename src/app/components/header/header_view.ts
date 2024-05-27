@@ -47,13 +47,13 @@ export default class HeaderView extends BaseComponent {
   }
 
   private setIconsBlock() {
-    const svgUser = svg(`./assets/img/userIcon.svg#svgElem`, styles.userlogoFill);
+    const svgUser = svg(`/assets/img/userIcon.svg#svgElem`, styles.userlogoFill);
     const userIcon = new BaseComponent({ className: styles.userlogo }, svgUser);
     userIcon.addListener('click', () => {
       this.showDropMenu();
     });
 
-    const svgBasket = svg(`./assets/img/basketIcon.svg#svgElem`, styles.basketLogoFill);
+    const svgBasket = svg(`/assets/img/basketIcon.svg#svgElem`, styles.basketLogoFill);
     const basketIcon = new BaseComponent({ className: styles.basketLogo }, svgBasket);
     basketIcon.addListener('click', () => {
       svgBasket.classList.toggle(styles.basketLogoActive);

@@ -13,7 +13,7 @@ import styles from './_form-ui-elements.scss';
  * @extends BaseComponent
  */
 class FormField extends BaseComponent {
-  private input: BaseComponent<HTMLInputElement>;
+  public input: BaseComponent<HTMLInputElement>;
 
   private errors: BaseComponent<HTMLElement>;
 
@@ -40,6 +40,11 @@ class FormField extends BaseComponent {
       const togglerPasswordVisibility = button([styles.form__inputPasswordToggler], '', { type: 'button' });
       togglerPasswordVisibility.addListener('click', () => this.toggleFieldType());
       this.inputWrapper.appendChildren([togglerPasswordVisibility]);
+    }
+    if (type === 'search') {
+      this.input.getNode().placeholder = 'Search...';
+      const searchButton = button([styles.form__inputSearch], '', { type: 'submit' });
+      this.inputWrapper.appendChildren([searchButton]);
     }
     if (type === 'date') {
       this.input.getNode().type = 'text';
