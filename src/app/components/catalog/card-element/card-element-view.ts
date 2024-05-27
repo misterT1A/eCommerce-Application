@@ -41,7 +41,7 @@ export default class Card extends BaseComponent {
         img.addClass(styles.img_Width);
       }
 
-      imgWrapper.getChildren[0].destroy();
+      imgWrapper.getChildren[0]?.destroy();
       imgWrapper.append(img);
     });
 
