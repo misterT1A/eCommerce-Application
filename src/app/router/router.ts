@@ -12,27 +12,32 @@ export default class Router {
   }
 
   public navigate(url: string, popstate = false) {
-    // to do / for products path
-    // const request = this.parseUrl(url);
-    // const pathForFind = request.resource === '' ? request.path : `${request.path}/${id}`;
+    const request = this.parseUrl(url);
 
-    if (AuthService.isAuthorized() && [Pages.LOGIN].includes(url)) {
+    if (AuthService.isAuthorized() && [Pages.LOGIN].includes(request.path)) {
       this.navigate(Pages.MAIN);
       return;
     }
 
-    if (!AuthService.isAuthorized() && [Pages.ACCOUNT].includes(url)) {
+    if (!AuthService.isAuthorized() && [Pages.ACCOUNT].includes(request.path)) {
       this.navigate(Pages.LOGIN);
       return;
     }
 
-    const route = this.routes.find((routeItem) => routeItem.path === url);
+    const route = this.routes.find((routeItem) => routeItem.path === request.path);
     if (!route) {
       this.navigate(Pages.ERROR, true);
       return;
     }
 
-    route.callBack();
+    if (request.resource && request.path === Pages.PRODUCT) {
+      route.callBack(request.resource);
+    } else if (request.resource && request.path !== Pages.PRODUCT) {
+      this.navigate(Pages.ERROR, true);
+    } else {
+      (route.callBack as () => void)();
+    }
+
     if (!popstate) {
       window.history.pushState(null, '', `/${url}`);
     }
@@ -40,20 +45,27 @@ export default class Router {
 
   public navigateToLastPoint() {
     const path = this.getCurrentPath();
+
     this.navigate(path);
   }
 
-  // to do / for products path
-  // private parseUrl(url: string) {
-  //   const result = {
-  //     path: '',
-  //   };
+  public navigateToProduct(name: string) {
+    const route = this.routes.find((routeItem) => routeItem.path === Pages.PRODUCT);
+    route?.callBack(name);
+    window.history.pushState(null, '', `/product/${name}`);
+  }
 
-  //   const path = url.split('/');
-  //   [result.path = '', result.resource = ''] = path;
+  private parseUrl(url: string) {
+    const result = {
+      path: '',
+      resource: '',
+    };
 
-  //   return result;
-  // }
+    const path = url.split('/');
+    [result.path = '', result.resource = ''] = path;
+
+    return result;
+  }
 
   private changeBrowser(): void {
     const path = this.getCurrentPath();

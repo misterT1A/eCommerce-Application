@@ -1,0 +1,132 @@
+.wrapper {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 200px 1fr 1fr;
+  gap: 20px;
+  padding: 20px;
+  background-color: $header_background_color;
+  border-radius: 20px;
+}
+
+.mini_emty_img_template,
+.main_emty_img_template {
+  @include flex(center, center, column);
+  border-radius: 15px;
+  background-color: rgb(170, 125, 125);
+  color: white;
+  font-size: 15px;
+}
+
+.mini_emty_img_template {
+  width: 150px;
+  height: 150px;
+}
+
+.main_emty_img_template {
+  width: 500px;
+  height: 500px;
+}
+
+.mini_img_block {
+  @include flex(center, flex-start, column);
+  gap: 20px;
+  max-width: 200px;
+  width: 100%;
+  height: 100%;
+}
+
+.mini_img_wrapper {
+  @include flex(center, center, column);
+  max-width: 150px;
+  width: 100%;
+  height: 150px;
+  overflow: hidden;
+  border-radius: 15px;
+  background-color: rgb(170, 125, 125);
+}
+
+.mini_img_Height {
+  width: auto;
+  max-height: 150px;
+}
+
+.mini_img_Width {
+  max-width: 150px;
+  height: auto;
+}
+
+.main_img_block {
+  @include flex(center, center, row);
+}
+
+.main_img_wrapper {
+  @include flex(center, center, column);
+  max-width: 500px;
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
+  border-radius: 15px;
+  background-color: rgb(170, 125, 125);
+}
+
+.main_img_Height {
+  width: auto;
+  max-height: 500px;
+  height: 100%;
+}
+
+.main_img_Width {
+  max-width: 500px;
+  width: 100%;
+  height: auto;
+}
+
+.text_wrapper {
+  @include flex(start, flex-start, column);
+  gap: 20px;
+  width: 100%;
+}
+
+.title {
+  text-align: left;
+  font-size: 25px;
+  font-weight: 400;
+  color: $card_title_color;
+}
+
+.description {
+  font-size: 15px;
+  color: $product_description_color;
+}
+
+@media screen and (max-width: 1000px) {
+  .wrapper {
+    grid-template-columns: 150px 1fr;
+    padding: 10px;
+    place-items: center;
+  }
+
+  .text_wrapper {
+    padding: 20px;
+    grid-column: 1 / span 2;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .wrapper {
+    grid-template-columns: 1fr;
+    padding: 10px;
+    place-items: center;
+  }
+
+  .mini_img_block {
+    display: none;
+  }
+
+  .main_img_wrapper {
+    grid-column: 1 / span 2;
+  }
+}
+
+@media not all and (hover: none) {
+}
