@@ -27,7 +27,11 @@ class FormField extends BaseComponent {
    * @param {string} type - The type of input (e.g., 'text', 'password', 'date').
    * @param {boolean} [required=true] - Whether the input is required or not (default is true).
    */
-  constructor(name: string, type: string, required = true) {
+  constructor(
+    name: string,
+    private type: string,
+    required = true
+  ) {
     super({ tag: 'div', className: styles.form__field }, label([styles.form__inputLabel], name));
     this.input = input([styles.form__input], { type, value: '', required, autocomplete: undefined });
     this.errors = div([styles.form__errors]);
@@ -72,6 +76,15 @@ class FormField extends BaseComponent {
 
   public reset() {
     this.input.getNode().value = '';
+  }
+
+  public setValue(value: string) {
+    if (this.type === 'date') {
+      const dateValue = new Date(value);
+      this.datePicker?.selectDate(dateValue, { silent: false });
+    } else {
+      this.input.getNode().value = value;
+    }
   }
 
   private toggleFieldType() {

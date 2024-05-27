@@ -144,6 +144,7 @@ export default class BurgerMenu extends BaseComponent {
         this.changeTextNotLoginned();
         this.changeTextCallback();
         AuthService.logout();
+        this.router.navigateToLastPoint();
         break;
       default:
         break;

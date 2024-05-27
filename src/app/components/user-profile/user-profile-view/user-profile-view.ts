@@ -7,7 +7,7 @@ import CredentialsView from './credentials-view';
 import ProfileAddressesView from './profile-addresses-view';
 
 class ProfileView extends BaseComponent<HTMLElement> {
-  public profileCredentials: BaseComponent;
+  public profileCredentials: CredentialsView;
 
   public profileAddresses: ProfileAddressesView;
 

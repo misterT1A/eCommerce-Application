@@ -47,7 +47,7 @@ $main-color-error: #d82700;
 .profile__userInfoHeader {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 10px;
   color: #aa4e41;
   text-transform: capitalize;
 }
@@ -59,7 +59,7 @@ $main-color-error: #d82700;
   .profile__userAddresses {
     grid-area: 3 / 1 / 4 / 3;
   }
-  .profile__button {
+  .profile .profile__button {
     max-width: 200px;
   }
 }
@@ -68,6 +68,7 @@ $main-color-error: #d82700;
   width: 50px;
   height: 50px;
   display: flex;
+  flex-shrink: 0;
   justify-content: center;
   align-items: center;
   color: #aa4e41;
@@ -175,6 +176,10 @@ $main-color-error: #d82700;
   .profile__addressesControls {
     grid-area: 4 / 1 / 5 / 3;
   }
+
+  .profile .profile__button {
+    max-width: 100%;
+  }
 }
 
 .profile__addressToggler_active {
@@ -225,4 +230,11 @@ $main-color-error: #d82700;
   .profile__button {
     flex-grow: 1;
   }
+}
+
+.profile__editUserInfoForm {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  gap: 15px;
 }
