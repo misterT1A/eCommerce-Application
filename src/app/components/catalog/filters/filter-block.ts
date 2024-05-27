@@ -134,6 +134,10 @@ export default class FilterBlock extends BaseComponent {
   }
 
   public setValues(values: string[]) {
-    console.log(values);
+    if (values.includes('IS_VEGAN')) {
+      this.veganFilter.setValue(true);
+      const event = new Event('change', { bubbles: true });
+      this.veganFilter.getNode().dispatchEvent(event);
+    }
   }
 }
