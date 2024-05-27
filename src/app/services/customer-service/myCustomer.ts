@@ -14,7 +14,7 @@ class MyCustomer {
   }
 
   public static get id() {
-    return this.info?.id?.split('-')[0] ?? '';
+    return this.info?.id;
   }
 
   public static get firstName() {
@@ -60,8 +60,12 @@ class MyCustomer {
     if (!date) {
       return '';
     }
-    const dateObj = new Date(date);
-    return `${dateObj.getDay()}/${dateObj.getMonth()}/${dateObj.getFullYear()}`;
+    return date;
+  }
+
+  public static get dateFormatted() {
+    const dateObj = new Date(this.dateOfBirth);
+    return `${(dateObj.getMonth() + 1).toString().padStart(2, '0')}/${dateObj.getDate().toString().padStart(2, '0')}/${dateObj.getFullYear()}`;
   }
 
   public static get addresses() {
