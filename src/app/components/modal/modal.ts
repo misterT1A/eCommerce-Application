@@ -16,11 +16,15 @@ class Modal<T extends BaseComponent> extends BaseComponent {
     super({ tag: 'div', className: styles.overlay });
     this.modal = div([styles.modal]);
     const header = div([styles.modal__header]);
-    const closeButton = button([styles.notification__close], '', { type: 'button' });
-    closeButton.append(svg(`./assets/img/notif-close.svg#close`, styles.modal__closeIcon));
+    const closeButton = button([styles.modal__close], '', { type: 'button' });
+    closeButton.append(svg(`/assets/img/notif-close.svg#close`, styles.modal__closeIcon));
     closeButton.addListener('click', () => this.close());
     if (modalProps.title) {
       header.append(h2([styles.modal__title], modalProps.title));
+    }
+    this.modal.append(header);
+    if (modalProps.content) {
+      this.modal.append(modalProps.content);
     }
     header.append(closeButton);
     this.append(this.modal);
@@ -31,7 +35,10 @@ class Modal<T extends BaseComponent> extends BaseComponent {
   }
 
   public close() {
-    this.destroy();
+    this.addClass(styles.overlay__hide);
+    setTimeout(() => {
+      this.destroy();
+    }, 300);
   }
 }
 
