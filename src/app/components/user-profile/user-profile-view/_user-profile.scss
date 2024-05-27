@@ -59,7 +59,7 @@ $main-color-error: #d82700;
   .profile__userAddresses {
     grid-area: 3 / 1 / 4 / 3;
   }
-  .profile__button {
+  .profile .profile__button {
     max-width: 200px;
   }
 }
@@ -175,6 +175,10 @@ $main-color-error: #d82700;
   .profile__addressesControls {
     grid-area: 4 / 1 / 5 / 3;
   }
+
+  .profile .profile__button {
+    max-width: 100%;
+  }
 }
 
 .profile__addressToggler_active {
@@ -225,4 +229,11 @@ $main-color-error: #d82700;
   .profile__button {
     flex-grow: 1;
   }
+}
+
+.profile__editUserInfoForm {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  gap: 15px;
 }

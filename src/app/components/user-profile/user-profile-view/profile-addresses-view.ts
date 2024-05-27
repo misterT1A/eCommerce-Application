@@ -71,7 +71,6 @@ class ProfileAddressesView extends BaseComponent {
         if (address.id) {
           const isBilling = addresses.billingAddressIds.includes(address.id);
           const isShipping = addresses.shippingAddressIds.includes(address.id);
-          console.log(addresses.billingAddressIds);
           let label = isBilling ? 'Billing Address' : 'Shipping Address';
           label = isShipping && isBilling ? 'Billing/Shipping Address' : label;
           const item = li(

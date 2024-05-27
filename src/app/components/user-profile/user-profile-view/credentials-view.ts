@@ -52,8 +52,8 @@ class CredentialsView extends BaseComponent {
     this.profileName.setTextContent(MyCustomer.fullName);
     this.email.setTextContent(MyCustomer.email);
     this.password.setTextContent(MyCustomer.password);
-    this.dateOfBirth.setTextContent(MyCustomer.dateOfBirth);
-    this.profileID.setTextContent(MyCustomer.id);
+    this.dateOfBirth.setTextContent(MyCustomer.dateFormatted);
+    this.profileID.setTextContent(MyCustomer.id?.split('-')[0] ?? '');
   }
 
   private wrapField(label: string, field: BaseComponent) {
