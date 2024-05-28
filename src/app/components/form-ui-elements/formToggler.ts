@@ -10,6 +10,8 @@ import styles from './_form-ui-elements.scss';
 class Toggler extends BaseComponent {
   private input: BaseComponent<HTMLInputElement>;
 
+  private bindToggler: Toggler | null = null;
+
   constructor(labelText: string) {
     super({ tag: 'div' });
     this.addClass(styles.form__toggler);
@@ -39,6 +41,15 @@ class Toggler extends BaseComponent {
    */
   public setValue(isChecked: boolean) {
     this.input.getNode().checked = isChecked;
+  }
+
+  public bindWith(toggler: Toggler) {
+    this.bindToggler = toggler;
+    this.addListener('input', () => {
+      if (!this.getValue()) {
+        this.bindToggler?.setValue(true);
+      }
+    });
   }
 }
 
