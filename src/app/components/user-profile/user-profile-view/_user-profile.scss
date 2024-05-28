@@ -132,6 +132,8 @@ $main-color-error: #d82700;
   padding: 15px;
   border-radius: 10px;
   gap: 5px;
+  overflow-y: auto;
+  max-height: 250px;
 }
 
 .profile__addressContainer {

@@ -3,6 +3,8 @@ import BaseComponent from '@utils/base-component';
 import { button, div, h2, li, span, ul } from '@utils/elements';
 
 import styles from './_user-profile.scss';
+import { getCountryName } from '../edit-mode-adapters';
+import generateTags from '../profile-helpers';
 
 class ProfileAddressesView extends BaseComponent {
   public addressesList: BaseComponent<HTMLUListElement>;
@@ -17,7 +19,7 @@ class ProfileAddressesView extends BaseComponent {
 
   private shippingAddressToggler: BaseComponent<HTMLButtonElement>;
 
-  private addAddressButton: BaseComponent<HTMLButtonElement>;
+  public addAddressButton: BaseComponent<HTMLButtonElement>;
 
   constructor(
     private deleteCallback: (id: string) => void,
@@ -42,7 +44,7 @@ class ProfileAddressesView extends BaseComponent {
       this.addAddressButton,
     ]);
     this.appendChildren([this.addressesList, this.addressContainer, this.addressesControls]);
-    this.redrawAddressesView();
+    this.updateView();
   }
 
   private clearContainers() {
@@ -61,7 +63,7 @@ class ProfileAddressesView extends BaseComponent {
     }
   }
 
-  public redrawAddressesView() {
+  public updateView() {
     const { addresses } = MyCustomer;
     this.billingAddressToggler.getNode().disabled = !MyCustomer.addresses.defaultBillingAddress;
     this.shippingAddressToggler.getNode().disabled = !MyCustomer.addresses.defaultShippingAddress;
@@ -76,7 +78,11 @@ class ProfileAddressesView extends BaseComponent {
           const item = li(
             [styles.profile__addressesListItem],
             span([styles.profile__addressesListItemText], `${label}`),
-            span([styles.profile__addressesListItemText_small], `id: ${address.id}`)
+            span([styles.profile__addressesListItemText_small], `id: ${address.id}`),
+            div(
+              [styles.profile__addressTagsWrapper],
+              ...generateTags(address.id).filter((tag) => tag.getNode().textContent?.includes('default'))
+            )
           );
           item.addListener('click', () => {
             this.showAddress(address.id ?? '');
@@ -92,6 +98,12 @@ class ProfileAddressesView extends BaseComponent {
   public openAddress(id: string) {
     if (this.addresses.has(id)) {
       this.addresses.get(id)?.getNode().click();
+      const wrapper = this.addressesList.getNode();
+      const item = this.addresses.get(id)?.getNode();
+      if (item) {
+        const count = item.offsetTop - wrapper.scrollTop - 10;
+        wrapper.scrollBy({ top: count, left: 0, behavior: 'smooth' });
+      }
     }
   }
 
@@ -110,28 +122,18 @@ class ProfileAddressesView extends BaseComponent {
     const deleteButton = button([styles.profile__button], 'DELETE');
     editButton.addListener('click', () => this.editCallback(addressID));
     deleteButton.addListener('click', () => this.deleteCallback(addressID));
-    const markers = {
-      billing: MyCustomer.addresses.billingAddressIds.includes(addressID),
-      shipping: MyCustomer.addresses.shippingAddressIds.includes(addressID),
-      default:
-        MyCustomer.addresses.defaultBillingAddress === addressID ||
-        MyCustomer.addresses.defaultShippingAddress === addressID,
-    };
-    const tags = Object.entries(markers).reduce((acc: BaseComponent[], [marker, value]) => {
-      if (value) {
-        acc.push(span([styles.profile__addressTag], marker));
-      }
-      return acc;
-    }, []);
     this.addressContainer.appendChildren([
       this.wrapField('City:', span([styles.profile__addressesField], address.city ?? '')),
-      this.wrapField('Country:', span([styles.profile__addressesField], address.country ?? '')),
+      this.wrapField('Country:', span([styles.profile__addressesField], getCountryName(address.country) ?? '')),
       this.wrapField('Street:', span([styles.profile__addressesField], address.streetName ?? '')),
       this.wrapField('Postal Code:', span([styles.profile__addressesField], address.postalCode ?? '')),
-      div([styles.profile__addressTagsWrapper], ...tags),
+      div([styles.profile__addressTagsWrapper], ...generateTags(addressID)),
       div([styles.profile__addressButtonsWrapper], editButton, deleteButton),
     ]);
-    this.updateTogglers(markers.billing && markers.default, markers.default && markers.shipping);
+    this.updateTogglers(
+      MyCustomer.addresses.defaultBillingAddress === addressID,
+      MyCustomer.addresses.defaultShippingAddress === addressID
+    );
   }
 
   private wrapField(label: string, field: BaseComponent) {
