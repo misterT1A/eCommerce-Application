@@ -76,7 +76,7 @@ export default class ProductView extends BaseComponent {
         img.addClass(product_styles.main_img_Width);
       }
 
-      imgWrapper.getChildren[0].destroy();
+      imgWrapper.getChildren[0]?.destroy();
       imgWrapper.append(img);
     });
 
