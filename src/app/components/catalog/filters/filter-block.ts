@@ -6,7 +6,8 @@ import BaseComponent from '@utils/base-component';
 import { button } from '@utils/elements';
 
 import styles from './_filters.scss';
-import { FILTERS, SORT } from './constants-filters';
+import type { FilterKeys } from './constants-filters';
+import { CATEGORIES, FILTERS, SORT, SUBCATEGORIES } from './constants-filters';
 import type ProductCards from '../product-cards/product-cards';
 
 enum SORT_SELECTION {
@@ -23,6 +24,10 @@ export default class FilterBlock extends BaseComponent {
   private searchForm: BaseComponent<HTMLFormElement>;
 
   private searchInput: FormField;
+
+  private categorySelect: FormSelection;
+
+  private subcategorySelect: FormSelection;
 
   private salesFilter: Toggler;
 
@@ -43,6 +48,9 @@ export default class FilterBlock extends BaseComponent {
       { tag: 'form', action: '#' },
       (this.searchInput = new FormField('', 'search', false))
     );
+    this.categorySelect = new FormSelection('Category', [...Object.keys(CATEGORIES)]);
+    this.subcategorySelect = new FormSelection('Subcategory', []);
+    this.subcategorySelect.addClass(styles.inactive);
     this.salesFilter = new Toggler('On sale');
     this.veganFilter = new Toggler('Vegan');
     this.forKidsFilter = new Toggler('For kids');
@@ -55,6 +63,8 @@ export default class FilterBlock extends BaseComponent {
     this.appendChildren([
       this.resetButton,
       this.searchForm,
+      this.categorySelect,
+      this.subcategorySelect,
       this.sortSelection,
       this.salesFilter,
       this.veganFilter,
@@ -75,6 +85,9 @@ export default class FilterBlock extends BaseComponent {
       if (!this.searchInput.getValue()) {
         this.handleSearch('');
       }
+    });
+    this.categorySelect.addListener('change', () => {
+      this.handleCategoryChange();
     });
     this.salesFilter.addListener('change', () => {
       this.handleFiltersChange(FILTERS.IS_SALE);
@@ -100,12 +113,61 @@ export default class FilterBlock extends BaseComponent {
   private updateView() {
     [this.salesFilter, this.veganFilter, this.forKidsFilter].forEach((filter) => filter.setValue(false));
     this.searchInput.reset();
+    [this.categorySelect, this.subcategorySelect].forEach((select) => select.reset());
     this.sortSelection.reset();
+    this.subcategorySelect.addClass(styles.inactive);
   }
 
   private handleSearch(query: string) {
     ProductService.setSearchQuery(query);
     ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
+  }
+
+  private async handleCategoryChange() {
+    if (!this.isCategoryChosen()) {
+      return;
+    }
+
+    const categoryID = CATEGORIES[this.categorySelect.getValue()];
+    const keys: string[] = [];
+    await ProductService.getSubcategories(categoryID)
+      .then((response) => {
+        const subcategories = response.body.results;
+        if (subcategories.length) {
+          subcategories.forEach((subcategory) => {
+            keys.push(subcategory.key?.replace('-', ' ').replace('_', ' & ') as string as string);
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    if (!keys.length) {
+      this.subcategorySelect.reset();
+      this.subcategorySelect.addClass(styles.inactive);
+      return;
+    }
+    this.subcategorySelect.destroy();
+    this.subcategorySelect = new FormSelection('Subcategory', [...keys]);
+    this.subcategorySelect.addListener('change', () => {
+      this.handleSubcategoryChange();
+    });
+
+    this.categorySelect.getNode().insertAdjacentElement('afterend', this.subcategorySelect.getNode());
+
+    // console.log(categoryID);
+
+    ProductService.setChosenCategory(CATEGORIES[this.categorySelect.getValue()]);
+    ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
+  }
+
+  private handleSubcategoryChange() {
+    ProductService.setChosenCategory(SUBCATEGORIES[this.subcategorySelect.getValue()]);
+    ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
+  }
+
+  private isCategoryChosen() {
+    return this.categorySelect.getValue();
   }
 
   private handleFiltersChange(filterValue: string) {
@@ -133,11 +195,16 @@ export default class FilterBlock extends BaseComponent {
     }
   }
 
-  public setValues(values: string[]) {
+  public setValues(values: FilterKeys[]) {
     if (values.includes('IS_VEGAN')) {
       this.veganFilter.setValue(true);
       const event = new Event('change', { bubbles: true });
       this.veganFilter.getNode().dispatchEvent(event);
+    }
+    if (values.includes('IS_KIDS')) {
+      this.forKidsFilter.setValue(true);
+      const event = new Event('change', { bubbles: true });
+      this.forKidsFilter.getNode().dispatchEvent(event);
     }
   }
 }
