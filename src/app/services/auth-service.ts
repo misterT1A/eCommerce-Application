@@ -149,7 +149,6 @@ class AuthenticationService {
         .execute()
         .then((result) => {
           this.root = root;
-          console.log(result.body.customer);
           resolve({
             success: true,
             message: 'OK',

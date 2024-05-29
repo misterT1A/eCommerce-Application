@@ -15,6 +15,13 @@ interface IRegistrationFormData {
   };
 }
 
+interface IUserInfoData {
+  firstName: string;
+  lastName: string;
+  date: string;
+  email: string;
+}
+
 interface IAddressData {
   defaultAddress: boolean;
   commonAddress: boolean;

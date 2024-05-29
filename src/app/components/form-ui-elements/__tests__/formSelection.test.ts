@@ -27,7 +27,7 @@ describe('FormSelection', () => {
   });
 
   it('Should set option correctly using setOptionChecked method', () => {
-    formSelection.setOptionChecked('UK');
+    formSelection.setValue('UK');
     expect(formSelection.getValue()).toBe('UK');
 
     const inputElement = formSelection.getNode().querySelector(`input[value="UK"]`) as HTMLInputElement;
@@ -35,7 +35,7 @@ describe('FormSelection', () => {
   });
 
   it('Should update button text and appearance on option change', () => {
-    formSelection.setOptionChecked('France');
+    formSelection.setValue('France');
     expect(formSelection.getValue()).toBe('France');
     expect(formSelection.getNode().querySelector(`.${styles.form__selectionButton}`)?.textContent).toBe('France');
   });

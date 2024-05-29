@@ -66,7 +66,7 @@ class FormSelection extends BaseComponent<HTMLFormElement> {
    * Sets the specified option as checked.
    * @param {string} option - The option to set as checked.
    */
-  public setOptionChecked(option: string) {
+  public setValue(option: string) {
     if (this.inputs.has(option)) {
       const inputOption = this.inputs.get(option)?.getNode();
       if (!(inputOption instanceof HTMLInputElement)) {

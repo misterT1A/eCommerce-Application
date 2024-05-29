@@ -52,6 +52,23 @@ class RegistrationValidator {
     return today.getFullYear() - birthDate.getFullYear();
   }
 
+  public static processUserInfo(formData: IUserInfoValues) {
+    return {
+      firstName: this.validateField(formData.firstName, 'firstName'),
+      lastName: this.validateField(formData.lastName, 'lastName'),
+      date: this.validateField(formData.date, 'date'),
+      email: this.validateField(formData.email, 'email'),
+    };
+  }
+
+  public static processAddressInfo(formData: ProfileAddressValues) {
+    return {
+      zipCode: this.validateField(formData.zipCode, 'zipCode', formData.country),
+      street: this.validateField(formData.street, 'street'),
+      city: this.validateField(formData.city, 'city'),
+    };
+  }
+
   public static processFormData(formData: IRegistrationFormData) {
     let result = {} as IRegistrationErrors;
     Object.entries(formData).forEach(([key, value]) => {

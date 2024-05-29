@@ -33,7 +33,7 @@ $main-color-error: #d82700;
   border: 1px solid $color-dark-gray;
   border-radius: 5px;
   height: 40px;
-  background-color: transparent;
+  background-color: #ffffff;
   cursor: pointer;
 }
 
@@ -93,6 +93,7 @@ $main-color-error: #d82700;
   display: flex;
   width: 100%;
   padding: 10px;
+  background-color: #ffffff;
   cursor: pointer;
 }
 
@@ -311,6 +312,7 @@ $main-color-error: #d82700;
   border: 1px solid $color-dark-gray;
   border-radius: 5px;
   padding: 0px 10px;
+  background-color: #ffffff;
   cursor: pointer;
 }
 

@@ -49,21 +49,21 @@ class FormSelectionMultiple extends BaseComponent<HTMLFormElement> {
         ul([styles.form__selectionList], ...listItems)
       ),
     ]);
-    this.setOptionsChecked(this.selected);
+    this.setValue(this.selected);
     this.updateAppearance();
   }
 
   public updateAppearance() {
     const formData = new FormData(this.getNode());
     this.selected = this.options.filter((opt) => formData.get(opt));
-    this.setOptionsChecked(this.selected);
+    this.setValue(this.selected);
   }
 
   /**
    * Sets the specified options as checked.
    * @param {string[]} options - The options to set as checked.
    */
-  public setOptionsChecked(options: string[]) {
+  public setValue(options: string[]) {
     this.selected = options.filter((option) => this.inputs.has(option));
     this.button.destroyChildren();
     this.options.forEach((option) => {

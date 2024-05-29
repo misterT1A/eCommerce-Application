@@ -8,8 +8,8 @@
   border-radius: 20px;
 }
 
-.mini_emty_img_template,
-.main_emty_img_template {
+.mini_empty_img_template,
+.main_empty_img_template {
   @include flex(center, center, column);
   border-radius: 15px;
   background-color: rgb(170, 125, 125);
@@ -17,12 +17,12 @@
   font-size: 15px;
 }
 
-.mini_emty_img_template {
+.mini_empty_img_template {
   width: 150px;
   height: 150px;
 }
 
-.main_emty_img_template {
+.main_empty_img_template {
   width: 500px;
   height: 500px;
 }
@@ -94,11 +94,23 @@
   color: $card_title_color;
 }
 
+.back_btn {
+  margin-left: auto;
+  font-size: 0.8rem;
+  border-radius: 5px;
+  padding: 0.2rem;
+}
+
 .description {
   font-size: 15px;
   color: $product_description_color;
 }
 
+.bottom_block {
+  display: flex;
+  width: 100%;
+  margin-top: auto;
+}
 @media screen and (max-width: 1000px) {
   .wrapper {
     grid-template-columns: 150px 1fr;

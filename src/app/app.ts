@@ -111,7 +111,7 @@ export default class App {
         callBack: async () => {
           const { default: Controller } = await import('@components/user-profile/user-profile-controller');
           await this.hideMain();
-          this.controller = new Controller(this.router);
+          this.controller = new Controller(this.router, this.headerController);
           this.setContent();
         },
       },

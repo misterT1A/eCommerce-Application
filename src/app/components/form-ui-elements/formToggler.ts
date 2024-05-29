@@ -40,6 +40,19 @@ class Toggler extends BaseComponent {
   public setValue(isChecked: boolean) {
     this.input.getNode().checked = isChecked;
   }
+
+  public bindWith(toggler: Toggler, isInverse = true, isDependent = false) {
+    const bindToggler = toggler;
+    this.addListener('input', () => {
+      if (isDependent) {
+        if (this.getValue()) {
+          bindToggler?.setValue(true);
+        }
+      } else if (!this.getValue()) {
+        bindToggler?.setValue(isInverse);
+      }
+    });
+  }
 }
 
 export default Toggler;
