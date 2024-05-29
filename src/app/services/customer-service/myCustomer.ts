@@ -90,6 +90,14 @@ class MyCustomer {
   public static get defaultBillingId() {
     return this.addresses.defaultBillingAddress;
   }
+
+  public static isBillingAddress(id: string) {
+    return this.addresses.billingAddressIds.includes(id);
+  }
+
+  public static isShippingAddress(id: string) {
+    return this.addresses.shippingAddressIds.includes(id);
+  }
 }
 
 export default MyCustomer;

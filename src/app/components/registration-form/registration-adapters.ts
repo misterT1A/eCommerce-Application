@@ -1,7 +1,7 @@
 import type { BaseAddress, CustomerDraft } from '@commercetools/platform-sdk';
 
 import { COUNTRIES_PATTERNS } from '@services/registrationValidationService/validCountries';
-import getUTCDate from '@utils/date-helpers';
+import getISODate from '@utils/date-helpers';
 
 const formAddress = (address: IAddressData): BaseAddress => ({
   country: COUNTRIES_PATTERNS[address.country]?.code,
@@ -58,7 +58,7 @@ export function prepareCustomerDraft(formData: IRegistrationFormData): CustomerD
     password: formData.password,
     firstName: formData.firstName,
     lastName: formData.lastName,
-    dateOfBirth: getUTCDate(new Date(formData.date)),
+    dateOfBirth: getISODate(new Date(formData.date)),
     ...prepareAddresses(formData),
     authenticationMode: 'Password',
   };
