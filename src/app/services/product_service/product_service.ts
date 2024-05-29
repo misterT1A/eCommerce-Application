@@ -23,7 +23,7 @@ class GetProductsService {
     this.chosenCategory = category;
   }
 
-  public async updateCategoriesObjects() {
+  public async getCommercetoolsData() {
     try {
       const data = await this.getCategories();
       const { results } = data.body;

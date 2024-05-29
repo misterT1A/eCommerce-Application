@@ -34,8 +34,8 @@ export default class App {
     this.controller = null;
     document.addEventListener('DOMContentLoaded', async () => {
       await AuthService.sessionStateHandler();
+      await ProductService.getCommercetoolsData();
       await updateMyCustomerInfo();
-      await ProductService.updateCategoriesObjects();
       this.headerController.updateTextLoggined(MyCustomer.fullNameShort);
       this.router.navigateToLastPoint();
     });

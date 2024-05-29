@@ -6,8 +6,8 @@ import BaseComponent from '@utils/base-component';
 import { button } from '@utils/elements';
 
 import styles from './_filters.scss';
-import type { FilterKeys } from './constants-filters';
 import { CATEGORIES, FILTERS, SORT, SUBCATEGORIES } from './constants-filters';
+import type Breadcrumbs from '../breadcrumbs/breadcrumbs';
 import type ProductCards from '../product-cards/product-cards';
 
 enum SORT_SELECTION {
@@ -37,11 +37,14 @@ export default class FilterBlock extends BaseComponent {
 
   private sortSelection: FormSelection;
 
-  constructor(private productCardsBlock: ProductCards) {
+  constructor(
+    private productCardsBlock: ProductCards,
+    private breadcrumbs: Breadcrumbs
+  ) {
     super({ tag: 'div', className: styles.filterBlock });
     this.resetButton = button([styles['reset-btn']], 'RESET FILTERS', {
       onclick: () => {
-        this.handleReset();
+        this.reset();
       },
     });
     this.searchForm = new BaseComponent<HTMLFormElement>(
@@ -103,11 +106,12 @@ export default class FilterBlock extends BaseComponent {
     });
   }
 
-  private async handleReset() {
+  private async reset() {
     this.addClass(styles.inactive);
     await ProductService.resetFilters().then((data) => this.productCardsBlock.setProducts(data.body.results));
     this.updateView();
     this.removeClass(styles.inactive);
+    this.breadcrumbs.update(['CATALOG']);
   }
 
   private updateView() {
@@ -155,11 +159,13 @@ export default class FilterBlock extends BaseComponent {
     }
     // console.log(categoryID);
 
+    this.breadcrumbs.update(['CATALOG', this.categorySelect.getValue()]);
     ProductService.setChosenCategory(CATEGORIES[this.categorySelect.getValue()]);
     ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
   }
 
   private handleSubcategoryChange() {
+    this.breadcrumbs.update(['CATALOG', this.categorySelect.getValue(), this.subcategorySelect.getValue()]);
     ProductService.setChosenCategory(SUBCATEGORIES[this.subcategorySelect.getValue()]);
     ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
   }
@@ -193,7 +199,7 @@ export default class FilterBlock extends BaseComponent {
     }
   }
 
-  public setValues(values: FilterKeys[]) {
+  public setValues(values: string[]) {
     if (values.includes('IS_VEGAN')) {
       this.veganFilter.setValue(true);
       const event = new Event('change', { bubbles: true });
