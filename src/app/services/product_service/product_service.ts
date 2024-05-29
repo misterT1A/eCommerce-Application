@@ -17,7 +17,6 @@ class GetProductsService {
 
   constructor() {
     this.root = AuthService.getRoot();
-    this.updateCategoriesObjects();
   }
 
   public setChosenCategory(category: string) {

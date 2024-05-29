@@ -131,11 +131,11 @@ export default class FilterBlock extends BaseComponent {
     const categoryID = CATEGORIES[this.categorySelect.getValue()];
     const keys: string[] = [];
     await ProductService.getSubcategories(categoryID)
-      .then((response) => {
-        const subcategories = response.body.results;
+      .then((data) => {
+        const subcategories = data.body.results;
         if (subcategories.length) {
           subcategories.forEach((subcategory) => {
-            keys.push(subcategory.key?.replace('-', ' ').replace('_', ' & ') as string as string);
+            keys.push(subcategory.key?.replace('-', ' ').replace('_', ' & ') as string);
           });
         }
       })
