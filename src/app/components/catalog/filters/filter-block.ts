@@ -145,16 +145,14 @@ export default class FilterBlock extends BaseComponent {
     if (!keys.length) {
       this.subcategorySelect.reset();
       this.subcategorySelect.addClass(styles.inactive);
-      return;
+    } else {
+      this.subcategorySelect.destroy();
+      this.subcategorySelect = new FormSelection('Subcategory', [...keys]);
+      this.subcategorySelect.addListener('change', () => {
+        this.handleSubcategoryChange();
+      });
+      this.categorySelect.getNode().insertAdjacentElement('afterend', this.subcategorySelect.getNode());
     }
-    this.subcategorySelect.destroy();
-    this.subcategorySelect = new FormSelection('Subcategory', [...keys]);
-    this.subcategorySelect.addListener('change', () => {
-      this.handleSubcategoryChange();
-    });
-
-    this.categorySelect.getNode().insertAdjacentElement('afterend', this.subcategorySelect.getNode());
-
     // console.log(categoryID);
 
     ProductService.setChosenCategory(CATEGORIES[this.categorySelect.getValue()]);
