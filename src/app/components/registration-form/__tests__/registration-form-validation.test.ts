@@ -65,12 +65,9 @@ describe('RegistrationController', () => {
       },
     };
 
-    const errorsAddress = {
-      defaultAddress: false,
-      commonAddress: false,
+    const errorsAddress: IAddressDataErrors = {
       city: [],
       street: [],
-      country: [],
       zipCode: [],
     };
 
