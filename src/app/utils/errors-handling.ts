@@ -1,6 +1,8 @@
 import type { ClientResponse } from '@commercetools/platform-sdk';
 import type { ErrorResponse } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/error';
 
+import notificationEmitter from '@components/notifications/notifications-controller';
+
 import { hasFields, isTypeOf } from './asserts-object';
 
 const errorResponseTemplate = {
@@ -72,4 +74,9 @@ export function processErrorResponse(error: unknown) {
     message: `Unexpected error: ${error}`,
     errors: [`${error}`],
   };
+}
+
+export function showErrorMessages(res: ILoginResult) {
+  const errors = res.errors ? res.errors : [res.message];
+  errors.forEach((text) => notificationEmitter.showMessage({ messageType: 'error', text }));
 }

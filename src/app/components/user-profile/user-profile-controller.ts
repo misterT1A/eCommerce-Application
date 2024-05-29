@@ -1,19 +1,24 @@
 import Controller from '@components/controller';
 import type HeaderController from '@components/header/header_controller';
-import Modal from '@components/modal/modal';
-import notificationEmitter from '@components/notifications/notifications-controller';
-import AuthService from '@services/auth-service';
-import { updateCustomer } from '@services/customer-service/my-customer-service';
 import MyCustomer from '@services/customer-service/myCustomer';
-import RegistrationValidator from '@services/registrationValidationService/registrationValidator';
 import type Router from '@src/app/router/router';
 
-import { getLogsFromRequestBody, getUserInfoUpdateRequest } from './edit-mode-adapters';
-import UserInfoEdit from './user-profile-view/edit-mode/edit-user';
+import AddAddress from './addresses-add-mode';
+import EditAddress from './addresses-edit-mode';
+import DeleteAddress from './delete-address-mode';
+import EditModeProfile from './profile-details-edit-mode';
 import ProfileView from './user-profile-view/user-profile-view';
 
 class ProfileController extends Controller<ProfileView> {
   private currentAddress = MyCustomer.addresses.addresses[0].id;
+
+  private profileInfoEdit: EditModeProfile;
+
+  private addAddress: AddAddress;
+
+  private editAddressMode: EditAddress;
+
+  private deleteAddressMode: DeleteAddress;
 
   constructor(
     private router: Router,
@@ -23,73 +28,50 @@ class ProfileController extends Controller<ProfileView> {
       new ProfileView(
         router,
         (id) => this.deleteAddress(id),
-        (id) => this.editAddress(id)
+        (id) => this.editAddress(id),
+        async (id) => {
+          await this.setAsDefaultShipping(id);
+        },
+        async (id) => {
+          await this.setAsDefaultBilling(id);
+        }
       )
     );
     this.getView.openAddress(this.currentAddress ?? '');
     this.getView.profileCredentials.editButton.addListener('click', () => {
       this.enableUserInfoEdit();
     });
+    this.getView.profileAddresses.addAddressButton.addListener('click', () => {
+      this.enableAddressesAdd();
+    });
+    this.profileInfoEdit = new EditModeProfile(this.getView, this.headerController);
+    this.addAddress = new AddAddress(this.getView);
+    this.editAddressMode = new EditAddress(this.getView);
+    this.deleteAddressMode = new DeleteAddress(this.getView);
   }
 
   private deleteAddress(id: string) {
-    console.log('delete', id);
+    this.deleteAddressMode.enable(id);
   }
 
   private editAddress(id: string) {
-    console.log('edit', id);
+    this.editAddressMode.enable(id);
   }
 
   private enableUserInfoEdit() {
-    const editForm = new UserInfoEdit({
-      firstName: MyCustomer.firstName ?? '',
-      lastName: MyCustomer.lastName ?? '',
-      date: MyCustomer.dateOfBirth ?? '',
-      email: MyCustomer.email ?? '',
-    });
-    const userInfoEditModal = new Modal({ title: 'Profile Info', content: editForm });
-    userInfoEditModal.open();
-    editForm.applyButton.addListener('click', () => {
-      if (this.processUserData(editForm).isValidForm) {
-        const values = editForm.getValues();
-        const requestBody = getUserInfoUpdateRequest(values);
-        if (!requestBody.actions.length) {
-          return;
-        }
-        editForm.applyButton.getNode().disabled = true;
-        updateCustomer(MyCustomer.id ?? '', AuthService.getRoot(), requestBody).then((res) => {
-          if (res.success) {
-            MyCustomer.setCustomer(res.customer);
-            this.getView.profileCredentials.updateView();
-            this.headerController.updateTextLoggined(MyCustomer.fullNameShort);
-            notificationEmitter.showMessage({
-              messageType: 'success',
-              title: 'Changes are saved!',
-              text: getLogsFromRequestBody(requestBody),
-            });
-          } else {
-            const errors = res.errors ? res.errors : [res.message];
-            errors.forEach((text) => notificationEmitter.showMessage({ messageType: 'error', text }));
-          }
-          editForm.applyButton.getNode().disabled = false;
-        });
-      }
-    });
-    editForm.addListener('input', () => this.processUserData(editForm));
+    this.profileInfoEdit.enable();
   }
 
-  private processUserData(form: UserInfoEdit) {
-    let isValidForm = true;
-    const errorsObject = RegistrationValidator.processUserInfo(form.getValues());
-    Object.entries(errorsObject).forEach(([key, errors]) => {
-      if (errors.length > 0) {
-        isValidForm = false;
-      }
-      form.fields[key as userFormFieldsType].updateErrors(errors);
-    });
-    return {
-      isValidForm,
-    };
+  private enableAddressesAdd() {
+    this.addAddress.enable();
+  }
+
+  public async setAsDefaultShipping(id: string) {
+    await this.editAddressMode.setAddressAsDefault('Shipping', id);
+  }
+
+  public async setAsDefaultBilling(id: string) {
+    await this.editAddressMode.setAddressAsDefault('Billing', id);
   }
 }
 

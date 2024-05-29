@@ -61,11 +61,13 @@ class RegistrationValidator {
     };
   }
 
-  // public static processAddressData(formData: IAddressProfileData) {
-  //   return {
-
-  //   }
-  // }
+  public static processAddressInfo(formData: ProfileAddressValues) {
+    return {
+      zipCode: this.validateField(formData.zipCode, 'zipCode', formData.country),
+      street: this.validateField(formData.street, 'street'),
+      city: this.validateField(formData.city, 'city'),
+    };
+  }
 
   public static processFormData(formData: IRegistrationFormData) {
     let result = {} as IRegistrationErrors;
