@@ -7,6 +7,8 @@ interface IModalProps<T extends BaseComponent> {
   title: string;
 
   content: T;
+
+  withoutCloseBtn?: boolean;
 }
 
 class Modal<T extends BaseComponent> extends BaseComponent {
@@ -26,7 +28,11 @@ class Modal<T extends BaseComponent> extends BaseComponent {
     if (modalProps.content) {
       this.modal.append(modalProps.content);
     }
-    header.append(closeButton);
+
+    if (!modalProps.withoutCloseBtn) {
+      header.append(closeButton);
+    }
+
     this.append(this.modal);
   }
 

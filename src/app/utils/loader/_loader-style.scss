@@ -1,21 +1,13 @@
 .loader {
   color: #585858;
-}
-
-.loader,
-.loader div {
-  box-sizing: border-box;
-}
-
-.loader {
   display: inline-block;
   position: relative;
   width: 80px;
   height: 80px;
+  margin: 0 auto;
 }
 
 .loader div {
-  box-sizing: border-box;
   display: block;
   position: absolute;
   width: 64px;
