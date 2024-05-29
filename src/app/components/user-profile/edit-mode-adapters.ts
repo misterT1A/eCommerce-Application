@@ -1,4 +1,4 @@
-import type { CustomerUpdate, CustomerUpdateAction } from '@commercetools/platform-sdk';
+import type { CustomerChangePassword, CustomerUpdate, CustomerUpdateAction } from '@commercetools/platform-sdk';
 
 import MyCustomer from '@services/customer-service/myCustomer';
 import { COUNTRIES_PATTERNS } from '@services/registrationValidationService/validCountries';
@@ -35,32 +35,6 @@ export function getUserInfoUpdateRequest(values: IUserInfoValues): CustomerUpdat
     version: MyCustomer.version ?? 1,
     actions,
   };
-}
-
-export function getLogsFromRequestBody(customerUpdateRequest: CustomerUpdate) {
-  const actions: string[] = [];
-  customerUpdateRequest.actions.forEach((action) => {
-    if (action.action === 'changeEmail') {
-      actions.push('email');
-    }
-    if (action.action === 'setFirstName') {
-      actions.push('first name');
-    }
-    if (action.action === 'setLastName') {
-      actions.push('last name');
-    }
-    if (action.action === 'setDateOfBirth') {
-      actions.push('date of birth');
-    }
-  });
-  const changes = actions?.slice(1)?.join(', ') ?? '';
-  if (actions.length > 1) {
-    return `The ${changes} and ${actions[0]} are updated.`;
-  }
-  if (actions.length === 1) {
-    return `The ${actions[0]} is updated.`;
-  }
-  return '';
 }
 
 const formAddressRequest = (values: ProfileAddressValues) => ({
@@ -193,5 +167,17 @@ export function getSetDefaultAddressRequest(type: 'Shipping' | 'Billing', id: st
   return {
     version: MyCustomer.version ?? 0,
     actions,
+  };
+}
+
+export function getChangePasswordRequest(passwords: {
+  currentPassword: string;
+  newPassword: string;
+}): CustomerChangePassword {
+  return {
+    id: MyCustomer.id ?? '',
+    version: MyCustomer.version ?? 0,
+    currentPassword: passwords.currentPassword,
+    newPassword: passwords.newPassword,
   };
 }
