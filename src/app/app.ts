@@ -1,5 +1,7 @@
+import modalConstructor from '@components/disconect/disconect-view';
 import FooterController from '@components/footer/footer-controller';
 import HeaderController from '@components/header/header_controller';
+import type Modal from '@components/modal/modal';
 import AuthService from '@services/auth-service';
 import { updateMyCustomerInfo } from '@services/customer-service/my-customer-service';
 import MyCustomer from '@services/customer-service/myCustomer';
@@ -22,6 +24,8 @@ export default class App {
 
   protected footerController: FooterController;
 
+  protected disconeectModal: Modal<BaseComponent>;
+
   constructor() {
     this.router = new Router(this.createsRoutes());
 
@@ -31,12 +35,24 @@ export default class App {
     this.footerController = new FooterController(this.router);
 
     this.controller = null;
+    this.disconeectModal = modalConstructor();
+
+    this.setListners();
+  }
+
+  private setListners() {
     document.addEventListener('DOMContentLoaded', async () => {
       await AuthService.sessionStateHandler();
       await updateMyCustomerInfo();
       this.headerController.updateTextLoggined(MyCustomer.fullNameShort);
       this.router.navigateToLastPoint();
     });
+
+    window.addEventListener('offline', () => {
+      this.disconeectModal = modalConstructor();
+      this.disconeectModal.open();
+    });
+    window.addEventListener('online', () => this.disconeectModal.close());
   }
 
   public showContent(parent: HTMLElement) {
@@ -81,10 +97,10 @@ export default class App {
       },
       {
         path: Pages.CATALOG,
-        callBack: async () => {
+        callBack: async (filtersParams: string[]) => {
           const { default: CatalogController } = await import('@components/catalog/catalog-controller');
           await this.hideMain();
-          this.controller = new CatalogController(this.router);
+          this.controller = new CatalogController(this.router, filtersParams);
           this.setContent();
         },
       },
