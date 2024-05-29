@@ -16,7 +16,6 @@ export default class CatalogController extends Controller<CatalogView> {
 
     this.initContent();
     this.view.getFilterBlockView.setValues(filtersParams || []);
-    console.log(filtersParams);
   }
 
   private initContent() {

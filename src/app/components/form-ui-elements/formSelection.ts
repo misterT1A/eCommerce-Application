@@ -42,7 +42,7 @@ class FormSelection extends BaseComponent<HTMLFormElement> {
     this.appendChildren([
       div(
         [styles.form__selectionButtonWrapper],
-        svg('./assets/img/arrow.svg#arrow', styles.form__selectionIcon),
+        svg('/assets/img/arrow.svg#arrow', styles.form__selectionIcon),
         this.button,
         ul([styles.form__selectionList], ...listItems)
       ),

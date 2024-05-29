@@ -1,4 +1,4 @@
-import { CATEGORIES, SORT, SUBCATEGORIES } from '@components/catalog/filters/constants-filters';
+import { CATEGORIES, FILTERS, SORT, SUBCATEGORIES } from '@components/catalog/filters/constants-filters';
 
 const setSort = (parsePath: string[], filter: string) => {
   const sortElemForDelete = parsePath.find((elem) => elem === filter);
@@ -17,6 +17,17 @@ const setSort = (parsePath: string[], filter: string) => {
 };
 
 const setCategoties = (parsePath: string[], filter: string) => {
+  const elemForDelete = parsePath.find((elem) => elem === filter);
+
+  if (elemForDelete) {
+    parsePath.splice(parsePath.indexOf(elemForDelete), 1);
+    const subElem = parsePath.find((elem) => elem in SUBCATEGORIES);
+    if (subElem) {
+      parsePath.splice(parsePath.indexOf(subElem), 1);
+    }
+    return;
+  }
+
   const element = parsePath.find((elem) => elem in CATEGORIES);
 
   if (element) {
@@ -32,6 +43,13 @@ const setCategoties = (parsePath: string[], filter: string) => {
 };
 
 const setSubCategories = (parsePath: string[], filter: string) => {
+  const elemForDelete = parsePath.find((elem) => elem === filter);
+
+  if (elemForDelete) {
+    parsePath.splice(parsePath.indexOf(elemForDelete), 1);
+    return;
+  }
+
   const element = parsePath.find((elem) => elem in SUBCATEGORIES);
 
   if (element) {
@@ -59,4 +77,16 @@ const setFilters = (parsePath: string[], filter: string) => {
   }
 };
 
-export { setSort, setCategoties, setSubCategories, setFilters };
+const checkRightURL = (url: string): boolean => {
+  const path = url.split('/').splice(1);
+  const params = [
+    ...Object.keys(FILTERS),
+    ...Object.keys(CATEGORIES),
+    ...Object.keys(SUBCATEGORIES),
+    ...Object.keys(SORT),
+  ];
+
+  return path.every((elem) => params.includes(elem));
+};
+
+export { setSort, setCategoties, setSubCategories, setFilters, checkRightURL };

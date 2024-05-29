@@ -2,7 +2,7 @@ import { CATEGORIES, FILTERS, SORT, SUBCATEGORIES } from '@components/catalog/fi
 import AuthService from '@services/auth-service';
 
 import Pages from './pages';
-import * as urlSeters from './router-model';
+import * as urlSeters from './router-helpers';
 
 export default class Router {
   protected routes: IRoute[];
@@ -18,17 +18,6 @@ export default class Router {
     this.sorts = new Set();
 
     window.addEventListener('popstate', this.changeBrowser.bind(this));
-
-    setTimeout(() => {
-      window.history.pushState(null, '', `/catalog/BREAD/CIABATTAS`);
-      this.setUrlCatalog('IS_VEGAN');
-      this.setUrlCatalog('IS_SALE');
-      // this.setUrlCatalog('IS_VEGAN');
-      this.setUrlCatalog('PRICE_DESC');
-      // this.setUrlCatalog('PRICE_DESC');
-      this.setUrlCatalog('PRICE_ASC');
-      this.setUrlCatalog('clear');
-    }, 2000);
   }
 
   public navigate(url: string, popstate = false) {
@@ -53,6 +42,10 @@ export default class Router {
     if (request.resource.length && [Pages.PRODUCT].includes(request.path)) {
       (route.callBack as (name: string) => void)(request.resource[0]);
     } else if (request.resource.length && [Pages.CATALOG].includes(request.path)) {
+      if (!urlSeters.checkRightURL(url)) {
+        this.navigate(Pages.ERROR, true);
+        return;
+      }
       (route.callBack as (name: string[]) => void)(request.resource);
     } else if (request.resource.length && ![Pages.PRODUCT, Pages.CATALOG].includes(request.path)) {
       this.navigate(Pages.ERROR, true);
@@ -69,9 +62,8 @@ export default class Router {
     const path = this.getCurrentPath();
     const parsePath = path.split('/').splice(1);
 
-    if (filter === 'clear') {
-      window.history.pushState(null, '', `/${Pages.CATALOG}`);
-      return;
+    if (!urlSeters.checkRightURL(path)) {
+      this.navigate(Pages.ERROR, true);
     }
 
     if (filter in SORT) {
@@ -90,7 +82,13 @@ export default class Router {
       urlSeters.setFilters(parsePath, filter);
     }
 
-    window.history.pushState(null, '', `/${Pages.CATALOG}/${parsePath.join('/')}`);
+    const catalogUrl = `/${Pages.CATALOG}`;
+    const filtersUrl = `/${parsePath.join('/')}`;
+    window.history.pushState(null, '', !parsePath.length ? catalogUrl : catalogUrl + filtersUrl);
+  }
+
+  public setEmptyUrlCatalog() {
+    window.history.pushState(null, '', `/${Pages.CATALOG}`);
   }
 
   public navigateToLastPoint() {
