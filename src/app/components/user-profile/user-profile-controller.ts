@@ -4,6 +4,8 @@ import MyCustomer from '@services/customer-service/myCustomer';
 import type Router from '@src/app/router/router';
 
 import AddAddress from './addresses-add-mode';
+import EditAddress from './addresses-edit-mode';
+import DeleteAddress from './delete-address-mode';
 import EditModeProfile from './profile-details-edit-mode';
 import ProfileView from './user-profile-view/user-profile-view';
 
@@ -14,6 +16,10 @@ class ProfileController extends Controller<ProfileView> {
 
   private addAddress: AddAddress;
 
+  private editAddressMode: EditAddress;
+
+  private deleteAddressMode: DeleteAddress;
+
   constructor(
     private router: Router,
     private headerController: HeaderController
@@ -22,7 +28,13 @@ class ProfileController extends Controller<ProfileView> {
       new ProfileView(
         router,
         (id) => this.deleteAddress(id),
-        (id) => this.editAddress(id)
+        (id) => this.editAddress(id),
+        async (id) => {
+          await this.setAsDefaultShipping(id);
+        },
+        async (id) => {
+          await this.setAsDefaultBilling(id);
+        }
       )
     );
     this.getView.openAddress(this.currentAddress ?? '');
@@ -34,14 +46,16 @@ class ProfileController extends Controller<ProfileView> {
     });
     this.profileInfoEdit = new EditModeProfile(this.getView, this.headerController);
     this.addAddress = new AddAddress(this.getView);
+    this.editAddressMode = new EditAddress(this.getView);
+    this.deleteAddressMode = new DeleteAddress(this.getView);
   }
 
   private deleteAddress(id: string) {
-    console.log('delete', id);
+    this.deleteAddressMode.enable(id);
   }
 
   private editAddress(id: string) {
-    console.log('edit', id);
+    this.editAddressMode.enable(id);
   }
 
   private enableUserInfoEdit() {
@@ -50,6 +64,14 @@ class ProfileController extends Controller<ProfileView> {
 
   private enableAddressesAdd() {
     this.addAddress.enable();
+  }
+
+  public async setAsDefaultShipping(id: string) {
+    await this.editAddressMode.setAddressAsDefault('Shipping', id);
+  }
+
+  public async setAsDefaultBilling(id: string) {
+    await this.editAddressMode.setAddressAsDefault('Billing', id);
   }
 }
 

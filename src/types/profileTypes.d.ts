@@ -16,7 +16,8 @@ enum ProfileAddressesFields {
   city,
   isBilling,
   isShipping,
-  isDefault,
+  isDefaultShipping,
+  isDefaultBilling,
 }
 
 type ProfileAddressesFieldsType = keyof typeof ProfileAddressesFields;
@@ -28,5 +29,6 @@ type ProfileAddressValues = {
   city: string;
   isBilling: boolean;
   isShipping: boolean;
-  isDefault: boolean;
+  isDefaultBilling: boolean;
+  isDefaultShipping: boolean;
 };

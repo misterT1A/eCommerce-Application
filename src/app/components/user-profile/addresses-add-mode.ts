@@ -1,14 +1,14 @@
 import type { Address } from '@commercetools/platform-sdk';
 
-import FormField from '@components/form-ui-elements/formField';
 import Modal from '@components/modal/modal';
 import notificationEmitter from '@components/notifications/notifications-controller';
 import AuthService from '@services/auth-service';
 import { updateCustomer } from '@services/customer-service/my-customer-service';
 import MyCustomer from '@services/customer-service/myCustomer';
-import RegistrationValidator from '@services/registrationValidationService/registrationValidator';
+import { showErrorMessages } from '@utils/errors-handling';
 
 import { getAddressAddRequest, getAddressTypeRequest } from './edit-mode-adapters';
+import { processAddressData } from './profile-helpers';
 import UserAddressEdit from './user-profile-view/edit-mode/edit-address';
 import type ProfileView from './user-profile-view/user-profile-view';
 
@@ -23,12 +23,13 @@ class AddAddress {
     MyCustomer.setCustomer(resAddAddress.customer);
     const addresses = resAddAddress.customer?.addresses;
     const addressID: Address = addresses ? addresses[addresses.length - 1] : '';
-    if (values.isBilling || values.isShipping || values.isDefault) {
+    if (values.isBilling || values.isShipping || values.isDefaultBilling || values.isDefaultShipping) {
       const request = getAddressTypeRequest({
         id: addressID.id ?? '',
         isBilling: values.isBilling,
         isShipping: values.isShipping,
-        isDefault: values.isDefault,
+        isDefaultBilling: values.isDefaultBilling,
+        isDefaultShipping: values.isDefaultShipping,
       });
       if (!request.actions.length) {
         return;
@@ -41,8 +42,7 @@ class AddAddress {
         userInfoEditModal.close();
         notificationEmitter.showMessage({ messageType: 'success', text: 'Address is added!' });
       } else {
-        const errors = resSetAttrs.errors ? resSetAttrs.errors : [resSetAttrs.message];
-        errors.forEach((text) => notificationEmitter.showMessage({ messageType: 'error', text }));
+        showErrorMessages(resAddAddress);
       }
     } else {
       this.view.profileAddresses.updateView();
@@ -57,7 +57,7 @@ class AddAddress {
     userInfoEditModal.open();
     addressForm.applyButton.setTextContent('ADD ADDRESS');
     addressForm.applyButton.addListener('click', async () => {
-      if (this.processData(addressForm).isValidForm) {
+      if (processAddressData(addressForm).isValidForm) {
         const values = addressForm.getValues();
         const requestBody = getAddressAddRequest(values);
         if (!requestBody.actions.length) {
@@ -66,27 +66,12 @@ class AddAddress {
         const resAddAddress = await updateCustomer(MyCustomer.id ?? '', AuthService.getRoot(), requestBody);
         if (resAddAddress.success) {
           this.setAddressAttributes(resAddAddress, values, userInfoEditModal);
+        } else {
+          showErrorMessages(resAddAddress);
         }
       }
     });
-    addressForm.addListener('input', () => this.processData(addressForm));
-  }
-
-  private processData(form: UserAddressEdit) {
-    let isValidForm = true;
-    const errorsObject = RegistrationValidator.processAddressInfo(form.getValues());
-    Object.entries(errorsObject).forEach(([key, errors]) => {
-      if (errors.length > 0) {
-        isValidForm = false;
-      }
-      const field = form.fields[key as ProfileAddressesFieldsType];
-      if (field instanceof FormField) {
-        field.updateErrors(errors);
-      }
-    });
-    return {
-      isValidForm,
-    };
+    addressForm.addListener('input', () => processAddressData(addressForm));
   }
 }
 
