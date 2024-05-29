@@ -44,7 +44,6 @@ class EditAddress {
         MyCustomer.setCustomer(resSetAttrs.customer);
         this.view.profileAddresses.updateView();
         this.view.openAddress(id ?? '');
-        notificationEmitter.showMessage({ messageType: 'success', title: 'Saved!', text: 'Address is updated!' });
       } else {
         showErrorMessages(resSetAttrs);
       }
@@ -72,6 +71,7 @@ class EditAddress {
           this.view.profileAddresses.updateView();
           this.view.openAddress(id);
           await this.setAddressAttributes(id, values);
+          notificationEmitter.showMessage({ messageType: 'success', title: 'Saved!', text: 'Address is updated!' });
         } else {
           showErrorMessages(resUpdateAddress);
         }
@@ -80,23 +80,6 @@ class EditAddress {
     addressForm.addListener('input', () => processAddressData(addressForm));
   }
 
-  // private processData(form: UserAddressEdit) {
-  //   let isValidForm = true;
-  //   const errorsObject = RegistrationValidator.processAddressInfo(form.getValues());
-  //   Object.entries(errorsObject).forEach(([key, errors]) => {
-  //     if (errors.length > 0) {
-  //       isValidForm = false;
-  //     }
-  //     const field = form.fields[key as ProfileAddressesFieldsType];
-  //     if (field instanceof FormField) {
-  //       field.updateErrors(errors);
-  //     }
-  //   });
-  //   return {
-  //     isValidForm,
-  //   };
-  // }
-
   public async setAddressAsDefault(type: 'Shipping' | 'Billing', id: string) {
     const request = getSetDefaultAddressRequest(type, id);
     if (!request.actions.length) {
@@ -104,7 +87,6 @@ class EditAddress {
     }
     const resSetAttrs = await updateCustomer(MyCustomer.id ?? '', AuthService.getRoot(), request);
     if (resSetAttrs.success) {
-      console.log(resSetAttrs);
       MyCustomer.setCustomer(resSetAttrs.customer);
       this.view.profileAddresses.updateView();
       this.view.openAddress(id ?? '');
