@@ -10,12 +10,10 @@ import { processErrorResponse } from '@utils/errors-handling';
 
 export async function updateMyCustomerInfo(): Promise<void> {
   const root = AuthService.getRoot();
-
   if (AuthService.isAuthorized()) {
     const customerInfo = await root.me().get().execute();
     if (customerInfo) {
       MyCustomer.setCustomer(customerInfo.body);
-      console.log('customer is updated');
     }
   }
 }

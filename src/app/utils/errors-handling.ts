@@ -72,7 +72,7 @@ export function processErrorResponse(error: unknown) {
   const errorResponse: unknown = error.body;
   if (isErrorResponse(errorResponse)) {
     const { statusCode } = error as ClientResponse;
-    if (statusCode === 400 || statusCode === 400) {
+    if (statusCode === 400 || statusCode === 409) {
       return {
         success: false,
         message: `Error`,
@@ -83,14 +83,14 @@ export function processErrorResponse(error: unknown) {
       return {
         success: false,
         message: `Error`,
-        errors: 'Bad gateway, please try later.',
+        errors: ['Bad gateway, please try later.'],
       };
     }
     if (statusCode === 404) {
       return {
         success: false,
         message: `Error`,
-        errors: 'Resource was not found.',
+        errors: ['Resource was not found.'],
       };
     }
   }

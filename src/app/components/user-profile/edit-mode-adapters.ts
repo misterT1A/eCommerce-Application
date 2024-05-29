@@ -67,14 +67,6 @@ export function getAddressEditRequest(values: ProfileAddressValues, addressId: s
   };
 }
 
-type AddressAttrs = {
-  id: string;
-  isBilling: boolean;
-  isShipping: boolean;
-  isDefaultBilling: boolean;
-  isDefaultShipping: boolean;
-};
-
 export function getAddressTypeRequest(newAddress: AddressAttrs, prevAddress?: AddressAttrs, version?: number) {
   const actions: CustomerUpdateAction[] = [];
   let refAddress = prevAddress;
