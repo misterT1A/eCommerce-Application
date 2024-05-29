@@ -7,15 +7,8 @@ import * as urlSeters from './router-helpers';
 export default class Router {
   protected routes: IRoute[];
 
-  protected filters: Set<string>;
-
-  protected sorts: Set<string>;
-
   constructor(routes: IRoute[]) {
     this.routes = routes;
-
-    this.filters = new Set();
-    this.sorts = new Set();
 
     window.addEventListener('popstate', this.changeBrowser.bind(this));
   }
