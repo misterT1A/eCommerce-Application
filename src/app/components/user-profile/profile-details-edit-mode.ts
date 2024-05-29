@@ -2,11 +2,12 @@ import type HeaderController from '@components/header/header_controller';
 import Modal from '@components/modal/modal';
 import notificationEmitter from '@components/notifications/notifications-controller';
 import AuthService from '@services/auth-service';
-import { updateCustomer } from '@services/customer-service/my-customer-service';
+import { updateCustomer, updateMyCustomerInfo } from '@services/customer-service/my-customer-service';
 import MyCustomer from '@services/customer-service/myCustomer';
 import RegistrationValidator from '@services/registrationValidationService/registrationValidator';
 
-import { getLogsFromRequestBody, getUserInfoUpdateRequest } from './edit-mode-adapters';
+import { getUserInfoUpdateRequest } from './edit-mode-adapters';
+import { getLogsFromRequestBody } from './profile-helpers';
 import UserInfoEdit from './user-profile-view/edit-mode/edit-user';
 import type ProfileView from './user-profile-view/user-profile-view';
 
@@ -26,6 +27,7 @@ class EditModeProfile {
     const userInfoEditModal = new Modal({ title: 'Profile Info', content: editForm });
     userInfoEditModal.open();
     editForm.applyButton.addListener('click', async () => {
+      await updateMyCustomerInfo();
       if (this.processUserData(editForm).isValidForm) {
         const values = editForm.getValues();
         const requestBody = getUserInfoUpdateRequest(values);

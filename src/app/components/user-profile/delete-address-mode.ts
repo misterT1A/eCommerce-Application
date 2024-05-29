@@ -1,7 +1,7 @@
 import Modal from '@components/modal/modal';
 import notificationEmitter from '@components/notifications/notifications-controller';
 import AuthService from '@services/auth-service';
-import { updateCustomer } from '@services/customer-service/my-customer-service';
+import { updateCustomer, updateMyCustomerInfo } from '@services/customer-service/my-customer-service';
 import MyCustomer from '@services/customer-service/myCustomer';
 import { showErrorMessages } from '@utils/errors-handling';
 
@@ -17,6 +17,7 @@ class DeleteAddress {
     const modal = new Modal({ title: 'Are you sure?', content: deleteAddress });
     modal.open();
     deleteAddress.confirmButton.addListener('click', async () => {
+      await updateMyCustomerInfo();
       const requestBody = getRemoveAddressRequest(id);
       deleteAddress.confirmButton.getNode().disabled = true;
       const resRemoveAddress = await updateCustomer(MyCustomer.id ?? '', AuthService.getRoot(), requestBody);

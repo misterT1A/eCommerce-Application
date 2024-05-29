@@ -3,7 +3,7 @@ import type { Address } from '@commercetools/platform-sdk';
 import Modal from '@components/modal/modal';
 import notificationEmitter from '@components/notifications/notifications-controller';
 import AuthService from '@services/auth-service';
-import { updateCustomer } from '@services/customer-service/my-customer-service';
+import { updateCustomer, updateMyCustomerInfo } from '@services/customer-service/my-customer-service';
 import MyCustomer from '@services/customer-service/myCustomer';
 import { showErrorMessages } from '@utils/errors-handling';
 
@@ -57,6 +57,7 @@ class AddAddress {
     userInfoEditModal.open();
     addressForm.applyButton.setTextContent('ADD ADDRESS');
     addressForm.applyButton.addListener('click', async () => {
+      await updateMyCustomerInfo();
       if (processAddressData(addressForm).isValidForm) {
         const values = addressForm.getValues();
         const requestBody = getAddressAddRequest(values);
