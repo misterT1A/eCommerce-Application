@@ -14,7 +14,8 @@ interface IUserInfoFormFields {
   zipCode: FormField;
   isBilling: Toggler;
   isShipping: Toggler;
-  isDefault: Toggler;
+  isDefaultBilling: Toggler;
+  isDefaultShipping: Toggler;
 }
 
 class UserAddressEdit extends BaseComponent {
@@ -25,7 +26,8 @@ class UserAddressEdit extends BaseComponent {
     zipCode: new FormField('Postal Code', 'text', false),
     isBilling: new Toggler('Set as billing address'),
     isShipping: new Toggler('Set as shipping address'),
-    isDefault: new Toggler('Set as default address'),
+    isDefaultBilling: new Toggler('Set as default billing address'),
+    isDefaultShipping: new Toggler('Set as default shipping address'),
   } as const;
 
   public applyButton: BaseComponent<HTMLButtonElement>;
@@ -40,12 +42,28 @@ class UserAddressEdit extends BaseComponent {
       this.fields.city,
       this.fields.isShipping,
       this.fields.isBilling,
-      this.fields.isDefault,
+      this.fields.isDefaultShipping,
+      this.fields.isDefaultBilling,
       this.applyButton,
     ]);
     this.fields.isShipping.setValue(true);
     this.fields.isBilling.bindWith(this.fields.isShipping);
     this.fields.isShipping.bindWith(this.fields.isBilling);
+    this.fields.isShipping.bindWith(this.fields.isDefaultShipping, false);
+    this.fields.isDefaultShipping.bindWith(this.fields.isShipping, false, true);
+    this.fields.isBilling.bindWith(this.fields.isDefaultBilling, false);
+    this.fields.isDefaultBilling.bindWith(this.fields.isBilling, false, true);
+  }
+
+  public setValues(values: ProfileAddressValues) {
+    this.fields.country.setValue(values.country);
+    this.fields.zipCode.setValue(values.zipCode);
+    this.fields.street.setValue(values.street);
+    this.fields.city.setValue(values.city);
+    this.fields.isBilling.setValue(values.isBilling);
+    this.fields.isShipping.setValue(values.isShipping);
+    this.fields.isDefaultShipping.setValue(values.isDefaultShipping);
+    this.fields.isDefaultBilling.setValue(values.isDefaultBilling);
   }
 
   public getValues(): ProfileAddressValues {
@@ -56,7 +74,8 @@ class UserAddressEdit extends BaseComponent {
       city: this.fields.city.getValue(),
       isBilling: this.fields.isBilling.getValue(),
       isShipping: this.fields.isShipping.getValue(),
-      isDefault: this.fields.isDefault.getValue(),
+      isDefaultBilling: this.fields.isDefaultBilling.getValue(),
+      isDefaultShipping: this.fields.isDefaultShipping.getValue(),
     };
   }
 }
