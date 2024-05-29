@@ -93,7 +93,13 @@ export function getAddressEditRequest(values: ProfileAddressValues, addressId: s
   };
 }
 
-type AddressAttrs = { id: string; isBilling: boolean; isShipping: boolean; isDefault: boolean };
+type AddressAttrs = {
+  id: string;
+  isBilling: boolean;
+  isShipping: boolean;
+  isDefaultBilling: boolean;
+  isDefaultShipping: boolean;
+};
 
 export function getAddressTypeRequest(newAddress: AddressAttrs, prevAddress?: AddressAttrs, version?: number) {
   const actions: CustomerUpdateAction[] = [];
@@ -103,7 +109,8 @@ export function getAddressTypeRequest(newAddress: AddressAttrs, prevAddress?: Ad
       id: newAddress.id,
       isBilling: false,
       isShipping: false,
-      isDefault: false,
+      isDefaultShipping: false,
+      isDefaultBilling: false,
     };
   }
   if (newAddress.isBilling !== refAddress?.isBilling) {
@@ -118,28 +125,22 @@ export function getAddressTypeRequest(newAddress: AddressAttrs, prevAddress?: Ad
       addressId: newAddress.id,
     });
   }
-  if (newAddress.isDefault) {
-    if (newAddress.isBilling) {
-      actions.push({
-        action: 'setDefaultBillingAddress',
-        addressId: newAddress.id,
-      });
-    }
-    if (newAddress.isShipping) {
-      actions.push({
-        action: 'setDefaultShippingAddress',
-        addressId: newAddress.id,
-      });
-    }
+  if (newAddress.isDefaultBilling) {
+    actions.push({
+      action: 'setDefaultBillingAddress',
+      addressId: newAddress.id,
+    });
+  }
+  if (newAddress.isDefaultShipping) {
+    actions.push({
+      action: 'setDefaultShippingAddress',
+      addressId: newAddress.id,
+    });
   }
   return {
     version: version ?? MyCustomer.version ?? 1,
     actions,
   };
-}
-
-export function getAddressesInfoUpdate() {
-  //
 }
 
 export function getCountryName(code: string) {
@@ -149,4 +150,48 @@ export function getCountryName(code: string) {
     ['FR', 'France'],
   ]);
   return map.get(code) ?? '';
+}
+
+export function getAddressValuesById(id: string) {
+  const address = MyCustomer.getAddressById(id);
+  return {
+    country: getCountryName(address?.country ?? '') as 'UK' | 'Belgium' | 'France',
+    zipCode: address?.postalCode ?? '',
+    street: address?.streetName ?? '',
+    city: address?.city ?? '',
+    isBilling: MyCustomer.isBillingAddress(id),
+    isShipping: MyCustomer.isShippingAddress(id),
+    isDefaultBilling: MyCustomer.defaultBillingId === id,
+    isDefaultShipping: MyCustomer.defaultShippingId === id,
+  };
+}
+
+export function getRemoveAddressRequest(addressId: string, version?: number) {
+  const action: CustomerUpdateAction = {
+    action: 'removeAddress',
+    addressId,
+  };
+  return {
+    version: version ?? MyCustomer.version ?? 1,
+    actions: [action],
+  };
+}
+
+export function getSetDefaultAddressRequest(type: 'Shipping' | 'Billing', id: string) {
+  const actions: CustomerUpdateAction[] = [
+    {
+      action: `setDefault${type}Address`,
+      addressId: id,
+    },
+  ];
+  if (!MyCustomer[`is${type}Address`](id)) {
+    actions.push({
+      action: `add${type}AddressId`,
+      addressId: id,
+    });
+  }
+  return {
+    version: MyCustomer.version ?? 0,
+    actions,
+  };
 }
