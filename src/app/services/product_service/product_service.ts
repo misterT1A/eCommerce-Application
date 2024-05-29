@@ -1,7 +1,7 @@
 import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk';
 
-import type { CategoryKey } from '@components/catalog/filters/constants-filters';
-import { CATEGORIES, SUBCATEGORIES } from '@components/catalog/filters/constants-filters';
+import type { CategoryKey, FilterKeys, SortKey } from '@components/catalog/filters/constants-filters';
+import { CATEGORIES, FILTERS, SORT, SUBCATEGORIES } from '@components/catalog/filters/constants-filters';
 import AuthService from '@services/auth-service';
 
 class GetProductsService {
@@ -33,17 +33,15 @@ class GetProductsService {
 
       results.forEach((result) => {
         if (!result.ancestors.length) {
-          const categoryKey = result.key?.toUpperCase().replace('-', ' ').replace('_', ' & ') as string;
+          const categoryKey = result.key as string;
           const categoryId = result.id;
           CATEGORIES[categoryKey] = categoryId;
         } else {
-          const categoryKey = result.key?.replace('-', ' ').replace('_', ' & ') as string;
+          const categoryKey = result.key as string;
           const categoryId = result.id;
           SUBCATEGORIES[categoryKey] = categoryId;
         }
       });
-      // console.log('Updated CATEGORIES:', CATEGORIES);
-      // console.log('Updated SUBCATEGORIES:', SUBCATEGORIES);
     } catch (e) {
       console.error('Error:', e);
     }
@@ -57,13 +55,6 @@ class GetProductsService {
           where: `parent(id="${categoryId}")`,
         },
       })
-      .execute();
-  }
-
-  public getAllProduct() {
-    return this.root
-      .productProjections()
-      .get({ queryArgs: { limit: 100 } })
       .execute();
   }
 
@@ -87,16 +78,17 @@ class GetProductsService {
     this.searchQuery = query;
   }
 
-  public applyFilter(filter: string) {
-    if (this.filters.has(filter)) {
-      this.filters.delete(filter);
+  public applyFilter(filter: FilterKeys) {
+    const filterValue = FILTERS[filter];
+    if (this.filters.has(filterValue)) {
+      this.filters.delete(filterValue);
     } else {
-      this.filters.add(filter);
+      this.filters.add(filterValue);
     }
   }
 
-  public applySort(sortType: string) {
-    this.sortOrder = sortType;
+  public applySort(sortType: SortKey) {
+    this.sortOrder = SORT[sortType];
   }
 
   public getFilteredProducts() {

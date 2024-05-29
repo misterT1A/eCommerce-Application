@@ -2,11 +2,14 @@ import FormField from '@components/form-ui-elements/formField';
 import FormSelection from '@components/form-ui-elements/formSelection';
 import Toggler from '@components/form-ui-elements/formToggler';
 import ProductService from '@services/product_service/product_service';
+import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
 import { button } from '@utils/elements';
+import { sortProducts, transformCategoryName, transformCategoryNamesForView } from '@utils/filters-helpers';
 
 import styles from './_filters.scss';
-import { CATEGORIES, FILTERS, SORT, SUBCATEGORIES } from './constants-filters';
+import type { FilterKeys, SortKey } from './constants-filters';
+import { CATEGORIES, SORT, SUBCATEGORIES } from './constants-filters';
 import type Breadcrumbs from '../breadcrumbs/breadcrumbs';
 import type ProductCards from '../product-cards/product-cards';
 
@@ -39,7 +42,9 @@ export default class FilterBlock extends BaseComponent {
 
   constructor(
     private productCardsBlock: ProductCards,
-    private breadcrumbs: Breadcrumbs
+    private breadcrumbs: Breadcrumbs,
+
+    private router: Router
   ) {
     super({ tag: 'div', className: styles.filterBlock });
     this.resetButton = button([styles['reset-btn']], 'RESET FILTERS', {
@@ -51,7 +56,7 @@ export default class FilterBlock extends BaseComponent {
       { tag: 'form', action: '#' },
       (this.searchInput = new FormField('', 'search', false))
     );
-    this.categorySelect = new FormSelection('Category', [...Object.keys(CATEGORIES)]);
+    this.categorySelect = new FormSelection('Category', [...transformCategoryNamesForView(Object.keys(CATEGORIES))]);
     this.subcategorySelect = new FormSelection('Subcategory', []);
     this.subcategorySelect.addClass(styles.inactive);
     this.salesFilter = new Toggler('On sale');
@@ -93,16 +98,16 @@ export default class FilterBlock extends BaseComponent {
       this.handleCategoryChange();
     });
     this.salesFilter.addListener('change', () => {
-      this.handleFiltersChange(FILTERS.IS_SALE);
+      this.handleFiltersChange('IS_SALE');
     });
     this.veganFilter.addListener('change', () => {
-      this.handleFiltersChange(FILTERS.IS_VEGAN);
+      this.handleFiltersChange('IS_VEGAN');
     });
     this.forKidsFilter.addListener('change', () => {
-      this.handleFiltersChange(FILTERS.IS_KIDS);
+      this.handleFiltersChange('IS_KIDS');
     });
     this.sortSelection.addListener('change', () => {
-      this.handleSortChange(this.sortProducts(this.sortSelection.getValue()));
+      this.handleSortChange(sortProducts(this.sortSelection.getValue()));
     });
   }
 
@@ -112,6 +117,7 @@ export default class FilterBlock extends BaseComponent {
     this.updateView();
     this.removeClass(styles.inactive);
     this.breadcrumbs.update(['CATALOG']);
+    this.router.setEmptyUrlCatalog();
   }
 
   private updateView() {
@@ -132,7 +138,7 @@ export default class FilterBlock extends BaseComponent {
       return;
     }
 
-    const categoryID = CATEGORIES[this.categorySelect.getValue()];
+    const categoryID = CATEGORIES[transformCategoryName(this.categorySelect.getValue())];
     const keys: string[] = [];
     await ProductService.getSubcategories(categoryID)
       .then((data) => {
@@ -151,22 +157,26 @@ export default class FilterBlock extends BaseComponent {
       this.subcategorySelect.addClass(styles.inactive);
     } else {
       this.subcategorySelect.destroy();
-      this.subcategorySelect = new FormSelection('Subcategory', [...keys]);
+      this.subcategorySelect = new FormSelection('Subcategory', transformCategoryNamesForView(keys));
       this.subcategorySelect.addListener('change', () => {
         this.handleSubcategoryChange();
       });
       this.categorySelect.getNode().insertAdjacentElement('afterend', this.subcategorySelect.getNode());
     }
-    // console.log(categoryID);
 
+    const categoryKey = Object.keys(CATEGORIES).find((key) => CATEGORIES[key] === categoryID) ?? '';
     this.breadcrumbs.update(['CATALOG', this.categorySelect.getValue()]);
-    ProductService.setChosenCategory(CATEGORIES[this.categorySelect.getValue()]);
+    this.router.setUrlCatalog(categoryKey);
+
+    ProductService.setChosenCategory(categoryID);
     ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
   }
 
   private handleSubcategoryChange() {
     this.breadcrumbs.update(['CATALOG', this.categorySelect.getValue(), this.subcategorySelect.getValue()]);
-    ProductService.setChosenCategory(SUBCATEGORIES[this.subcategorySelect.getValue()]);
+    this.router.setUrlCatalog(transformCategoryName(this.subcategorySelect.getValue()));
+    const subcategoryID = SUBCATEGORIES[transformCategoryName(this.subcategorySelect.getValue())];
+    ProductService.setChosenCategory(subcategoryID);
     ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
   }
 
@@ -174,32 +184,19 @@ export default class FilterBlock extends BaseComponent {
     return this.categorySelect.getValue();
   }
 
-  private handleFiltersChange(filterValue: string) {
+  private handleFiltersChange(filterValue: FilterKeys) {
     ProductService.applyFilter(filterValue);
     ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
+    this.router.setUrlCatalog(filterValue);
   }
 
-  private handleSortChange(value: string) {
+  private handleSortChange(value: SortKey) {
     ProductService.applySort(value);
     ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
+    this.router.setUrlCatalog(value);
   }
 
-  private sortProducts(value: string): string {
-    switch (value) {
-      case SORT_SELECTION.PRICE_DESC:
-        return SORT.PRICE_DESC;
-      case SORT_SELECTION.PRICE_ASC:
-        return SORT.PRICE_ASC;
-      case SORT_SELECTION.A_Z:
-        return SORT.A_Z;
-      case SORT_SELECTION.Z_A:
-        return SORT.Z_A;
-      default:
-        return '';
-    }
-  }
-
-  public setValues(values: string[]) {
+  public async setValues(values: string[]) {
     if (values.includes('IS_VEGAN')) {
       this.veganFilter.setValue(true);
       const event = new Event('change', { bubbles: true });
@@ -209,6 +206,39 @@ export default class FilterBlock extends BaseComponent {
       this.forKidsFilter.setValue(true);
       const event = new Event('change', { bubbles: true });
       this.forKidsFilter.getNode().dispatchEvent(event);
+    }
+    if (values.includes('IS_SALE')) {
+      this.salesFilter.setValue(true);
+      const event = new Event('change', { bubbles: true });
+      this.salesFilter.getNode().dispatchEvent(event);
+    }
+    if (values.some((value) => value in SORT)) {
+      const validValue = values.find((value) => value in SORT);
+      if (validValue) {
+        this.sortSelection.setValue(SORT_SELECTION[validValue as keyof typeof SORT_SELECTION]);
+        const event = new Event('change', { bubbles: true });
+        this.sortSelection.getNode().dispatchEvent(event);
+      }
+    }
+    if (values.some((value) => value in CATEGORIES)) {
+      const validValue = values.find((value) => value in CATEGORIES);
+      if (validValue) {
+        const selectValue = String(transformCategoryNamesForView([validValue]));
+        this.categorySelect.setValue(selectValue);
+        const event = new Event('change', { bubbles: true });
+        this.categorySelect.getNode().dispatchEvent(event);
+      }
+    }
+    if (values.some((value) => value in SUBCATEGORIES)) {
+      const validValue = values.find((value) => value in SUBCATEGORIES);
+      if (validValue) {
+        const selectValue = String(transformCategoryNamesForView([validValue]));
+        setTimeout(() => {
+          this.subcategorySelect.setValue(selectValue);
+          const event = new Event('change', { bubbles: true });
+          this.subcategorySelect.getNode().dispatchEvent(event);
+        }, 400);
+      }
     }
   }
 }

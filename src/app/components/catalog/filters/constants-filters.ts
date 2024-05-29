@@ -16,6 +16,8 @@ const SORT = {
   PRICE_ASC: 'price asc',
   A_Z: 'name.en asc',
   Z_A: 'name.en desc',
-};
+} as const;
+
+export type SortKey = keyof typeof SORT;
 
 export { FILTERS, CATEGORIES, SUBCATEGORIES, SORT };

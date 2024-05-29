@@ -19,7 +19,7 @@ export default class CatalogView extends BaseComponent {
 
     this.breadCrumbsBlock = new Breadcrumbs();
     this.productCardsBlock = new ProductCards(this.router);
-    this.filterBlock = new FilterBlock(this.productCardsBlock, this.breadCrumbsBlock);
+    this.filterBlock = new FilterBlock(this.productCardsBlock, this.breadCrumbsBlock, router);
 
     const mainContent = div([styles.mainContent], this.filterBlock, this.productCardsBlock);
 
