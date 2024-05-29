@@ -52,7 +52,6 @@ class FormSelection extends BaseComponent<HTMLFormElement> {
   public updateAppearance() {
     const formData = new FormData(this.getNode());
     const currentValue = formData.get('options');
-    console.log(formData.get('options'));
     if (!currentValue || typeof currentValue !== 'string') {
       this.value = '';
     } else {

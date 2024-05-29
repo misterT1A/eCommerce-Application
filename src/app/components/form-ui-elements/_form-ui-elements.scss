@@ -10,6 +10,7 @@ $main-color-error: #d82700;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
+  width: 100%;
   gap: 5px;
 }
 
@@ -93,7 +94,6 @@ $main-color-error: #d82700;
   display: flex;
   width: 100%;
   padding: 10px;
-  background-color: #ffffff;
   cursor: pointer;
 }
 
@@ -312,7 +312,6 @@ $main-color-error: #d82700;
   border: 1px solid $color-dark-gray;
   border-radius: 5px;
   padding: 0px 10px;
-  background-color: #ffffff;
   cursor: pointer;
 }
 
