@@ -133,13 +133,10 @@ export default class FilterBlock extends BaseComponent {
     ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
   }
 
-  private handleCategoryChange() {
-    if (!this.isCategoryChosen()) {
-      return;
-    }
+  private categoryChange() {
     const categoryID = CATEGORIES[transformCategoryName(this.categorySelect.getValue())];
-
     const subcategoryKeys = Object.keys(SUBCATEGORIES).filter((el) => SUBCATEGORIES[el].parentId === categoryID) ?? '';
+
     if (!subcategoryKeys.length) {
       this.subcategorySelect.reset();
       this.subcategorySelect.addClass(styles.inactive);
@@ -151,18 +148,29 @@ export default class FilterBlock extends BaseComponent {
       });
       this.categorySelect.getNode().insertAdjacentElement('afterend', this.subcategorySelect.getNode());
     }
-    const categoryKey = Object.keys(CATEGORIES).find((key) => CATEGORIES[key] === categoryID) ?? '';
-    this.breadcrumbs.update(['CATALOG', this.categorySelect.getValue()]);
-    this.router.setUrlCatalog(categoryKey);
+
     ProductService.setChosenCategory(categoryID);
+  }
+
+  private handleCategoryChange() {
+    if (!this.isCategoryChosen()) {
+      return;
+    }
+    this.categoryChange();
+    const categoryID = CATEGORIES[transformCategoryName(this.categorySelect.getValue())];
+    this.breadcrumbs.update(['CATALOG', this.categorySelect.getValue()]);
+    const categoryKey = Object.keys(CATEGORIES).find((key) => CATEGORIES[key] === categoryID) ?? '';
+    this.router.setUrlCatalog(categoryKey);
     ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
   }
 
   private handleSubcategoryChange() {
-    this.breadcrumbs.update(['CATALOG', this.categorySelect.getValue(), this.subcategorySelect.getValue()]);
     this.router.setUrlCatalog(transformCategoryName(this.subcategorySelect.getValue()));
+
+    this.breadcrumbs.update(['CATALOG', this.categorySelect.getValue(), this.subcategorySelect.getValue()]);
     const subcategoryID = SUBCATEGORIES[transformCategoryName(this.subcategorySelect.getValue())];
     ProductService.setChosenCategory(subcategoryID.id);
+
     ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
   }
 
@@ -183,50 +191,44 @@ export default class FilterBlock extends BaseComponent {
   }
 
   public setValues(values: string[]) {
-    values.forEach((val) => this.router.setUrlCatalog(val));
-
     if (values.some((value) => value in CATEGORIES)) {
       const validValue = values.find((value) => value in CATEGORIES);
       if (validValue) {
         const selectValue = String(transformCategoryNamesForView([validValue]));
         this.categorySelect.setValue(selectValue);
-        const event = new Event('change', { bubbles: true });
-        this.categorySelect.getNode().dispatchEvent(event);
+        this.categoryChange();
       }
     }
     if (values.some((value) => value in SUBCATEGORIES)) {
       const validValue = values.find((value) => value in SUBCATEGORIES);
       if (validValue) {
         const selectValue = String(transformCategoryNamesForView([validValue]));
-        setTimeout(() => {
-          this.subcategorySelect.setValue(selectValue);
-          const event = new Event('change', { bubbles: true });
-          this.subcategorySelect.getNode().dispatchEvent(event);
-        }, 1500);
+        this.subcategorySelect.setValue(selectValue);
+        this.breadcrumbs.update(['CATALOG', this.categorySelect.getValue(), this.subcategorySelect.getValue()]);
+        const subcategoryID = SUBCATEGORIES[transformCategoryName(this.subcategorySelect.getValue())];
+        ProductService.setChosenCategory(subcategoryID.id);
       }
     }
     if (values.some((value) => value in SORT)) {
-      const validValue = values.find((value) => value in SORT);
+      const validValue = values.find((value) => value in SORT) as SortKey;
       if (validValue) {
         this.sortSelection.setValue(SORT_SELECTION[validValue as keyof typeof SORT_SELECTION]);
-        const event = new Event('change', { bubbles: true });
-        this.sortSelection.getNode().dispatchEvent(event);
+        ProductService.applySort(validValue);
       }
     }
     if (values.includes('IS_VEGAN')) {
       this.veganFilter.setValue(true);
-      const event = new Event('change');
-      this.veganFilter.getNode().dispatchEvent(event);
+      ProductService.applyFilter('IS_VEGAN');
     }
     if (values.includes('IS_KIDS')) {
       this.forKidsFilter.setValue(true);
-      const event = new Event('change', { bubbles: true });
-      this.forKidsFilter.getNode().dispatchEvent(event);
+      ProductService.applyFilter('IS_KIDS');
     }
     if (values.includes('IS_SALE')) {
       this.salesFilter.setValue(true);
-      const event = new Event('change', { bubbles: true });
-      this.salesFilter.getNode().dispatchEvent(event);
+      ProductService.applyFilter('IS_SALE');
     }
+
+    ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
   }
 }
