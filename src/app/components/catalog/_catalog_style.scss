@@ -1,4 +1,10 @@
 .wrapper {
   width: 100%;
-  @include flex(start, flex-end, row);
+  @include flex(start, flex-end, column);
+  gap: 25px;
+}
+
+.mainContent {
+  @include flex(start, start, row);
+  gap: 3%;
 }

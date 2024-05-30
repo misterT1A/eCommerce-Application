@@ -5,6 +5,7 @@ import type Modal from '@components/modal/modal';
 import AuthService from '@services/auth-service';
 import { updateMyCustomerInfo } from '@services/customer-service/my-customer-service';
 import MyCustomer from '@services/customer-service/myCustomer';
+import ProductService from '@services/product_service/product_service';
 import BaseComponent from '@utils/base-component';
 
 import styles from './_app_style.scss';
@@ -43,6 +44,7 @@ export default class App {
   private setListners() {
     document.addEventListener('DOMContentLoaded', async () => {
       await AuthService.sessionStateHandler();
+      await ProductService.getCommercetoolsData();
       await updateMyCustomerInfo();
       this.headerController.updateTextLoggined(MyCustomer.fullNameShort);
       this.router.navigateToLastPoint();
