@@ -25,7 +25,7 @@ export default class App {
 
   protected footerController: FooterController;
 
-  protected disconeectModal: Modal<BaseComponent>;
+  protected disconnectModal: Modal<BaseComponent>;
 
   constructor() {
     this.router = new Router(this.createsRoutes());
@@ -36,12 +36,12 @@ export default class App {
     this.footerController = new FooterController(this.router);
 
     this.controller = null;
-    this.disconeectModal = modalConstructor();
+    this.disconnectModal = modalConstructor();
 
-    this.setListners();
+    this.setListeners();
   }
 
-  private setListners() {
+  private setListeners() {
     document.addEventListener('DOMContentLoaded', async () => {
       await AuthService.sessionStateHandler();
       await ProductService.getCommercetoolsData();
@@ -51,10 +51,10 @@ export default class App {
     });
 
     window.addEventListener('offline', () => {
-      this.disconeectModal = modalConstructor();
-      this.disconeectModal.open();
+      this.disconnectModal = modalConstructor();
+      this.disconnectModal.open();
     });
-    window.addEventListener('online', () => this.disconeectModal.close());
+    window.addEventListener('online', () => this.disconnectModal.close());
   }
 
   public showContent(parent: HTMLElement) {
