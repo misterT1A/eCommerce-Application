@@ -8,7 +8,7 @@ import MyCustomer from '@services/customer-service/myCustomer';
 import { showErrorMessages } from '@utils/errors-handling';
 
 import { getAddressAddRequest, getAddressTypeRequest } from './edit-mode-adapters';
-import { processAddressData } from './profile-helpers';
+import { prepareMyCustomer, processAddressData } from './profile-helpers';
 import UserAddressEdit from './user-profile-view/edit-mode/edit-address';
 import type ProfileView from './user-profile-view/user-profile-view';
 
@@ -51,12 +51,17 @@ class AddAddress {
     }
   }
 
-  public enable() {
+  public enable(logout: () => Promise<void>) {
     const addressForm = new UserAddressEdit();
-    const userInfoEditModal = new Modal({ title: 'Add Address', content: addressForm });
-    userInfoEditModal.open();
+    const modal = new Modal({ title: 'Add Address', content: addressForm });
+    modal.open();
     addressForm.applyButton.setTextContent('ADD ADDRESS');
     addressForm.applyButton.addListener('click', async () => {
+      const actualizeCustomer = await prepareMyCustomer(() => logout());
+      if (!actualizeCustomer.isAuthorized) {
+        modal.close();
+        return;
+      }
       if (processAddressData(addressForm).isValidForm) {
         const values = addressForm.getValues();
         const requestBody = getAddressAddRequest(values);
@@ -65,7 +70,7 @@ class AddAddress {
         }
         const resAddAddress = await updateCustomer(MyCustomer.id ?? '', AuthService.getRoot(), requestBody);
         if (resAddAddress.success) {
-          this.setAddressAttributes(resAddAddress, values, userInfoEditModal);
+          this.setAddressAttributes(resAddAddress, values, modal);
         } else {
           showErrorMessages(resAddAddress);
         }

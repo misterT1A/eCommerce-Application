@@ -32,6 +32,10 @@ export function assertIsErrorResponse(value: unknown): asserts value is ErrorRes
 
 const RegistrationErrorsMap = new Map([
   ['DuplicateField', 'An account with this email address already exists. Please log in or use another email address.'],
+  ['InvalidCurrentPassword', 'Invalid current password!'],
+  ['ConcurrentModification', 'Too many attempts, try later.'],
+  ['InvalidCredentials', 'Wrong credentials!'],
+  ['invalid_token', 'Invalid token.'],
 ]);
 
 /**
@@ -54,24 +58,47 @@ export function getErrorsMessages(errorResp: ErrorResponse): string[] {
  */
 export function processErrorResponse(error: unknown) {
   if (!isClientResponse(error)) {
+    if (`${error}`.includes('NetworkError')) {
+      return {
+        success: false,
+        message: `Network error occurred. Please, check connection or try later.`,
+      };
+    }
     return {
       success: false,
-      message: `Unexpected error: ${error}`,
+      message: `${error}`,
     };
   }
   const errorResponse: unknown = error.body;
   if (isErrorResponse(errorResponse)) {
-    if ((error as ClientResponse).statusCode === 400) {
+    const { statusCode } = error as ClientResponse;
+    if (statusCode === 400 || statusCode === 409) {
       return {
         success: false,
         message: `Error`,
         errors: getErrorsMessages(errorResponse),
+        statusCode,
+      };
+    }
+    if (statusCode === 502) {
+      return {
+        success: false,
+        message: `Error`,
+        errors: ['Bad gateway, please try later.'],
+      };
+    }
+    if (statusCode === 404) {
+      return {
+        success: false,
+        message: `Error`,
+        errors: ['Resource was not found.'],
       };
     }
   }
+
   return {
     success: false,
-    message: `Unexpected error: ${error}`,
+    message: `${error}`,
     errors: [`${error}`],
   };
 }

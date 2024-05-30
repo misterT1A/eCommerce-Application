@@ -16,9 +16,9 @@ class ProfileAddressesView extends BaseComponent {
 
   private addresses: Map<string, BaseComponent<HTMLLIElement>> = new Map();
 
-  private billingAddressToggler: BaseComponent<HTMLButtonElement>;
+  public billingAddressToggler: BaseComponent<HTMLButtonElement>;
 
-  private shippingAddressToggler: BaseComponent<HTMLButtonElement>;
+  public shippingAddressToggler: BaseComponent<HTMLButtonElement>;
 
   public addAddressButton: BaseComponent<HTMLButtonElement>;
 
@@ -33,13 +33,7 @@ class ProfileAddressesView extends BaseComponent {
     this.addressContainer = div([styles.profile__addressContainer]);
     this.addressesControls = div([styles.profile__addressesControls]);
     this.billingAddressToggler = button([styles.profile__addressToggler], 'default billing');
-    this.billingAddressToggler.addListener('click', () =>
-      this.openAddress(MyCustomer.addresses.defaultBillingAddress ?? '')
-    );
     this.shippingAddressToggler = button([styles.profile__addressToggler], 'default shipping');
-    this.shippingAddressToggler.addListener('click', () =>
-      this.openAddress(MyCustomer.addresses.defaultShippingAddress ?? '')
-    );
     this.addAddressButton = button([styles.profile__button], 'ADD ADDRESS');
     this.addressesControls.appendChildren([
       this.billingAddressToggler,

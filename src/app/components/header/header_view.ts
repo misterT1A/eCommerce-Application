@@ -113,7 +113,7 @@ export default class HeaderView extends BaseComponent {
     this.burgerMenu.changeTextLoggined();
   }
 
-  private changeTextNotLoginned() {
+  public changeTextNotLoginned() {
     const logInTitle = this.dropMenu.getChildren[1];
     const signTitle = this.dropMenu.getChildren[2];
     signTitle.setTextContent('Sign Up');

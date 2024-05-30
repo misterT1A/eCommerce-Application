@@ -6,7 +6,8 @@ import { updateCustomer } from '@services/customer-service/my-customer-service';
 import MyCustomer from '@services/customer-service/myCustomer';
 import RegistrationValidator from '@services/registrationValidationService/registrationValidator';
 
-import { getLogsFromRequestBody, getUserInfoUpdateRequest } from './edit-mode-adapters';
+import { getUserInfoUpdateRequest } from './edit-mode-adapters';
+import { getLogsFromRequestBody, prepareMyCustomer } from './profile-helpers';
 import UserInfoEdit from './user-profile-view/edit-mode/edit-user';
 import type ProfileView from './user-profile-view/user-profile-view';
 
@@ -16,7 +17,7 @@ class EditModeProfile {
     private headerController: HeaderController
   ) {}
 
-  public enable() {
+  public enable(logout: () => Promise<void>) {
     const editForm = new UserInfoEdit({
       firstName: MyCustomer.firstName ?? '',
       lastName: MyCustomer.lastName ?? '',
@@ -26,7 +27,11 @@ class EditModeProfile {
     const userInfoEditModal = new Modal({ title: 'Profile Info', content: editForm });
     userInfoEditModal.open();
     editForm.applyButton.addListener('click', async () => {
-      if (this.processUserData(editForm).isValidForm) {
+      const actualizeCustomer = await prepareMyCustomer(() => logout());
+      if (!actualizeCustomer.isAuthorized) {
+        userInfoEditModal.close();
+      }
+      if (this.processUserData(editForm).isValidForm && actualizeCustomer.isAuthorized) {
         const values = editForm.getValues();
         const requestBody = getUserInfoUpdateRequest(values);
         if (!requestBody.actions.length) {

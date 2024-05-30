@@ -33,11 +33,8 @@ interface IAddressData {
 }
 
 interface IAddressDataErrors {
-  defaultAddress: boolean;
-  commonAddress: boolean;
   city: string[];
   street: string[];
-  country: string[];
   zipCode: string[];
 }
 
@@ -47,8 +44,8 @@ interface IRegistrationErrors {
   date: string[];
   email: string[];
   password: string[];
-  billingAddress: IAddressDataErrors;
-  shippingAddress: IAddressDataErrors;
+  billingAddress?: IAddressDataErrors;
+  shippingAddress?: IAddressDataErrors;
 }
 
 // TODO: add interfaces for reusable UI form elements
