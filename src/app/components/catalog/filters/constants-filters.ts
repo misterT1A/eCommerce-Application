@@ -7,7 +7,7 @@ const FILTERS = {
 export type FilterKeys = keyof typeof FILTERS;
 
 const CATEGORIES: { [key: string]: string } = {};
-const SUBCATEGORIES: { [key: string]: string } = {};
+const SUBCATEGORIES: { [key: string]: { id: string; parentId: string } } = {};
 
 export type CategoryKey = keyof typeof CATEGORIES;
 

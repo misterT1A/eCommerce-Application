@@ -111,9 +111,9 @@ export default class FilterBlock extends BaseComponent {
     });
   }
 
-  private async reset() {
+  public reset() {
     this.addClass(styles.inactive);
-    await ProductService.resetFilters().then((data) => this.productCardsBlock.setProducts(data.body.results));
+    ProductService.resetFilters().then((data) => this.productCardsBlock.setProducts(data.body.results));
     this.updateView();
     this.removeClass(styles.inactive);
     this.breadcrumbs.update(['CATALOG']);
@@ -133,41 +133,27 @@ export default class FilterBlock extends BaseComponent {
     ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
   }
 
-  private async handleCategoryChange() {
+  private handleCategoryChange() {
     if (!this.isCategoryChosen()) {
       return;
     }
-
     const categoryID = CATEGORIES[transformCategoryName(this.categorySelect.getValue())];
-    const keys: string[] = [];
-    await ProductService.getSubcategories(categoryID)
-      .then((data) => {
-        const subcategories = data.body.results;
-        if (subcategories.length) {
-          subcategories.forEach((subcategory) => {
-            keys.push(subcategory.key?.replace('-', ' ').replace('_', ' & ') as string);
-          });
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-    if (!keys.length) {
+
+    const subcategoryKeys = Object.keys(SUBCATEGORIES).filter((el) => SUBCATEGORIES[el].parentId === categoryID) ?? '';
+    if (!subcategoryKeys.length) {
       this.subcategorySelect.reset();
       this.subcategorySelect.addClass(styles.inactive);
     } else {
       this.subcategorySelect.destroy();
-      this.subcategorySelect = new FormSelection('Subcategory', transformCategoryNamesForView(keys));
+      this.subcategorySelect = new FormSelection('Subcategory', transformCategoryNamesForView(subcategoryKeys));
       this.subcategorySelect.addListener('change', () => {
         this.handleSubcategoryChange();
       });
       this.categorySelect.getNode().insertAdjacentElement('afterend', this.subcategorySelect.getNode());
     }
-
     const categoryKey = Object.keys(CATEGORIES).find((key) => CATEGORIES[key] === categoryID) ?? '';
     this.breadcrumbs.update(['CATALOG', this.categorySelect.getValue()]);
     this.router.setUrlCatalog(categoryKey);
-
     ProductService.setChosenCategory(categoryID);
     ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
   }
@@ -176,7 +162,7 @@ export default class FilterBlock extends BaseComponent {
     this.breadcrumbs.update(['CATALOG', this.categorySelect.getValue(), this.subcategorySelect.getValue()]);
     this.router.setUrlCatalog(transformCategoryName(this.subcategorySelect.getValue()));
     const subcategoryID = SUBCATEGORIES[transformCategoryName(this.subcategorySelect.getValue())];
-    ProductService.setChosenCategory(subcategoryID);
+    ProductService.setChosenCategory(subcategoryID.id);
     ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
   }
 
@@ -196,30 +182,9 @@ export default class FilterBlock extends BaseComponent {
     this.router.setUrlCatalog(value);
   }
 
-  public async setValues(values: string[]) {
-    if (values.includes('IS_VEGAN')) {
-      this.veganFilter.setValue(true);
-      const event = new Event('change', { bubbles: true });
-      this.veganFilter.getNode().dispatchEvent(event);
-    }
-    if (values.includes('IS_KIDS')) {
-      this.forKidsFilter.setValue(true);
-      const event = new Event('change', { bubbles: true });
-      this.forKidsFilter.getNode().dispatchEvent(event);
-    }
-    if (values.includes('IS_SALE')) {
-      this.salesFilter.setValue(true);
-      const event = new Event('change', { bubbles: true });
-      this.salesFilter.getNode().dispatchEvent(event);
-    }
-    if (values.some((value) => value in SORT)) {
-      const validValue = values.find((value) => value in SORT);
-      if (validValue) {
-        this.sortSelection.setValue(SORT_SELECTION[validValue as keyof typeof SORT_SELECTION]);
-        const event = new Event('change', { bubbles: true });
-        this.sortSelection.getNode().dispatchEvent(event);
-      }
-    }
+  public setValues(values: string[]) {
+    values.forEach((val) => this.router.setUrlCatalog(val));
+
     if (values.some((value) => value in CATEGORIES)) {
       const validValue = values.find((value) => value in CATEGORIES);
       if (validValue) {
@@ -237,8 +202,31 @@ export default class FilterBlock extends BaseComponent {
           this.subcategorySelect.setValue(selectValue);
           const event = new Event('change', { bubbles: true });
           this.subcategorySelect.getNode().dispatchEvent(event);
-        }, 400);
+        }, 1500);
       }
+    }
+    if (values.some((value) => value in SORT)) {
+      const validValue = values.find((value) => value in SORT);
+      if (validValue) {
+        this.sortSelection.setValue(SORT_SELECTION[validValue as keyof typeof SORT_SELECTION]);
+        const event = new Event('change', { bubbles: true });
+        this.sortSelection.getNode().dispatchEvent(event);
+      }
+    }
+    if (values.includes('IS_VEGAN')) {
+      this.veganFilter.setValue(true);
+      const event = new Event('change');
+      this.veganFilter.getNode().dispatchEvent(event);
+    }
+    if (values.includes('IS_KIDS')) {
+      this.forKidsFilter.setValue(true);
+      const event = new Event('change', { bubbles: true });
+      this.forKidsFilter.getNode().dispatchEvent(event);
+    }
+    if (values.includes('IS_SALE')) {
+      this.salesFilter.setValue(true);
+      const event = new Event('change', { bubbles: true });
+      this.salesFilter.getNode().dispatchEvent(event);
     }
   }
 }

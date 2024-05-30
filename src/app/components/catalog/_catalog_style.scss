@@ -6,4 +6,5 @@
 
 .mainContent {
   @include flex(start, start, row);
+  gap: 3%;
 }

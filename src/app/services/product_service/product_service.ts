@@ -39,7 +39,7 @@ class GetProductsService {
         } else {
           const categoryKey = result.key as string;
           const categoryId = result.id;
-          SUBCATEGORIES[categoryKey] = categoryId;
+          SUBCATEGORIES[categoryKey] = { id: categoryId, parentId: result.parent?.id as string };
         }
       });
     } catch (e) {
