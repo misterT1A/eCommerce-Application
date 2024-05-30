@@ -13,11 +13,14 @@ class DeleteAccount {
     const modal = new Modal({ title: 'Are you sure?', content: deleteAcc });
     modal.open();
     deleteAcc.confirmButton.addListener('click', async () => {
+      deleteAcc.confirmButton.getNode().disabled = true;
       await updateMyCustomerInfo();
       const res = await deleteAccount(AuthService.getRoot());
       if (res.success) {
-        modal.close();
         await logout();
+        modal.close();
+      } else {
+        deleteAcc.confirmButton.getNode().disabled = false;
       }
     });
   }
