@@ -18,12 +18,12 @@ class ProfileView extends BaseComponent<HTMLElement> {
   public deleteAccount: BaseComponent<HTMLButtonElement>;
 
   constructor(
-    private router: Router,
-    private deleteCallback: (id: string) => void,
-    private editCallback: (id: string) => void,
-    private setAsDefaultShipping: (id: string) => Promise<void>,
+    router: Router,
+    deleteCallback: (id: string) => void,
+    editCallback: (id: string) => void,
+    setAsDefaultShipping: (id: string) => Promise<void>,
 
-    private setAsDefaultBilling: (id: string) => Promise<void>
+    setAsDefaultBilling: (id: string) => Promise<void>
   ) {
     super({ tag: 'div', className: styles.profile }, h2([styles.profile__title], 'My Account'));
     this.profileCredentials = new CredentialsView();

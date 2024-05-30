@@ -40,3 +40,11 @@ type AddressAttrs = {
   isDefaultBilling: boolean;
   isDefaultShipping: boolean;
 };
+
+type AddressesInfo = {
+  addresses: Address[];
+  billingAddressIds: string[];
+  shippingAddressIds: string[];
+  defaultShippingAddress: string | undefined;
+  defaultBillingAddress: string | undefined;
+};

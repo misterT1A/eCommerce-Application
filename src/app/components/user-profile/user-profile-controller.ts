@@ -1,6 +1,7 @@
 import Controller from '@components/controller';
 import type HeaderController from '@components/header/header_controller';
 import AuthService from '@services/auth-service';
+import MyCustomer from '@services/customer-service/myCustomer';
 import type Router from '@src/app/router/router';
 
 import AddAddress from './addresses-add-mode';
@@ -49,6 +50,12 @@ class ProfileController extends Controller<ProfileView> {
     this.deleteAddressMode = new DeleteAddress(this.getView);
     this.changePasswordMode = new ChangePasswordMode(this.getView);
     this.deleteAccountMode = new DeleteAccount(this.getView);
+    this.getView.profileAddresses.billingAddressToggler.addListener('click', () =>
+      this.getView.openAddress(MyCustomer.addresses.defaultBillingAddress ?? '')
+    );
+    this.getView.profileAddresses.shippingAddressToggler.addListener('click', () =>
+      this.getView.openAddress(MyCustomer.addresses.defaultShippingAddress ?? '')
+    );
   }
 
   private async logout() {
