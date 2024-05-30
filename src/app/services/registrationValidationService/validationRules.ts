@@ -24,6 +24,10 @@ const REGISTRATION_VALIDATION_RULES = {
   ],
   street: [
     { rule: 'Must contain at least one character', pattern: /.+/ },
+    {
+      rule: 'Must contain only letters of latin alphabet, special characters and digits',
+      pattern: /^[A-Za-z0-9!\s@#$%^&*()_+:",.<>|-]+$/,
+    },
     { rule: 'Should not exceed 100 characters in length.', pattern: /^.{0,100}$/ },
   ],
 };

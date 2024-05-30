@@ -11,12 +11,15 @@ import {
   getAddressValuesById,
   getSetDefaultAddressRequest,
 } from './edit-mode-adapters';
-import { processAddressData } from './profile-helpers';
+import { prepareMyCustomer, processAddressData } from './profile-helpers';
 import UserAddressEdit from './user-profile-view/edit-mode/edit-address';
 import type ProfileView from './user-profile-view/user-profile-view';
 
 class EditAddress {
-  constructor(private view: ProfileView) {}
+  constructor(
+    private view: ProfileView,
+    private logout: () => Promise<void>
+  ) {}
 
   private async setAddressAttributes(id: string, values: ProfileAddressValues) {
     if (values.isBilling || values.isShipping || values.isDefaultBilling || values.isDefaultShipping) {
@@ -59,7 +62,11 @@ class EditAddress {
     userInfoEditModal.open();
     addressForm.setValues(getAddressValuesById(id));
     addressForm.applyButton.addListener('click', async () => {
-      if (processAddressData(addressForm).isValidForm) {
+      const actualizeCustomer = await prepareMyCustomer(() => this.logout());
+      if (!actualizeCustomer.isAuthorized) {
+        userInfoEditModal.close();
+      }
+      if (processAddressData(addressForm).isValidForm && actualizeCustomer.isAuthorized) {
         const values = addressForm.getValues();
         const requestBody = getAddressEditRequest(values, id);
         if (!requestBody.actions.length) {
@@ -81,6 +88,10 @@ class EditAddress {
   }
 
   public async setAddressAsDefault(type: 'Shipping' | 'Billing', id: string) {
+    const actualizeCustomer = await prepareMyCustomer(() => this.logout());
+    if (!actualizeCustomer.isAuthorized) {
+      return;
+    }
     const request = getSetDefaultAddressRequest(type, id);
     if (!request.actions.length) {
       return;

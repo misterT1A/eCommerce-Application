@@ -46,4 +46,6 @@ interface ILoginResult {
   message: string;
   customer?: ICustomer;
   errors?: string[];
+
+  statusCode?: number;
 }

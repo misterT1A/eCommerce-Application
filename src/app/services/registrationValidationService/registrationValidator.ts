@@ -52,7 +52,7 @@ class RegistrationValidator {
     return today.getFullYear() - birthDate.getFullYear();
   }
 
-  public static processUserInfo(formData: IUserInfoValues) {
+  public static processUserInfo(formData: IUserInfoValues | IRegistrationFormData) {
     return {
       firstName: this.validateField(formData.firstName, 'firstName'),
       lastName: this.validateField(formData.lastName, 'lastName'),
@@ -61,51 +61,43 @@ class RegistrationValidator {
     };
   }
 
-  public static processAddressInfo(formData: ProfileAddressValues) {
+  public static processPasswords(formData: { currentPassword: string; newPassword: string }) {
     return {
-      zipCode: this.validateField(formData.zipCode, 'zipCode', formData.country),
-      street: this.validateField(formData.street, 'street'),
-      city: this.validateField(formData.city, 'city'),
+      currentPassword: this.validateField(formData.currentPassword, 'password'),
+      newPassword: this.validateField(formData.newPassword, 'password'),
     };
   }
 
-  public static processFormData(formData: IRegistrationFormData) {
-    let result = {} as IRegistrationErrors;
-    Object.entries(formData).forEach(([key, value]) => {
-      if (typeof value === 'string') {
-        result = { ...result, ...Object.fromEntries([[key, this.validateField(value, key)]]) };
-      } else if (typeof value === 'object' && value !== null) {
-        if (formData.addresses.billingAddress?.commonAddress) {
-          result = {
-            ...result,
-            ...Object.fromEntries([['billingAddress', this.processAddressFormData(value.billingAddress)]]),
-          };
-        } else if (formData.addresses.shippingAddress?.commonAddress) {
-          result = {
-            ...result,
-            ...Object.fromEntries([['shippingAddress', this.processAddressFormData(value.shippingAddress)]]),
-          };
-        } else {
-          result = {
-            ...result,
-            ...Object.fromEntries([['billingAddress', this.processAddressFormData(value.billingAddress)]]),
-            ...Object.fromEntries([['shippingAddress', this.processAddressFormData(value.shippingAddress)]]),
-          };
-        }
-      }
-    });
-    return result;
+  public static processFormData(formData: IRegistrationFormData): IRegistrationErrors {
+    const result = {
+      ...this.processUserInfo(formData),
+      password: this.validateField(formData.password, 'password'),
+    };
+    if (formData.addresses.billingAddress?.commonAddress) {
+      return {
+        ...result,
+        ...{ billingAddress: this.processAddressFormData(formData.addresses.billingAddress) },
+      };
+    }
+    if (formData.addresses.shippingAddress?.commonAddress) {
+      return {
+        ...result,
+        ...{ shippingAddress: this.processAddressFormData(formData.addresses.shippingAddress) },
+      };
+    }
+    return {
+      ...result,
+      ...{ shippingAddress: this.processAddressFormData(formData.addresses.shippingAddress) },
+      ...{ billingAddress: this.processAddressFormData(formData.addresses.billingAddress) },
+    };
   }
 
-  private static processAddressFormData(address: IAddressFormData | undefined) {
-    return Object.fromEntries(
-      Object.entries(address ?? {}).map(([subKey, subValue]) => {
-        if (typeof subValue === 'string') {
-          return [subKey, this.validateField(subValue, subKey, (address as IAddressFormData).country)];
-        }
-        return [subKey, subValue];
-      })
-    );
+  public static processAddressFormData(address: ProfileAddressValues | IAddressData | undefined) {
+    return {
+      zipCode: this.validateField(address?.zipCode ?? '', 'zipCode', address?.country),
+      street: this.validateField(address?.street ?? '', 'street'),
+      city: this.validateField(address?.city ?? '', 'city'),
+    };
   }
 }
 

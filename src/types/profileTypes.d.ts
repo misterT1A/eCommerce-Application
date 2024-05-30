@@ -32,3 +32,19 @@ type ProfileAddressValues = {
   isDefaultBilling: boolean;
   isDefaultShipping: boolean;
 };
+
+type AddressAttrs = {
+  id: string;
+  isBilling: boolean;
+  isShipping: boolean;
+  isDefaultBilling: boolean;
+  isDefaultShipping: boolean;
+};
+
+type AddressesInfo = {
+  addresses: Address[];
+  billingAddressIds: string[];
+  shippingAddressIds: string[];
+  defaultShippingAddress: string | undefined;
+  defaultBillingAddress: string | undefined;
+};
