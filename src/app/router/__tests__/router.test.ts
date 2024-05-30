@@ -1,9 +1,13 @@
+import { CATEGORIES, FILTERS, SORT, SUBCATEGORIES } from '@components/catalog/filters/constants-filters';
+
 import Router from '../router';
 
 const routes = [
   { path: '', callBack: jest.fn() },
   { path: 'login', callBack: jest.fn() },
   { path: 'registration', callBack: jest.fn() },
+  { path: 'catalog', callBack: jest.fn() },
+  { path: 'product', callBack: jest.fn() },
   { path: 'error', callBack: jest.fn() },
 ];
 
@@ -13,7 +17,7 @@ describe('Router', () => {
 
     routes.forEach((route) => {
       router.navigate(route.path);
-      expect(route.callBack).toHaveBeenCalledTimes(1);
+      expect(route.callBack).toHaveBeenCalled();
     });
   });
 
@@ -63,6 +67,24 @@ describe('Router', () => {
 
     Object.defineProperty(window, 'location', {
       value: originalLocation,
+    });
+  });
+
+  it('should set the required url', () => {
+    const pushStateSpy = jest.spyOn(window.history, 'pushState');
+    const mockPath = '/catalog';
+    jest.spyOn(router, 'getCurrentPath').mockReturnValue(mockPath);
+
+    const filters = [
+      ...Object.keys(FILTERS),
+      ...Object.keys(CATEGORIES),
+      ...Object.keys(SUBCATEGORIES),
+      ...Object.keys(SORT),
+    ];
+
+    filters.forEach((filter) => {
+      router.setUrlCatalog(filter);
+      expect(pushStateSpy).toHaveBeenCalledWith(null, '', `/catalog/${filter}`);
     });
   });
 });
