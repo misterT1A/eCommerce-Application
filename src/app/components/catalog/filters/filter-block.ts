@@ -9,7 +9,7 @@ import { sortProducts, transformCategoryName, transformCategoryNamesForView } fr
 
 import styles from './_filters.scss';
 import type { FilterKeys, SortKey } from './constants-filters';
-import { CATEGORIES, SORT, SUBCATEGORIES } from './constants-filters';
+import { CATALOG_ROOT, CATEGORIES, SORT, SUBCATEGORIES } from './constants-filters';
 import type Breadcrumbs from '../breadcrumbs/breadcrumbs';
 import type ProductCards from '../product-cards/product-cards';
 
@@ -48,9 +48,7 @@ export default class FilterBlock extends BaseComponent {
   ) {
     super({ tag: 'div', className: styles.filterBlock });
     this.resetButton = button([styles['reset-btn']], 'RESET FILTERS', {
-      onclick: () => {
-        this.reset();
-      },
+      onclick: () => this.reset(),
     });
     this.searchForm = new BaseComponent<HTMLFormElement>(
       { tag: 'form', action: '#' },
@@ -111,21 +109,23 @@ export default class FilterBlock extends BaseComponent {
     });
   }
 
-  public reset() {
-    this.addClass(styles.inactive);
-    ProductService.resetFilters().then((data) => this.productCardsBlock.setProducts(data.body.results));
+  public async reset() {
     this.updateView();
-    this.removeClass(styles.inactive);
-    this.breadcrumbs.update(['CATALOG']);
+    ProductService.resetFilters();
+    await ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
+    this.breadcrumbs.update([CATALOG_ROOT]);
     this.router.setEmptyUrlCatalog();
+    this.removeClass(styles.inactive);
   }
 
   private updateView() {
+    this.addClass(styles.inactive);
     [this.salesFilter, this.veganFilter, this.forKidsFilter].forEach((filter) => filter.setValue(false));
     this.searchInput.reset();
     [this.categorySelect, this.subcategorySelect].forEach((select) => select.reset());
     this.sortSelection.reset();
     this.subcategorySelect.addClass(styles.inactive);
+    setTimeout(() => this.removeClass(styles.inactive), 1000);
   }
 
   private handleSearch(query: string) {
@@ -148,17 +148,17 @@ export default class FilterBlock extends BaseComponent {
       });
       this.categorySelect.getNode().insertAdjacentElement('afterend', this.subcategorySelect.getNode());
     }
+    this.breadcrumbs.update([CATALOG_ROOT, this.categorySelect.getValue()]);
 
     ProductService.setChosenCategory(categoryID);
   }
 
-  private handleCategoryChange() {
+  public handleCategoryChange() {
     if (!this.isCategoryChosen()) {
       return;
     }
     this.categoryChange();
     const categoryID = CATEGORIES[transformCategoryName(this.categorySelect.getValue())];
-    this.breadcrumbs.update(['CATALOG', this.categorySelect.getValue()]);
     const categoryKey = Object.keys(CATEGORIES).find((key) => CATEGORIES[key] === categoryID) ?? '';
     this.router.setUrlCatalog(categoryKey);
     ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
@@ -167,7 +167,7 @@ export default class FilterBlock extends BaseComponent {
   private handleSubcategoryChange() {
     this.router.setUrlCatalog(transformCategoryName(this.subcategorySelect.getValue()));
 
-    this.breadcrumbs.update(['CATALOG', this.categorySelect.getValue(), this.subcategorySelect.getValue()]);
+    this.breadcrumbs.update([CATALOG_ROOT, this.categorySelect.getValue(), this.subcategorySelect.getValue()]);
     const subcategoryID = SUBCATEGORIES[transformCategoryName(this.subcategorySelect.getValue())];
     ProductService.setChosenCategory(subcategoryID.id);
 
@@ -204,7 +204,7 @@ export default class FilterBlock extends BaseComponent {
       if (validValue) {
         const selectValue = String(transformCategoryNamesForView([validValue]));
         this.subcategorySelect.setValue(selectValue);
-        this.breadcrumbs.update(['CATALOG', this.categorySelect.getValue(), this.subcategorySelect.getValue()]);
+        this.breadcrumbs.update([CATALOG_ROOT, this.categorySelect.getValue(), this.subcategorySelect.getValue()]);
         const subcategoryID = SUBCATEGORIES[transformCategoryName(this.subcategorySelect.getValue())];
         ProductService.setChosenCategory(subcategoryID.id);
       }
@@ -228,7 +228,12 @@ export default class FilterBlock extends BaseComponent {
       this.salesFilter.setValue(true);
       ProductService.applyFilter('IS_SALE');
     }
-
+    if (values.includes(CATALOG_ROOT)) {
+      ProductService.resetFilters();
+      this.updateView();
+      this.categoryChange();
+      this.breadcrumbs.update([CATALOG_ROOT]);
+    }
     ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
   }
 }
