@@ -1,17 +1,20 @@
 import Modal from '@components/modal/modal';
 import notificationEmitter from '@components/notifications/notifications-controller';
 import AuthService from '@services/auth-service';
-import { updateCustomerPassword, updateMyCustomerInfo } from '@services/customer-service/my-customer-service';
+import { updateCustomerPassword } from '@services/customer-service/my-customer-service';
 import MyCustomer from '@services/customer-service/myCustomer';
 import { showErrorMessages } from '@utils/errors-handling';
 
 import { getChangePasswordRequest } from './edit-mode-adapters';
-import { processPasswordData } from './profile-helpers';
+import { prepareMyCustomer, processPasswordData } from './profile-helpers';
 import ChangePassword from './user-profile-view/edit-mode/change-password';
 import type ProfileView from './user-profile-view/user-profile-view';
 
 class ChangePasswordMode {
-  constructor(private view: ProfileView) {}
+  constructor(
+    private view: ProfileView,
+    private logout: () => Promise<void>
+  ) {}
 
   public enable() {
     const changePasswordForm = new ChangePassword();
@@ -19,8 +22,11 @@ class ChangePasswordMode {
     modal.open();
     changePasswordForm.addListener('input', () => processPasswordData(changePasswordForm));
     changePasswordForm.confirmButton.addListener('click', async () => {
-      await updateMyCustomerInfo();
-      if (processPasswordData(changePasswordForm).isValidForm) {
+      const actualizeCustomer = await prepareMyCustomer(() => this.logout());
+      if (!actualizeCustomer.isAuthorized) {
+        modal.close();
+      }
+      if (processPasswordData(changePasswordForm).isValidForm && actualizeCustomer.isAuthorized) {
         changePasswordForm.confirmButton.getNode().disabled = true;
         const values = changePasswordForm.getValues();
         const changePasswordRequestBody = getChangePasswordRequest(changePasswordForm.getValues());

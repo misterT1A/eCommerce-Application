@@ -1,7 +1,8 @@
 import Modal from '@components/modal/modal';
 import AuthService from '@services/auth-service';
-import { deleteAccount, updateMyCustomerInfo } from '@services/customer-service/my-customer-service';
+import { deleteAccount } from '@services/customer-service/my-customer-service';
 
+import { prepareMyCustomer } from './profile-helpers';
 import UserDelete from './user-profile-view/edit-mode/delete-account';
 import type ProfileView from './user-profile-view/user-profile-view';
 
@@ -14,7 +15,11 @@ class DeleteAccount {
     modal.open();
     deleteAcc.confirmButton.addListener('click', async () => {
       deleteAcc.confirmButton.getNode().disabled = true;
-      await updateMyCustomerInfo();
+      const actualizeCustomer = await prepareMyCustomer(() => logout());
+      if (!actualizeCustomer.isAuthorized) {
+        modal.close();
+        return;
+      }
       const res = await deleteAccount(AuthService.getRoot());
       if (res.success) {
         await logout();

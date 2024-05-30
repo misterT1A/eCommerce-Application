@@ -77,6 +77,7 @@ export function processErrorResponse(error: unknown) {
         success: false,
         message: `Error`,
         errors: getErrorsMessages(errorResponse),
+        statusCode,
       };
     }
     if (statusCode === 502) {

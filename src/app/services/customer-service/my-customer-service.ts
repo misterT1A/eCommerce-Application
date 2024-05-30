@@ -8,13 +8,34 @@ import AuthService from '@services/auth-service';
 import MyCustomer from '@services/customer-service/myCustomer';
 import { processErrorResponse } from '@utils/errors-handling';
 
-export async function updateMyCustomerInfo(): Promise<void> {
+export async function updateMyCustomerInfo(): Promise<ILoginResult> {
   const root = AuthService.getRoot();
   if (AuthService.isAuthorized()) {
-    const customerInfo = await root.me().get().execute();
-    if (customerInfo) {
-      MyCustomer.setCustomer(customerInfo.body);
+    try {
+      const customerInfo = await root.me().get().execute();
+      if (customerInfo) {
+        MyCustomer.setCustomer(customerInfo.body);
+        return {
+          success: true,
+          message: '',
+          customer: customerInfo.body,
+        };
+      }
+      return {
+        success: false,
+        message: '',
+      };
+    } catch {
+      return {
+        success: false,
+        message: 'Failed to load customer',
+      };
     }
+  } else {
+    return {
+      success: false,
+      message: 'Not authorized',
+    };
   }
 }
 

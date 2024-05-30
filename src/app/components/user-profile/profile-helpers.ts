@@ -1,6 +1,8 @@
 import type { CustomerUpdate } from '@commercetools/platform-sdk';
 
 import FormField from '@components/form-ui-elements/formField';
+import AuthService from '@services/auth-service';
+import { updateMyCustomerInfo } from '@services/customer-service/my-customer-service';
 import MyCustomer from '@services/customer-service/myCustomer';
 import RegistrationValidator from '@services/registrationValidationService/registrationValidator';
 import type BaseComponent from '@utils/base-component';
@@ -89,4 +91,21 @@ export function getLogsFromRequestBody(customerUpdateRequest: CustomerUpdate) {
     return `The ${actions[0]} is updated.`;
   }
   return '';
+}
+
+export async function prepareMyCustomer(logout: () => Promise<void>) {
+  const customerUpdate = await updateMyCustomerInfo();
+  if (!customerUpdate.success) {
+    if (customerUpdate.message === 'Not authorized') {
+      await logout();
+      return {
+        isAuthorized: false,
+      };
+    }
+    await AuthService.sessionStateHandler();
+    await updateMyCustomerInfo();
+  }
+  return {
+    isAuthorized: true,
+  };
 }
