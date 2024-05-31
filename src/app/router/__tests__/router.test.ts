@@ -1,6 +1,7 @@
-import { CATEGORIES, FILTERS, SORT, SUBCATEGORIES } from '@components/catalog/filters/constants-filters';
+import { FILTERS, SORT } from '@components/catalog/filters/constants-filters';
 
 import Router from '../router';
+import { checkRightURL, setCategoties, sortUrl } from '../router-helpers';
 
 const routes = [
   { path: '', callBack: jest.fn() },
@@ -70,21 +71,51 @@ describe('Router', () => {
     });
   });
 
-  it('should set the required url', () => {
+  it('should set the required url for sort and filters', () => {
     const pushStateSpy = jest.spyOn(window.history, 'pushState');
     const mockPath = '/catalog';
     jest.spyOn(router, 'getCurrentPath').mockReturnValue(mockPath);
 
-    const filters = [
-      ...Object.keys(FILTERS),
-      ...Object.keys(CATEGORIES),
-      ...Object.keys(SUBCATEGORIES),
-      ...Object.keys(SORT),
-    ];
+    const filters = [...Object.keys(FILTERS), ...Object.keys(SORT)];
 
     filters.forEach((filter) => {
       router.setUrlCatalog(filter);
       expect(pushStateSpy).toHaveBeenCalledWith(null, '', `/catalog/${filter}`);
     });
+  });
+
+  it('should set the required url for categories', () => {
+    jest.mock('@components/catalog/filters/constants-filters', () => ({
+      CATEGORIES: {
+        bread: 'Mock Category 1',
+        cakes: 'Mock Category 2',
+      },
+    }));
+
+    const path = ['bread'];
+    const filter = 'bread';
+    setCategoties(path, filter);
+    expect(path).toEqual([]);
+  });
+
+  it('should check Right URL', () => {
+    jest.mock('@components/catalog/filters/constants-filters', () => ({
+      CATEGORIES: {
+        bread: 'Mock Category 1',
+      },
+      SUBCATEGORIES: {
+        baguettes: 'Mock Category 1',
+      },
+    }));
+
+    const url = 'catalog/IS_VEGAN/PRICE_DESC';
+    expect(checkRightURL(url)).toEqual(true);
+    const wrongUrl = 'catalog/IS_VEGANdd//PRICE_DESC';
+    expect(checkRightURL(wrongUrl)).toEqual(false);
+  });
+
+  it('should sort url', () => {
+    const url = ['IS_VEGAN', 'PRICE_DESC'];
+    expect(sortUrl(url)).toEqual('IS_VEGAN/PRICE_DESC');
   });
 });

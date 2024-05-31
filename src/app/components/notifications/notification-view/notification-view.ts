@@ -19,12 +19,12 @@ class MessageView extends BaseComponent<HTMLElement> {
     super({ tag: 'div', className: styles.notification__message });
     this.addClass(styles[`notification__message_${props.messageType}`]);
     this.closeButton = button([styles.notification__close], '', { type: 'button' });
-    this.closeButton.append(svg(`./assets/img/notif-close.svg#close`, styles.notification__closeIcon));
+    this.closeButton.append(svg(`/assets/img/notif-close.svg#close`, styles.notification__closeIcon));
     const messageTitle = h2([styles.notification__title], props.title ?? DefaultNotificationTitle[props.messageType]);
     this.appendChildren([
       div(
         [styles.notification__header],
-        svg(`./assets/img/notif-${props.messageType}.svg#icon`, styles.notification__headerIcon),
+        svg(`/assets/img/notif-${props.messageType}.svg#icon`, styles.notification__headerIcon),
         messageTitle,
         this.closeButton
       ),
