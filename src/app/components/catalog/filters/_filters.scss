@@ -5,6 +5,29 @@
   gap: 10px;
   padding: 10px;
   padding-top: 0;
+  transform: translateX(0%);
+
+  @include tablet {
+    position: absolute;
+    width: 60%;
+    right: 100%;
+    top: 0;
+    min-height: 100vh;
+    z-index: 51;
+    transform: translateX(0);
+    background-color: #fff;
+    transition: transform 0.6s ease-in-out;
+    padding: 8%;
+  }
+
+  @include mobile {
+    width: 100%;
+    padding: 15%;
+  }
+
+  &--visible {
+    transform: translateX(100%);
+  }
 }
 
 .reset-btn {
@@ -40,4 +63,36 @@ input[type='search'] {
 .inactive {
   opacity: 0.4;
   pointer-events: none;
+}
+
+.toggle-filters {
+  display: none;
+  align-items: center;
+  gap: 15px;
+  font-size: 1.1rem;
+  padding: 10px;
+  color: $card_read_more_btn_color;
+  &-btn {
+    background: center / contain no-repeat;
+    background-image: URL(../../../../assets/filters.svg);
+    height: 20px;
+    width: 20px;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .toggle-filters {
+    display: flex;
+  }
+  // .filterBlock {
+  //   // position: absolute;
+  //   // width: 70%;
+  //   // right: 100%;
+  //   // top: 0;
+  //   // min-height: 100vh;
+  //   // z-index: 51;
+  //   // transform: translateX(0);
+  //   // background-color: #fff;
+  //   // transition: transform 0.6s ease-in-out;
+  // }
 }
