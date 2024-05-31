@@ -56,6 +56,7 @@ export default class Router {
     const parsePath = path.split('/').splice(1);
 
     if (!urlSeters.checkRightURL(path)) {
+      console.log(path);
       this.navigate(Pages.ERROR, true);
     }
 
@@ -76,7 +77,7 @@ export default class Router {
     }
 
     const catalogUrl = `/${Pages.CATALOG}`;
-    const filtersUrl = `/${parsePath.join('/')}`;
+    const filtersUrl = `/${urlSeters.sortUrl(parsePath)}`;
     window.history.pushState(null, '', !parsePath.length ? catalogUrl : catalogUrl + filtersUrl);
   }
 
