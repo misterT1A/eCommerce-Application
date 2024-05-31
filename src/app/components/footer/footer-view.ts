@@ -1,3 +1,4 @@
+import { CATEGORIES } from '@components/catalog/filters/constants-filters';
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
@@ -10,49 +11,51 @@ export default class FooterView extends BaseComponent {
 
   protected linksWrapper = div([styles.wrapper]);
 
-  protected aboutWrapper = div([styles.aboutWrapper]);
+  protected categories: string[] | null;
 
   constructor(router: Router) {
     super({ tag: 'footer', className: styles.footer });
     this.router = router;
-
-    this.setContent();
+    this.categories = null;
   }
 
-  private setContent() {
-    this.setCategoriesBlock();
-    this.setLinksBlock();
-    this.setContactBlock();
-    this.aboutBlock();
+  public setContent() {
+    this.categories = Object.keys(CATEGORIES);
 
-    this.appendChildren([this.linksWrapper, this.aboutWrapper]);
-  }
-
-  private setCategoriesBlock() {
-    const wrapper = div([styles.categoriesWrapper]);
-    const links = [
-      'Bread',
-      'Muffins & Cupcakes',
-      'Biscuits',
-      'Pastries',
-      'Pies & Tarts',
-      'Waffles',
-      'Cakes',
-      'Rolls & Buns',
-      'Vegan',
-      'Cookies',
-      'Doughnuts',
-    ];
-    const catCount = 11;
-    for (let i = 0; i < catCount; i += 1) {
-      const elem = span([styles.link], links[i]);
-      wrapper.append(elem);
+    const categoriesBlock = this.setCategoriesBlock();
+    const linksBlock = this.setLinksBlock();
+    const contactBlock = this.setContactBlock();
+    if (categoriesBlock && linksBlock && contactBlock) {
+      this.linksWrapper.appendChildren([categoriesBlock, linksBlock, contactBlock]);
     }
-    const container = div([styles.block, styles.blockFull], h2([styles.categoriesTitle], 'CATEGORIES'), wrapper);
-    this.linksWrapper.append(container);
+
+    const aboutBlock = this.aboutBlock();
+
+    this.appendChildren([this.linksWrapper, aboutBlock]);
   }
 
-  private setLinksBlock() {
+  private setCategoriesBlock(): BaseComponent | null {
+    const wrapper = div([styles.categoriesWrapper]);
+
+    if (!this.categories) {
+      return null;
+    }
+    const links = this.categories.map((cat) => cat.replace(/_/g, ' & ').replace(/-/g, ' '));
+
+    links.forEach((cat, index) => {
+      const word = cat.charAt(0).toUpperCase() + cat.slice(1);
+      const elem = span([styles.link], word);
+      elem.getNode().setAttribute(`data-link`, (this.categories as string[])[index]);
+      wrapper.append(elem);
+    });
+
+    const container = div([styles.block, styles.blockFull], h2([styles.categoriesTitle], 'CATEGORIES'), wrapper);
+    wrapper.addListener('click', (e: Event) => this.categoriesHandler(e));
+
+    return container;
+  }
+
+  private setLinksBlock(): BaseComponent {
     const wrapper = div([styles.linksWrapper]);
     const links = ['Home', 'Catalog'];
     const catCount = 3;
@@ -61,11 +64,13 @@ export default class FooterView extends BaseComponent {
       wrapper.append(elem);
     }
     const container = div([styles.block, styles.blockHalf], h2([styles.categoriesTitle], 'LINKS '), wrapper);
-    this.linksWrapper.append(container);
+
     wrapper.addListener('click', (e: Event) => this.LinksHandler(e));
+
+    return container;
   }
 
-  private setContactBlock() {
+  private setContactBlock(): BaseComponent {
     const wrapper = div([styles.linksWrapper]);
     const links = [
       div(
@@ -92,19 +97,31 @@ export default class FooterView extends BaseComponent {
       wrapper.append(linkBlock);
     }
     const container = div([styles.block, styles.blockHalf], h2([styles.categoriesTitle], 'CONTACTS '), wrapper);
-    this.linksWrapper.append(container);
+    // this.linksWrapper.append(container);
+    return container;
   }
 
-  private aboutBlock() {
+  private aboutBlock(): BaseComponent {
     const year = span([styles.aboutText], '© 2024 Net Ninjas');
     const nameCourse = span([styles.aboutText], 'Rolling Scopes School');
     const courseLogo = svg('/assets/img/rss-logo.svg#svgElem', styles.aboutLogo);
 
-    this.aboutWrapper.appendChildren([year, nameCourse, courseLogo]);
-    // return [year, nameCourse, courseLogo];
+    const container = div([styles.aboutWrapper], year, nameCourse, courseLogo);
+    return container;
   }
-  // TODO categories handler
-  // private categoriesHandler() {}
+
+  private categoriesHandler(e: Event) {
+    const target = (e.target as HTMLElement)?.dataset.link;
+
+    if (!this.categories || !target) {
+      return;
+    }
+    if (this.categories.includes(target)) {
+      this.router.setEmptyUrlCatalog();
+      this.router.setUrlCatalog(target);
+      this.router.navigateToLastPoint();
+    }
+  }
 
   private LinksHandler(e: Event) {
     const target = (e.target as HTMLElement)?.textContent;

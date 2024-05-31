@@ -7,4 +7,8 @@ export default class FooterController extends Controller<FooterView> {
   constructor(router: Router) {
     super(new FooterView(router));
   }
+
+  public setContent() {
+    this.view.setContent();
+  }
 }
