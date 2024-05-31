@@ -20,6 +20,9 @@ class GetProductsService {
   }
 
   public setChosenCategory(category: string) {
+    if (!category) {
+      this.chosenCategory = '';
+    }
     this.chosenCategory = category;
   }
 
@@ -71,7 +74,6 @@ class GetProductsService {
     this.chosenCategory = '';
     this.searchQuery = '';
     this.sortOrder = '';
-    return this.getFilteredProducts();
   }
 
   public setSearchQuery(query: string) {
