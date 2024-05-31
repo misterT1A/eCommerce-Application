@@ -6,5 +6,8 @@
 
 .mainContent {
   @include flex(start, start, row);
+  @include tablet {
+    margin: auto;
+  }
   gap: 3%;
 }

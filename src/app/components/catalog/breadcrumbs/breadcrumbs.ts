@@ -46,14 +46,14 @@ export default class Breadcrumbs extends BaseComponent {
 
     if (target.innerText === CATALOG_ROOT) {
       this.parent.getRouter.setEmptyUrlCatalog();
-      this.parent.getFilterBlockView.setValues([CATALOG_ROOT]);
+      this.parent.getFilterBlock.setValues([CATALOG_ROOT]);
       return;
     }
 
     const path = this.parent.getRouter.getCurrentPath().split('/').splice(1);
     const filteredPath = path.filter((el) => !(el in SUBCATEGORIES));
     this.parent.getRouter.setEmptyUrlCatalog();
-    this.parent.getFilterBlockView.setValues([transformCategoryName(target.innerText)]);
+    this.parent.getFilterBlock.setValues([transformCategoryName(target.innerText)]);
     filteredPath.forEach((el) => this.parent.getRouter.setUrlCatalog(el));
   }
 

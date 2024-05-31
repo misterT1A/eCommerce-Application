@@ -24,7 +24,7 @@ export default class CatalogController extends Controller<CatalogView> {
         .then((data) => this.changeProducts(data))
         .catch(() => this.router.navigate(Pages.ERROR, true));
     } else {
-      this.view.getFilterBlockView.setValues(this.filtersParams);
+      this.view.getFilterBlock.setValues(this.filtersParams);
     }
   }
 

@@ -5,6 +5,42 @@
   gap: 10px;
   padding: 10px;
   padding-top: 0;
+
+  @include tablet {
+    position: absolute;
+    width: 60%;
+    right: 100%;
+    top: 0;
+    min-height: 100vh;
+    z-index: 51;
+    transform: translateX(0);
+    background-color: #fff;
+    transition: transform 0.6s ease-in-out;
+    padding: 8%;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    &--visible {
+      transform: translateX(100%);
+    }
+  }
+
+  @include mobile {
+    width: 90%;
+    padding: 15%;
+  }
+}
+
+.close-btn {
+  display: none;
+  width: 40px;
+  height: 40px;
+  background: center / contain no-repeat;
+  background-image: URL(../../../../assets/cross.svg);
+  position: absolute;
+  top: 1%;
+  right: 2%;
+  @include tablet {
+    display: block;
+  }
 }
 
 .reset-btn {
@@ -15,9 +51,15 @@
   border-radius: 20px;
   background-color: transparent;
   transition: all 0.3s linear;
-  &:hover {
+  &:active {
     background-color: $card_read_more_btn_color;
     color: #fff;
+  }
+  @media (hover: hover) {
+    &:hover {
+      background-color: $card_read_more_btn_color;
+      color: #fff;
+    }
   }
 }
 
@@ -38,6 +80,28 @@ input[type='search'] {
 }
 
 .inactive {
-  opacity: 0.4;
+  opacity: 0.6;
   pointer-events: none;
+}
+
+.blur {
+  filter: blur(1.5px);
+}
+
+.toggle-filters {
+  display: none;
+  align-items: center;
+  gap: 15px;
+  font-size: 1.1rem;
+  padding: 10px;
+  color: $card_read_more_btn_color;
+  &-btn {
+    background: center / contain no-repeat;
+    background-image: URL(../../../../assets/filters.svg);
+    height: 20px;
+    width: 20px;
+  }
+  @include tablet {
+    display: flex;
+  }
 }
