@@ -85,13 +85,6 @@ describe('Router', () => {
   });
 
   it('should set the required url for categories', () => {
-    jest.mock('@components/catalog/filters/constants-filters', () => ({
-      CATEGORIES: {
-        bread: 'Mock Category 1',
-        cakes: 'Mock Category 2',
-      },
-    }));
-
     const path = ['bread'];
     const filter = 'bread';
     setCategoties(path, filter);
@@ -99,15 +92,6 @@ describe('Router', () => {
   });
 
   it('should check Right URL', () => {
-    jest.mock('@components/catalog/filters/constants-filters', () => ({
-      CATEGORIES: {
-        bread: 'Mock Category 1',
-      },
-      SUBCATEGORIES: {
-        baguettes: 'Mock Category 1',
-      },
-    }));
-
     const url = 'catalog/IS_VEGAN/PRICE_DESC';
     expect(checkRightURL(url)).toEqual(true);
     const wrongUrl = 'catalog/IS_VEGANdd//PRICE_DESC';
