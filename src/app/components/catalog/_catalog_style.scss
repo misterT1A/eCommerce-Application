@@ -6,7 +6,7 @@
 
 .mainContent {
   @include flex(start, start, row);
-  @include mobile {
+  @include tablet {
     margin: auto;
   }
   gap: 3%;
