@@ -6,5 +6,8 @@
 
 .mainContent {
   @include flex(start, start, row);
+  @include mobile {
+    margin: auto;
+  }
   gap: 3%;
 }

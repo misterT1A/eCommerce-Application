@@ -22,6 +22,8 @@ enum SORT_SELECTION {
 }
 
 export default class FilterBlock extends BaseComponent {
+  private closeButton: BaseComponent<HTMLButtonElement>;
+
   private resetButton: BaseComponent<HTMLButtonElement>;
 
   private searchForm: BaseComponent<HTMLFormElement>;
@@ -50,6 +52,12 @@ export default class FilterBlock extends BaseComponent {
     this.resetButton = button([styles['reset-btn']], 'RESET FILTERS', {
       onclick: () => this.reset(),
     });
+    this.closeButton = button([styles['close-btn']], '', {
+      onclick: () => {
+        this.removeClass(styles['filterBlock--visible']);
+        document.body.style.overflow = '';
+      },
+    });
     this.searchForm = new BaseComponent<HTMLFormElement>(
       { tag: 'form', action: '#' },
       (this.searchInput = new FormField('', 'search', false))
@@ -67,6 +75,7 @@ export default class FilterBlock extends BaseComponent {
       SORT_SELECTION.Z_A,
     ]);
     this.appendChildren([
+      this.closeButton,
       this.resetButton,
       this.searchForm,
       this.categorySelect,
@@ -115,11 +124,11 @@ export default class FilterBlock extends BaseComponent {
     await ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
     this.breadcrumbs.update([CATALOG_ROOT]);
     this.router.setEmptyUrlCatalog();
-    this.removeClass(styles.inactive);
+    this.removeClass(styles.blur);
   }
 
   private updateView() {
-    this.addClass(styles.inactive);
+    this.addClass(styles.blur);
     [this.salesFilter, this.veganFilter, this.forKidsFilter].forEach((filter) => filter.setValue(false));
     this.searchInput.reset();
     [this.categorySelect, this.subcategorySelect].forEach((select) => select.reset());
