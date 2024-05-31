@@ -26,4 +26,5 @@ module.exports = {
   modulePathIgnorePatterns: ['<rootDir>/dist/'],
   moduleFileExtensions: ['ts', 'js'],
   setupFiles: ['<rootDir>/jest.setup.js'],
+  collectCoverageFrom: ['./src/**', '!src/**/*.d.ts'],
 };
