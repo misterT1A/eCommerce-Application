@@ -15,13 +15,17 @@ export default class CatalogController extends Controller<CatalogView> {
     super(new CatalogView(router));
 
     this.initContent();
-    this.view.getFilterBlockView.setValues(filtersParams || []);
   }
 
   private initContent() {
-    ProductsService.getFilteredProducts()
-      .then((data) => this.changeProducts(data))
-      .catch(() => this.router.navigate(Pages.ERROR, true));
+    ProductsService.resetFilters();
+    if (!this.filtersParams) {
+      ProductsService.getFilteredProducts()
+        .then((data) => this.changeProducts(data))
+        .catch(() => this.router.navigate(Pages.ERROR, true));
+    } else {
+      this.view.getFilterBlockView.setValues(this.filtersParams);
+    }
   }
 
   // the ResProducts type can be supplemented with your own responsive option

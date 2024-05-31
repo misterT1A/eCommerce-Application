@@ -4,24 +4,22 @@ import { div } from '@utils/elements';
 
 import styles from './_catalog_style.scss';
 import Breadcrumbs from './breadcrumbs/breadcrumbs';
-import FilterBlock from './filters/filter-block';
+import FiltersBlock from './filters/filter-block';
 import ProductCards from './product-cards/product-cards';
 
 export default class CatalogView extends BaseComponent {
   protected productCardsBlock: ProductCards;
 
-  protected filterBlock: FilterBlock;
+  protected filtersBlock: FiltersBlock;
 
   private breadCrumbsBlock: Breadcrumbs;
 
   constructor(protected router: Router) {
     super({ tag: 'section', className: styles.wrapper });
-
-    this.breadCrumbsBlock = new Breadcrumbs();
     this.productCardsBlock = new ProductCards(this.router);
-    this.filterBlock = new FilterBlock(this.productCardsBlock, this.breadCrumbsBlock, router);
-
-    const mainContent = div([styles.mainContent], this.filterBlock, this.productCardsBlock);
+    this.breadCrumbsBlock = new Breadcrumbs(this);
+    this.filtersBlock = new FiltersBlock(this.productCardsBlock, this.breadCrumbsBlock, this.router);
+    const mainContent = div([styles.mainContent], this.filtersBlock, this.productCardsBlock);
 
     this.appendChildren([this.breadCrumbsBlock, mainContent]);
   }
@@ -31,6 +29,10 @@ export default class CatalogView extends BaseComponent {
   }
 
   public get getFilterBlockView() {
-    return this.filterBlock;
+    return this.filtersBlock;
+  }
+
+  public get getRouter() {
+    return this.router;
   }
 }
