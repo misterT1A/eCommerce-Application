@@ -4,12 +4,13 @@ import { deleteAccount } from '@services/customer-service/my-customer-service';
 
 import { prepareMyCustomer } from './profile-helpers';
 import UserDelete from './user-profile-view/edit-mode/delete-account';
+import type EditModeForm from './user-profile-view/edit-mode/edit-mode-view';
 import type ProfileView from './user-profile-view/user-profile-view';
 
 class DeleteAccount {
   constructor(private view: ProfileView) {}
 
-  public enable(logout: () => Promise<void>) {
+  public enable(logout: () => Promise<void>, modalEditMode?: Modal<EditModeForm>) {
     const deleteAcc = new UserDelete();
     const modal = new Modal({ title: 'Are you sure?', content: deleteAcc });
     modal.open();
@@ -18,12 +19,14 @@ class DeleteAccount {
       const actualizeCustomer = await prepareMyCustomer(() => logout());
       if (!actualizeCustomer.isAuthorized) {
         modal.close();
+        modalEditMode?.close();
         return;
       }
       const res = await deleteAccount(AuthService.getRoot());
       if (res.success) {
         await logout();
         modal.close();
+        modalEditMode?.close();
       } else {
         deleteAcc.confirmButton.getNode().disabled = false;
       }

@@ -22,14 +22,15 @@ class AddAddress {
   ) {
     MyCustomer.setCustomer(resAddAddress.customer);
     const addresses = resAddAddress.customer?.addresses;
-    const addressID: Address = addresses ? addresses[addresses.length - 1] : '';
+    const address: Address = addresses ? addresses[addresses.length - 1] : '';
     if (values.isBilling || values.isShipping || values.isDefaultBilling || values.isDefaultShipping) {
+      const { isBilling, isShipping, isDefaultBilling, isDefaultShipping } = values;
       const request = getAddressTypeRequest({
-        id: addressID.id ?? '',
-        isBilling: values.isBilling,
-        isShipping: values.isShipping,
-        isDefaultBilling: values.isDefaultBilling,
-        isDefaultShipping: values.isDefaultShipping,
+        id: address.id ?? '',
+        isBilling,
+        isShipping,
+        isDefaultBilling,
+        isDefaultShipping,
       });
       if (!request.actions.length) {
         return;
@@ -38,7 +39,7 @@ class AddAddress {
       if (resSetAttrs.success) {
         MyCustomer.setCustomer(resSetAttrs.customer);
         this.view.profileAddresses.updateView();
-        this.view.openAddress(addressID.id ?? '');
+        this.view.openAddress(address.id ?? '');
         userInfoEditModal.close();
         notificationEmitter.showMessage({ messageType: 'success', text: 'Address is added!' });
       } else {
@@ -46,7 +47,7 @@ class AddAddress {
       }
     } else {
       this.view.profileAddresses.updateView();
-      this.view.openAddress(addressID.id ?? '');
+      this.view.openAddress(address.id ?? '');
       userInfoEditModal.close();
     }
   }

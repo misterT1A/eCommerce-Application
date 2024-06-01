@@ -4,10 +4,9 @@ import notificationEmitter from '@components/notifications/notifications-control
 import AuthService from '@services/auth-service';
 import { updateCustomer } from '@services/customer-service/my-customer-service';
 import MyCustomer from '@services/customer-service/myCustomer';
-import RegistrationValidator from '@services/registrationValidationService/registrationValidator';
 
 import { getUserInfoUpdateRequest } from './edit-mode-adapters';
-import { getLogsFromRequestBody, prepareMyCustomer } from './profile-helpers';
+import { getLogsFromRequestBody, prepareMyCustomer, processUserData } from './profile-helpers';
 import UserInfoEdit from './user-profile-view/edit-mode/edit-user';
 import type ProfileView from './user-profile-view/user-profile-view';
 
@@ -31,7 +30,7 @@ class EditModeProfile {
       if (!actualizeCustomer.isAuthorized) {
         userInfoEditModal.close();
       }
-      if (this.processUserData(editForm).isValidForm && actualizeCustomer.isAuthorized) {
+      if (processUserData(editForm).isValidForm && actualizeCustomer.isAuthorized) {
         const values = editForm.getValues();
         const requestBody = getUserInfoUpdateRequest(values);
         if (!requestBody.actions.length) {
@@ -55,21 +54,7 @@ class EditModeProfile {
         editForm.applyButton.getNode().disabled = false;
       }
     });
-    editForm.addListener('input', () => this.processUserData(editForm));
-  }
-
-  private processUserData(form: UserInfoEdit) {
-    let isValidForm = true;
-    const errorsObject = RegistrationValidator.processUserInfo(form.getValues());
-    Object.entries(errorsObject).forEach(([key, errors]) => {
-      if (errors.length > 0) {
-        isValidForm = false;
-      }
-      form.fields[key as userFormFieldsType].updateErrors(errors);
-    });
-    return {
-      isValidForm,
-    };
+    editForm.addListener('input', () => processUserData(editForm));
   }
 }
 
