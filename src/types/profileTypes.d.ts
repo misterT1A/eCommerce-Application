@@ -22,24 +22,27 @@ enum ProfileAddressesFields {
 
 type ProfileAddressesFieldsType = keyof typeof ProfileAddressesFields;
 
-type ProfileAddressValues = {
-  country: 'UK' | 'France' | 'Belgium';
-  zipCode: string;
-  street: string;
-  city: string;
+type AddressType = {
   isBilling: boolean;
   isShipping: boolean;
   isDefaultBilling: boolean;
   isDefaultShipping: boolean;
 };
 
+type CountryType = 'UK' | 'France' | 'Belgium';
+
+type ProfileAddressInfoType = {
+  country: CountryType;
+  zipCode: string;
+  street: string;
+  city: string;
+};
+
+type ProfileAddressValues = ProfileAddressInfoType & AddressType;
+
 type AddressAttrs = {
   id: string;
-  isBilling: boolean;
-  isShipping: boolean;
-  isDefaultBilling: boolean;
-  isDefaultShipping: boolean;
-};
+} & AddressType;
 
 type AddressesInfo = {
   addresses: Address[];
