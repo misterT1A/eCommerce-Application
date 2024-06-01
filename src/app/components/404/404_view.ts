@@ -1,3 +1,4 @@
+import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
 
@@ -26,7 +27,7 @@ export default class View404 extends BaseComponent {
       const element = new BaseComponent(prop);
       this.append(element);
       if (prop.tag === 'button') {
-        element.addListener('click', () => this.navigate(''));
+        element.addListener('click', () => this.navigate(Pages.MAIN));
       }
     });
   }

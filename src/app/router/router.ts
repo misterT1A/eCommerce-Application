@@ -56,7 +56,6 @@ export default class Router {
     const parsePath = path.split('/').splice(1);
 
     if (!urlSeters.checkRightURL(path)) {
-      console.log(path);
       this.navigate(Pages.ERROR, true);
     }
 

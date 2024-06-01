@@ -47,6 +47,7 @@ export default class App {
       await ProductService.getCommercetoolsData();
       await updateMyCustomerInfo();
       this.headerController.updateTextLoggined(MyCustomer.fullNameShort);
+      this.footerController.setContent();
       this.router.navigateToLastPoint();
     });
 
