@@ -21,41 +21,6 @@ class EditAddress {
     private logout: () => Promise<void>
   ) {}
 
-  private async setAddressAttributes(id: string, values: ProfileAddressValues) {
-    if (values.isBilling || values.isShipping || values.isDefaultBilling || values.isDefaultShipping) {
-      const request = getAddressTypeRequest(
-        {
-          id: id ?? '',
-          isBilling: values.isBilling,
-          isShipping: values.isShipping,
-          isDefaultBilling: values.isDefaultBilling,
-          isDefaultShipping: values.isDefaultShipping,
-        },
-        {
-          id: id ?? '',
-          isBilling: MyCustomer.isBillingAddress(id),
-          isShipping: MyCustomer.isShippingAddress(id),
-          isDefaultBilling: MyCustomer.defaultBillingId === id,
-          isDefaultShipping: MyCustomer.defaultShippingId === id,
-        }
-      );
-      if (!request.actions.length) {
-        return;
-      }
-      const resSetAttrs = await updateCustomer(MyCustomer.id ?? '', AuthService.getRoot(), request);
-      if (resSetAttrs.success) {
-        MyCustomer.setCustomer(resSetAttrs.customer);
-        this.view.profileAddresses.updateView();
-        this.view.openAddress(id ?? '');
-      } else {
-        showErrorMessages(resSetAttrs);
-      }
-    } else {
-      this.view.profileAddresses.updateView();
-      this.view.openAddress(id ?? '');
-    }
-  }
-
   public enable(id: string) {
     const addressForm = new UserAddressEdit();
     const userInfoEditModal = new Modal({ title: 'Edit Address', content: addressForm });
@@ -68,7 +33,16 @@ class EditAddress {
       }
       if (processAddressData(addressForm).isValidForm && actualizeCustomer.isAuthorized) {
         const values = addressForm.getValues();
-        const requestBody = getAddressEditRequest(values, id);
+        const requestAddress = getAddressEditRequest(values, id);
+        const { isBilling, isShipping, isDefaultBilling, isDefaultShipping } = values;
+        const requestType = getAddressTypeRequest(
+          { id: id ?? '', isBilling, isShipping, isDefaultBilling, isDefaultShipping },
+          { id: id ?? '', ...MyCustomer.getAddressType(id) }
+        );
+        const requestBody = {
+          version: MyCustomer.version ?? 1,
+          actions: [...requestAddress.actions, ...requestType.actions],
+        };
         if (!requestBody.actions.length) {
           return;
         }
@@ -77,7 +51,6 @@ class EditAddress {
           MyCustomer.setCustomer(resUpdateAddress.customer);
           this.view.profileAddresses.updateView();
           this.view.openAddress(id);
-          await this.setAddressAttributes(id, values);
           notificationEmitter.showMessage({ messageType: 'success', title: 'Saved!', text: 'Address is updated!' });
         } else {
           showErrorMessages(resUpdateAddress);
@@ -87,12 +60,12 @@ class EditAddress {
     addressForm.addListener('input', () => processAddressData(addressForm));
   }
 
-  public async setAddressAsDefault(type: 'Shipping' | 'Billing', id: string) {
+  public async setAddressAsDefault(type: 'Shipping' | 'Billing', id: string, reset = false) {
     const actualizeCustomer = await prepareMyCustomer(() => this.logout());
     if (!actualizeCustomer.isAuthorized) {
       return;
     }
-    const request = getSetDefaultAddressRequest(type, id);
+    const request = getSetDefaultAddressRequest(type, id, reset);
     if (!request.actions.length) {
       return;
     }

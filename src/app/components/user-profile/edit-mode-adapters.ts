@@ -4,6 +4,8 @@ import MyCustomer from '@services/customer-service/myCustomer';
 import { COUNTRIES_PATTERNS } from '@services/registrationValidationService/validCountries';
 import getISODate from '@utils/date-helpers';
 
+import { getCountryName } from './profile-helpers';
+
 export function getUserInfoUpdateRequest(values: IUserInfoValues): CustomerUpdate {
   const actions: CustomerUpdateAction[] = [];
   if (MyCustomer.email !== values.email) {
@@ -96,26 +98,27 @@ export function getAddressTypeRequest(newAddress: AddressAttrs, prevAddress?: Ad
       action: 'setDefaultBillingAddress',
       addressId: newAddress.id,
     });
+  } else if (refAddress?.isDefaultBilling) {
+    actions.push({
+      action: 'setDefaultBillingAddress',
+      addressId: undefined,
+    });
   }
   if (newAddress.isDefaultShipping) {
     actions.push({
       action: 'setDefaultShippingAddress',
       addressId: newAddress.id,
     });
+  } else if (refAddress?.isDefaultShipping) {
+    actions.push({
+      action: 'setDefaultShippingAddress',
+      addressId: undefined,
+    });
   }
   return {
     version: version ?? MyCustomer.version ?? 1,
     actions,
   };
-}
-
-export function getCountryName(code: string) {
-  const map = new Map([
-    ['GB', 'UK'],
-    ['BE', 'Belgium'],
-    ['FR', 'France'],
-  ]);
-  return map.get(code) ?? '';
 }
 
 export function getAddressValuesById(id: string) {
@@ -125,10 +128,7 @@ export function getAddressValuesById(id: string) {
     zipCode: address?.postalCode ?? '',
     street: address?.streetName ?? '',
     city: address?.city ?? '',
-    isBilling: MyCustomer.isBillingAddress(id),
-    isShipping: MyCustomer.isShippingAddress(id),
-    isDefaultBilling: MyCustomer.defaultBillingId === id,
-    isDefaultShipping: MyCustomer.defaultShippingId === id,
+    ...MyCustomer.getAddressType(id),
   };
 }
 
@@ -143,17 +143,17 @@ export function getRemoveAddressRequest(addressId: string, version?: number) {
   };
 }
 
-export function getSetDefaultAddressRequest(type: 'Shipping' | 'Billing', id: string) {
+export function getSetDefaultAddressRequest(type: 'Shipping' | 'Billing', id: string, reset = false) {
   const actions: CustomerUpdateAction[] = [
     {
       action: `setDefault${type}Address`,
-      addressId: id,
+      addressId: reset ? undefined : id,
     },
   ];
   if (!MyCustomer[`is${type}Address`](id)) {
     actions.push({
       action: `add${type}AddressId`,
-      addressId: id,
+      addressId: reset ? undefined : id,
     });
   }
   return {

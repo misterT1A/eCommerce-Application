@@ -9,6 +9,7 @@ import EditAddress from './addresses-edit-mode';
 import ChangePasswordMode from './change-password-mode';
 import DeleteAccount from './delete-account-mode';
 import DeleteAddress from './delete-address-mode';
+import EditMode from './edit-mode';
 import EditModeProfile from './profile-details-edit-mode';
 import ProfileView from './user-profile-view/user-profile-view';
 
@@ -25,6 +26,8 @@ class ProfileController extends Controller<ProfileView> {
 
   private deleteAccountMode: DeleteAccount;
 
+  private editMode: EditMode;
+
   constructor(
     private router: Router,
     private headerController: HeaderController
@@ -32,12 +35,30 @@ class ProfileController extends Controller<ProfileView> {
     super(
       new ProfileView(
         router,
-        (id) => this.deleteAddressMode.enable(id),
-        (id) => this.editAddressMode.enable(id),
-        (id) => this.editAddressMode.setAddressAsDefault('Shipping', id),
-        (id) => this.editAddressMode.setAddressAsDefault('Billing', id)
+        (id: string) => this.deleteAddressMode.enable(id),
+        (id: string) => this.editAddressMode.enable(id),
+        (id: string, reset: boolean) => this.editAddressMode.setAddressAsDefault('Shipping', id, reset),
+        (id: string, reset: boolean) => this.editAddressMode.setAddressAsDefault('Billing', id, reset)
       )
     );
+
+    this.setListeners();
+
+    this.profileInfoEdit = new EditModeProfile(this.getView, this.headerController);
+    this.addAddress = new AddAddress(this.getView);
+    this.editAddressMode = new EditAddress(this.getView, () => this.logout());
+    this.deleteAddressMode = new DeleteAddress(this.getView, () => this.logout());
+    this.changePasswordMode = new ChangePasswordMode(this.getView, () => this.logout());
+    this.deleteAccountMode = new DeleteAccount(this.getView);
+    this.editMode = new EditMode(
+      this.getView,
+      () => this.logout(),
+      this.headerController,
+      () => this.deleteAccountMode.enable(() => this.logout())
+    );
+  }
+
+  private setListeners() {
     this.getView.openFirstAddress();
     this.getView.profileCredentials.editButton.addListener('click', () =>
       this.profileInfoEdit.enable(() => this.logout())
@@ -45,15 +66,9 @@ class ProfileController extends Controller<ProfileView> {
     this.getView.profileAddresses.addAddressButton.addListener('click', () =>
       this.addAddress.enable(() => this.logout())
     );
+    this.getView.buttonEdit.addListener('click', () => this.editMode.enable());
     this.getView.changePasswordButton.addListener('click', () => this.changePasswordMode.enable());
-    this.getView.deleteAccount.addListener('click', () => this.deleteAccountMode.enable(() => this.logout()));
     this.getView.logOutButton.addListener('click', () => this.logout());
-    this.profileInfoEdit = new EditModeProfile(this.getView, this.headerController);
-    this.addAddress = new AddAddress(this.getView);
-    this.editAddressMode = new EditAddress(this.getView, () => this.logout());
-    this.deleteAddressMode = new DeleteAddress(this.getView, () => this.logout());
-    this.changePasswordMode = new ChangePasswordMode(this.getView, () => this.logout());
-    this.deleteAccountMode = new DeleteAccount(this.getView);
     this.getView.profileAddresses.billingAddressToggler.addListener('click', () =>
       this.getView.openAddress(MyCustomer.addresses.defaultBillingAddress ?? '')
     );
