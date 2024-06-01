@@ -4,33 +4,39 @@ import { div } from '@utils/elements';
 
 import styles from './_catalog_style.scss';
 import Breadcrumbs from './breadcrumbs/breadcrumbs';
-import FilterBlock from './filters/filter-block';
+import FiltersBlock from './filters/filter-block';
+import ToggleFiltersBlock from './filters/toggle-filters';
 import ProductCards from './product-cards/product-cards';
 
 export default class CatalogView extends BaseComponent {
   protected productCardsBlock: ProductCards;
 
-  protected filterBlock: FilterBlock;
+  protected filtersBlock: FiltersBlock;
 
   private breadCrumbsBlock: Breadcrumbs;
 
+  private toggleFiltersBlock: ToggleFiltersBlock;
+
   constructor(protected router: Router) {
     super({ tag: 'section', className: styles.wrapper });
-
-    this.breadCrumbsBlock = new Breadcrumbs();
     this.productCardsBlock = new ProductCards(this.router);
-    this.filterBlock = new FilterBlock(this.productCardsBlock, this.breadCrumbsBlock, router);
+    this.breadCrumbsBlock = new Breadcrumbs(this);
+    this.filtersBlock = new FiltersBlock(this.productCardsBlock, this.breadCrumbsBlock, this.router);
+    this.toggleFiltersBlock = new ToggleFiltersBlock(this.filtersBlock);
+    const mainContent = div([styles.mainContent], this.filtersBlock, this.productCardsBlock);
 
-    const mainContent = div([styles.mainContent], this.filterBlock, this.productCardsBlock);
-
-    this.appendChildren([this.breadCrumbsBlock, mainContent]);
+    this.appendChildren([this.breadCrumbsBlock, this.toggleFiltersBlock, mainContent]);
   }
 
   public get getProductCardView() {
     return this.productCardsBlock;
   }
 
-  public get getFilterBlockView() {
-    return this.filterBlock;
+  public get getFilterBlock() {
+    return this.filtersBlock;
+  }
+
+  public get getRouter() {
+    return this.router;
   }
 }

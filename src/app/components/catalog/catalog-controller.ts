@@ -1,4 +1,4 @@
-import type { ProductProjection } from '@commercetools/platform-sdk';
+// import type { ProductProjection } from '@commercetools/platform-sdk';
 
 import Controller from '@components/controller';
 import ProductsService from '@services/product_service/product_service';
@@ -15,19 +15,16 @@ export default class CatalogController extends Controller<CatalogView> {
     super(new CatalogView(router));
 
     this.initContent();
-    this.view.getFilterBlockView.setValues(filtersParams || []);
   }
 
   private initContent() {
-    ProductsService.getFilteredProducts()
-      .then((data) => this.changeProducts(data))
-      .catch(() => this.router.navigate(Pages.ERROR, true));
-  }
-
-  // the ResProducts type can be supplemented with your own responsive option
-  private changeProducts(res: ResProducts) {
-    const products: ProductProjection[] = res.body.results;
-    // pass only the array of products
-    this.view.getProductCardView.setProducts(products);
+    ProductsService.resetFilters();
+    if (!this.filtersParams) {
+      ProductsService.getFilteredProducts()
+        .then((data) => this.view.getProductCardView.setProducts(data.body.results))
+        .catch(() => this.router.navigate(Pages.ERROR, true));
+    } else {
+      this.view.getFilterBlock.setValues(this.filtersParams);
+    }
   }
 }

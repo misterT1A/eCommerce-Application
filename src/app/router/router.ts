@@ -76,7 +76,7 @@ export default class Router {
     }
 
     const catalogUrl = `/${Pages.CATALOG}`;
-    const filtersUrl = `/${parsePath.join('/')}`;
+    const filtersUrl = `/${urlSeters.sortUrl(parsePath)}`;
     window.history.pushState(null, '', !parsePath.length ? catalogUrl : catalogUrl + filtersUrl);
   }
 

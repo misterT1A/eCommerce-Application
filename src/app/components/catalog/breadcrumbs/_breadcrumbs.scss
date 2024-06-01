@@ -17,6 +17,10 @@
   font-weight: bold;
 }
 
+.li:last-child {
+  pointer-events: none;
+}
+
 .hide {
   opacity: 0;
 }
