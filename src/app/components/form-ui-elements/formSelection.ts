@@ -92,6 +92,9 @@ class FormSelection extends BaseComponent<HTMLFormElement> {
     return this.value;
   }
 
+  /**
+   * Resets the form selection by unchecking options.
+   */
   public reset() {
     this.inputs.forEach((item) => {
       const fieldInput = item;
