@@ -23,7 +23,7 @@ class EditMode {
     private view: ProfileView,
     private logout: () => Promise<void>,
     private headerController: HeaderController,
-    private deleteAccount: () => void
+    private deleteAccount: (modal?: Modal<EditModeForm>) => void
   ) {}
 
   public enable() {
@@ -33,7 +33,6 @@ class EditMode {
         this.openAddressModal(id, values);
       }
     });
-
     this.addresses = new Map();
     MyCustomer.addresses.addresses.forEach((address) => {
       this.addresses.set(address.id ?? '', {
@@ -47,8 +46,7 @@ class EditMode {
     const modal = new Modal({ title: 'Edit Account Details', content: this.editView, wide: true });
     modal.open();
     this.editView.deleteAccount.addListener('click', () => {
-      this.deleteAccount();
-      modal.close();
+      this.deleteAccount(modal);
     });
     this.editView.addListener('input', () => {
       if (!this.editView) {
@@ -65,40 +63,47 @@ class EditMode {
         modal.close();
       }
       if (processUserData(this.editView.editUserInfo).isValidForm && actualizeCustomer.isAuthorized) {
-        const userActions = getUserInfoUpdateRequest(this.editView.editUserInfo.getValues()).actions;
-        const addressActions: CustomerUpdateAction[] = [];
-        this.addresses.forEach((address, id) => {
-          addressActions.push(...getAddressEditRequest(address, id).actions);
-          const { isBilling, isShipping, isDefaultBilling, isDefaultShipping } = address;
-          addressActions.push(
-            ...getAddressTypeRequest(
-              { id, isBilling, isShipping, isDefaultBilling, isDefaultShipping },
-              { id, ...MyCustomer.getAddressType(id) }
-            ).actions
-          );
-        });
-        const actions = [...userActions, ...addressActions];
-        const res = await updateCustomer(MyCustomer.id ?? '', AuthService.getRoot(), {
-          version: MyCustomer.version ?? 1,
-          actions,
-        });
-        if (res.success) {
-          MyCustomer.setCustomer(res.customer);
-          this.view.profileAddresses.updateView();
-          this.view.profileCredentials.updateView();
-          this.view.openFirstAddress();
-          notificationEmitter.showMessage({
-            messageType: 'success',
-            title: 'Saved',
-            text: 'Your profile was updated!',
-          });
-          this.headerController.updateTextLoggined(MyCustomer.fullNameShort);
-        } else {
-          showErrorMessages(res);
-        }
+        await this.sendRequest();
       }
     });
     this.editView.drawCards(this.addresses);
+  }
+
+  private async sendRequest() {
+    if (!this.editView) {
+      return;
+    }
+    const userActions = getUserInfoUpdateRequest(this.editView.editUserInfo.getValues()).actions;
+    const addressActions: CustomerUpdateAction[] = [];
+    this.addresses.forEach((address, id) => {
+      addressActions.push(...getAddressEditRequest(address, id).actions);
+      const { isBilling, isShipping, isDefaultBilling, isDefaultShipping } = address;
+      addressActions.push(
+        ...getAddressTypeRequest(
+          { id, isBilling, isShipping, isDefaultBilling, isDefaultShipping },
+          { id, ...MyCustomer.getAddressType(id) }
+        ).actions
+      );
+    });
+    const actions = [...userActions, ...addressActions];
+    const res = await updateCustomer(MyCustomer.id ?? '', AuthService.getRoot(), {
+      version: MyCustomer.version ?? 1,
+      actions,
+    });
+    if (res.success) {
+      MyCustomer.setCustomer(res.customer);
+      this.view.profileAddresses.updateView();
+      this.view.profileCredentials.updateView();
+      this.view.openFirstAddress();
+      notificationEmitter.showMessage({
+        messageType: 'success',
+        title: 'Saved',
+        text: 'Your profile was updated!',
+      });
+      this.headerController.updateTextLoggined(MyCustomer.fullNameShort);
+    } else {
+      showErrorMessages(res);
+    }
   }
 
   public openAddressModal(id: string, values: ProfileAddressValues) {

@@ -1,5 +1,6 @@
 import Controller from '@components/controller';
 import type HeaderController from '@components/header/header_controller';
+import type Modal from '@components/modal/modal';
 import AuthService from '@services/auth-service';
 import MyCustomer from '@services/customer-service/myCustomer';
 import type Router from '@src/app/router/router';
@@ -11,6 +12,7 @@ import DeleteAccount from './delete-account-mode';
 import DeleteAddress from './delete-address-mode';
 import EditMode from './edit-mode';
 import EditModeProfile from './profile-details-edit-mode';
+import type EditModeForm from './user-profile-view/edit-mode/edit-mode-view';
 import ProfileView from './user-profile-view/user-profile-view';
 
 class ProfileController extends Controller<ProfileView> {
@@ -54,7 +56,7 @@ class ProfileController extends Controller<ProfileView> {
       this.getView,
       () => this.logout(),
       this.headerController,
-      () => this.deleteAccountMode.enable(() => this.logout())
+      (modal?: Modal<EditModeForm>) => this.deleteAccountMode.enable(() => this.logout(), modal)
     );
   }
 
