@@ -20,6 +20,11 @@
   height: fit-content;
   overflow: hidden;
   background-color: rgb(170, 125, 125);
+
+  @include mobile {
+    min-height: 200px;
+    max-height: 250px;
+  }
 }
 
 .img-zoom {
@@ -28,10 +33,8 @@
   width: 100%;
   max-height: 500px;
   object-fit: contain;
-}
 
-@media screen and (max-width: 1000px) {
-  .img-zoom {
+  @include tablet {
     max-width: 700px;
     width: 100%;
     padding-left: 10px;
@@ -39,11 +42,5 @@
     min-height: 500px;
     height: fit-content;
     max-height: 500px;
-  }
-}
-@media screen and (max-width: 600px) {
-  .slide {
-    min-height: 200px;
-    max-height: 250px;
   }
 }
