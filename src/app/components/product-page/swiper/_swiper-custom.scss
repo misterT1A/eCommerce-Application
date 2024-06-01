@@ -10,6 +10,7 @@
 .modal {
   max-width: 1000px;
   overflow: hidden;
+  gap: 15px;
 }
 
 .slide {
@@ -19,14 +20,13 @@
   height: fit-content;
   max-height: 500px;
   overflow: hidden;
-  border-radius: 15px;
   background-color: rgb(170, 125, 125);
 }
 
 .img-zoom {
   border-radius: 20px;
-  max-width: 1100px;
-  padding: 5px;
+  max-width: fit-content;
+  width: 100%;
   object-fit: contain;
 }
 
