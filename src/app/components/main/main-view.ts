@@ -1,7 +1,7 @@
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
-import { div, h2, ul } from '@utils/elements';
+import { div, h2, span, ul } from '@utils/elements';
 
 import styles from './_styles.scss';
 
@@ -39,6 +39,24 @@ export default class MainView extends BaseComponent {
       )
     );
     this.addListener('click', (e: Event) => this.navigate(e));
+    this.append(this.setVideo());
+  }
+
+  private setVideo() {
+    const video = new BaseComponent<HTMLVideoElement>({
+      tag: 'video',
+      className: styles.video_content,
+      autoplay: true,
+      muted: true,
+      loop: true,
+      src: './assets/img/3119255-sd_640_360_25fps.mp4',
+    });
+    // const img = div([styles.img_content]);
+    const title = span([styles.video_title], 'Om Nom Nom');
+    const titleWraper = div([styles.video_title_wrapper], title);
+
+    const wrapper = div([styles.video_wrapper], video, titleWraper);
+    return wrapper;
   }
 
   private navigate(e: Event) {
