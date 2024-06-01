@@ -1,6 +1,8 @@
 import type { Image, Price, ProductProjection } from '@commercetools/platform-sdk';
+import 'swiper/css/bundle';
 
 import { changeCount, setPrice } from '@components/catalog/card-element/card-model';
+import Modal from '@components/modal/modal';
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
@@ -8,6 +10,8 @@ import { button, div, h2, p } from '@utils/elements';
 import setLoader from '@utils/loader/loader-view';
 
 import product_styles from './_product-styles.scss';
+import swiper_styles from './swiper/_swiper-custom.scss';
+import { initSwiper, initZoomedSwiper } from './swiper/swiper';
 import general_styles from '../../_app_style.scss';
 import card_styles from '../catalog/card-element/_card-style.scss';
 
@@ -20,67 +24,84 @@ export default class ProductView extends BaseComponent {
   }
 
   public setContent(data: ProductProjection) {
-    console.log(data);
-    const miniImgs = this.setMiniImgBlock(data.masterVariant.images);
-    const mainImg = this.setMainImg(data.masterVariant.images);
+    const swiper = this.setSwiper(data.masterVariant.images);
     const text = this.setText(data);
-
-    this.appendChildren([miniImgs, mainImg, text]);
+    this.appendChildren([swiper, text]);
+    initSwiper();
     this.addListener('click', (e: Event) => this.handler(e));
   }
 
-  private setMiniImgBlock(data: Image[] | undefined): BaseComponent {
+  private setModalContent(data: Image[] | undefined): BaseComponent {
     if (!data) {
-      return p([product_styles.mini_empty_img_template], 'no image');
+      return p([product_styles.main_empty_img_template], 'no image');
     }
-
-    const wrapper = div([product_styles.mini_img_block]);
-
-    data.forEach((imgUrl) => {
+    const swiper = div(['zoomedSwiper']);
+    const swiperWrapper = div(['swiper-wrapper']);
+    data.forEach((image) => {
       const loader = setLoader();
-      const imgWrapper = div([product_styles.mini_img_wrapper], loader);
-
-      const img = new BaseComponent<HTMLImageElement>({ tag: 'img', src: imgUrl.url });
-
-      img.addListener('load', () => {
-        if (img.getNode().width > img.getNode().height) {
-          img.addClass(product_styles.mini_img_Height);
-        } else {
-          img.addClass(product_styles.mini_img_Width);
-        }
-
-        imgWrapper.getChildren[0].destroy();
-        imgWrapper.append(img);
+      const slide = div(['swiper-slide', swiper_styles.slide], loader);
+      const img = new BaseComponent<HTMLImageElement>({
+        tag: 'img',
+        src: image.url,
+        className: swiper_styles['img-zoom'],
       });
 
-      wrapper.append(imgWrapper);
+      img.addListener('load', () => {
+        const imgLoader = slide.getChildren[0];
+        if (imgLoader) {
+          imgLoader.destroy();
+        }
+        slide.getNode().style.backgroundColor = '#faf4f4';
+        slide.append(img);
+      });
+      swiperWrapper.append(slide);
     });
 
-    return wrapper;
+    const controlPrev = div(['swiper-button-prev', swiper_styles.button]);
+    const controlNext = div(['swiper-button-next', swiper_styles.button]);
+    const scrollbar = div(['swiper-scrollbar']);
+    swiper.appendChildren([swiperWrapper, controlPrev, controlNext, scrollbar]);
+
+    return swiper;
   }
 
-  private setMainImg(data: Image[] | undefined): BaseComponent {
+  private setSwiper(data: Image[] | undefined): BaseComponent {
     if (!data) {
       return p([product_styles.main_empty_img_template], 'no image');
     }
 
-    const loader = setLoader();
-    const imgWrapper = div([product_styles.main_img_wrapper], loader);
+    const swiper = div(['swiper', product_styles.main_img_wrapper]);
+    const swiperWrapper = div(['swiper-wrapper']);
+    data.forEach((image) => {
+      const loader = setLoader();
+      const slide = div(['swiper-slide', product_styles.main_img_wrapper], loader);
+      const img = new BaseComponent<HTMLImageElement>({ tag: 'img', src: image.url, className: product_styles.img });
 
-    const img = new BaseComponent<HTMLImageElement>({ tag: 'img', src: data[0].url });
+      img.addListener('load', () => {
+        const imgLoader = slide.getChildren[0];
+        if (imgLoader) {
+          imgLoader.destroy();
+        }
+        slide.append(img);
+      });
 
-    img.addListener('load', () => {
-      if (img.getNode().width > img.getNode().height) {
-        img.addClass(product_styles.main_img_Height);
-      } else {
-        img.addClass(product_styles.main_img_Width);
-      }
-
-      imgWrapper.getChildren[0]?.destroy();
-      imgWrapper.append(img);
+      swiperWrapper.append(slide);
     });
 
-    return imgWrapper;
+    const controlPrev = div(['swiper-button-prev', swiper_styles.button]);
+    const controlNext = div(['swiper-button-next', swiper_styles.button]);
+    const scrollbar = div(['swiper-scrollbar']);
+
+    swiperWrapper.addListener('click', () => {
+      const modal = new Modal({ title: '', content: this.setModalContent(data) });
+      modal.addClass(swiper_styles.overlay);
+      modal.modal.addClass(swiper_styles.modal);
+      modal.open();
+      initZoomedSwiper();
+    });
+    swiper.appendChildren([swiperWrapper, controlPrev, controlNext, scrollbar]);
+
+    return swiper;
   }
 
   private setText(data: ProductProjection): BaseComponent {
