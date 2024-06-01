@@ -331,3 +331,77 @@ $main-color-error: #d82700;
   height: 12px;
   fill: #ffffff;
 }
+
+.range {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.range__rangeSlider {
+  display: grid;
+  cursor: pointer;
+}
+
+.range__rangeSliderBackground {
+  grid-area: 1 / 1 / 2 / 2;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.range__rangeSliderBackgroundBar {
+  grid-area: 1 / 1 / 2 / 2;
+  height: 2px;
+  background-color: #9c9c9c;
+  width: 100%;
+  align-self: center;
+}
+
+.range__leftBound,
+.range__rightBound {
+  height: 10px;
+  flex-shrink: 0;
+}
+.range__leftBound {
+  border-right: #000000 2px solid;
+}
+
+.range__rightBound {
+  border-left: #000000 2px solid;
+}
+
+.range__rangeBar {
+  height: 2px;
+  width: 100%;
+  flex-grow: 1;
+  background-color: #000000;
+}
+
+.range__rangeInputs {
+  grid-area: 1 / 1 / 2 / 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.range__input {
+  opacity: 0;
+  height: 0.2px;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 2px;
+  width: 100%;
+  background-color: #c6c6c6;
+  pointer-events: none;
+  &::-webkit-slider-thumb {
+    pointer-events: all;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+}
+
+.range__label {
+  color: #707070;
+}
