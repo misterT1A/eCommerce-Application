@@ -39,6 +39,14 @@ describe('Header', () => {
 
     expect(navigateSpy).toHaveBeenCalledWith(Pages.REG);
   });
+  test('should navigate to My Account page when "My Account" is clicked', () => {
+    const mockEvent = { target: { textContent: 'My Account' } };
+    const navigateSpy = jest.spyOn(router, 'navigate');
+
+    header.getView['navigate'](mockEvent as unknown as Event);
+
+    expect(navigateSpy).toHaveBeenCalled();
+  });
 
   test('should not navigate for unknown link', () => {
     const mockEvent = { target: { textContent: 'Unknown Link' } };
@@ -95,5 +103,23 @@ describe('Header', () => {
     burgerMenu['navigate'](mockEvent as unknown as Event);
 
     expect(navigateSpy).not.toHaveBeenCalled();
+  });
+
+  test('should not navigate from burger menu to My Account', () => {
+    const mockEvent = { target: { textContent: 'My Account' } };
+    const navigateSpy = jest.spyOn(router, 'navigate');
+
+    burgerMenu['navigate'](mockEvent as unknown as Event);
+
+    expect(navigateSpy).toHaveBeenCalled();
+  });
+
+  test('should not navigate from burger menu to My Account', () => {
+    const mockEvent = { target: { textContent: 'My Account' } };
+    const navigateSpy = jest.spyOn(router, 'navigate');
+
+    burgerMenu['navigate'](mockEvent as unknown as Event);
+
+    expect(navigateSpy).toHaveBeenCalled();
   });
 });

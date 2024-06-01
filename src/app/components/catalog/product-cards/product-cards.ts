@@ -20,7 +20,7 @@ export default class ProductCards extends BaseComponent {
     this.hideBlock().then(() => {
       this.showBlock();
 
-      if (products.length === 0) {
+      if (!products.length) {
         this.showNotFoundTitle();
         return;
       }
@@ -42,7 +42,7 @@ export default class ProductCards extends BaseComponent {
     });
   }
 
-  private showNotFoundTitle() {
+  public showNotFoundTitle() {
     const title = h2([styles.title_noFound], 'No products were found according to applied filters');
     this.append(title);
   }
