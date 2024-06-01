@@ -21,7 +21,7 @@ describe('Catalog', () => {
 
   test('should get content view', () => {
     expect(view['getProductCardView']).toBeInstanceOf(ProductCards);
-    expect(view['getFilterBlockView']).toBeInstanceOf(FilterBlock);
+    expect(view['getFilterBlock']).toBeInstanceOf(FilterBlock);
     expect(view['getRouter']).toBeInstanceOf(Router);
   });
 });
