@@ -1,0 +1,46 @@
+.button {
+  color: $main-color-accent;
+}
+
+.overlay {
+  max-width: 1440px;
+  margin: auto;
+}
+
+.modal {
+  max-width: 1000px;
+  overflow: hidden;
+}
+
+.slide {
+  @include flex(center, center, column);
+  max-width: 100%;
+  min-height: 500px;
+  height: fit-content;
+  max-height: 500px;
+  overflow: hidden;
+  border-radius: 15px;
+  background-color: rgb(170, 125, 125);
+}
+
+.img-zoom {
+  border-radius: 20px;
+  max-width: 1100px;
+  padding: 5px;
+  object-fit: contain;
+}
+
+@media screen and (max-width: 1000px) {
+  .img-zoom {
+    max-width: 700px;
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 500px;
+  }
+}
+@media screen and (max-width: 800px) {
+  .slide {
+    min-height: 200px;
+  }
+}
