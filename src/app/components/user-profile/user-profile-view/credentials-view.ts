@@ -1,5 +1,6 @@
 import MyCustomer from '@services/customer-service/myCustomer';
 import BaseComponent from '@utils/base-component';
+import copyTextInClipboard from '@utils/copy-text-to-clipboard';
 import { button, div, h2, p, span } from '@utils/elements';
 
 import styles from './_user-profile.scss';
@@ -24,7 +25,10 @@ class CredentialsView extends BaseComponent {
     const header = div([styles.profile__userInfoHeader]);
     this.circle = div([styles.profile__userInfoCircle]);
     this.profileName = h2([styles.profile__userInfoName], '');
-    this.profileID = p([styles.profile__userInfoData], '');
+    this.profileID = p([styles.profile__userInfoDataID], '');
+    this.profileID.addListener('click', () =>
+      copyTextInClipboard(MyCustomer.id ?? '', 'Your id was copied to clipboard!')
+    );
     header.appendChildren([
       this.circle,
       div(
@@ -53,7 +57,7 @@ class CredentialsView extends BaseComponent {
     this.email.setTextContent(MyCustomer.email);
     this.password.setTextContent(MyCustomer.password);
     this.dateOfBirth.setTextContent(MyCustomer.dateFormatted);
-    this.profileID.setTextContent(MyCustomer.id?.split('-')[0] ?? '');
+    this.profileID.setTextContent(`${MyCustomer.id?.split('-')[0] ?? ''}- ...`);
   }
 
   private wrapField(label: string, field: BaseComponent) {
