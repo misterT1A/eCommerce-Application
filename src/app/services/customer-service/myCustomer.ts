@@ -1,4 +1,4 @@
-import type { Customer } from '@commercetools/platform-sdk';
+import type { Address, Customer } from '@commercetools/platform-sdk';
 
 class MyCustomer {
   private static info: Customer | null = null;
@@ -78,7 +78,7 @@ class MyCustomer {
     };
   }
 
-  public static getAddressById(id: string) {
+  public static getAddressById(id: string): Address | undefined {
     const { addresses } = this.addresses;
     return addresses.find((address) => address.id === id);
   }
@@ -97,6 +97,15 @@ class MyCustomer {
 
   public static isShippingAddress(id: string) {
     return this.addresses.shippingAddressIds.includes(id);
+  }
+
+  public static getAddressType(id: string) {
+    return {
+      isBilling: this.isBillingAddress(id),
+      isShipping: this.isShippingAddress(id),
+      isDefaultBilling: id === this.defaultBillingId,
+      isDefaultShipping: id === this.defaultShippingId,
+    };
   }
 }
 

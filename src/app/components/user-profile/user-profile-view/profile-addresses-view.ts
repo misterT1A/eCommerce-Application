@@ -1,11 +1,10 @@
 import Toggler from '@components/form-ui-elements/formToggler';
 import MyCustomer from '@services/customer-service/myCustomer';
 import BaseComponent from '@utils/base-component';
-import { button, div, h2, li, span, ul } from '@utils/elements';
+import { button, div, h2, li, p, span, ul } from '@utils/elements';
 
 import styles from './_user-profile.scss';
-import { getCountryName } from '../edit-mode-adapters';
-import generateTags from '../profile-helpers';
+import { generateTagsById, getAddressTitle, getAddressView } from '../profile-helpers';
 
 class ProfileAddressesView extends BaseComponent {
   public addressesList: BaseComponent<HTMLUListElement>;
@@ -25,8 +24,8 @@ class ProfileAddressesView extends BaseComponent {
   constructor(
     private deleteCallback: (id: string) => void,
     private editCallback: (id: string) => void,
-    private setAsDefaultShipping: (id: string) => Promise<void>,
-    private setAsDefaultBilling: (id: string) => Promise<void>
+    private setAsDefaultShipping: (id: string, reset: boolean) => Promise<void>,
+    private setAsDefaultBilling: (id: string, reset: boolean) => Promise<void>
   ) {
     super({ tag: 'div', className: styles.profile__userAddresses }, h2([styles.profile__addressesTitle], 'ADDRESSES'));
     this.addressesList = ul([styles.profile__addressesList]);
@@ -70,15 +69,13 @@ class ProfileAddressesView extends BaseComponent {
         if (address.id) {
           const isBilling = addresses.billingAddressIds.includes(address.id);
           const isShipping = addresses.shippingAddressIds.includes(address.id);
-          let label = isBilling ? 'Billing Address' : 'Shipping Address';
-          label = isShipping && isBilling ? 'Billing/Shipping Address' : label;
           const item = li(
             [styles.profile__addressesListItem],
-            span([styles.profile__addressesListItemText], `${label}`),
+            span([styles.profile__addressesListItemText], `${getAddressTitle({ isBilling, isShipping })}`),
             span([styles.profile__addressesListItemText_small], `id: ${address.id}`),
             div(
               [styles.profile__addressTagsWrapper],
-              ...generateTags(address.id).filter((tag) => tag.getNode().textContent?.includes('default'))
+              ...generateTagsById(address.id).filter((tag) => tag.getNode().textContent?.includes('default'))
             )
           );
           item.addListener('click', () => {
@@ -122,43 +119,39 @@ class ProfileAddressesView extends BaseComponent {
     const togglerSetDefaultShipping = new Toggler('Set as default shipping');
     const togglerSetDefaultBilling = new Toggler('Set as default billing');
     this.addressContainer.appendChildren([
-      this.wrapField('City:', span([styles.profile__addressesField], address.city ?? '')),
-      this.wrapField('Street:', span([styles.profile__addressesField], address.streetName ?? '')),
-      this.wrapField('Country:', span([styles.profile__addressesField], getCountryName(address.country) ?? '')),
-      this.wrapField('Postal Code:', span([styles.profile__addressesField], address.postalCode ?? '')),
-      div([styles.profile__addressTagsWrapper], ...generateTags(addressID)),
+      div(
+        [],
+        h2(
+          [styles.profile__addressTitle],
+          getAddressTitle({
+            isBilling: MyCustomer.isBillingAddress(addressID),
+            isShipping: MyCustomer.isShippingAddress(addressID),
+          })
+        ),
+        p([styles.profile__addressId], `id: ${addressID}`)
+      ),
+      ...getAddressView(address),
+      div([styles.profile__addressTagsWrapper], ...generateTagsById(addressID)),
       togglerSetDefaultShipping,
       togglerSetDefaultBilling,
       div([styles.profile__addressButtonsWrapper], editButton, deleteButton),
     ]);
-    if (MyCustomer.defaultBillingId === addressID) {
-      togglerSetDefaultBilling.destroy();
-    }
-    if (MyCustomer.defaultShippingId === addressID) {
-      togglerSetDefaultShipping.destroy();
-    }
+    togglerSetDefaultBilling.setValue(MyCustomer.defaultBillingId === addressID);
+    togglerSetDefaultShipping.setValue(MyCustomer.defaultShippingId === addressID);
     this.updateTogglers(
       MyCustomer.addresses.defaultBillingAddress === addressID,
       MyCustomer.addresses.defaultShippingAddress === addressID
     );
     togglerSetDefaultBilling.addListener('input', async () => {
-      if (togglerSetDefaultBilling.getValue()) {
-        this.addressContainer.addClass(styles.profile__addressContainer_disabled);
-        await this.setAsDefaultBilling(addressID);
-        this.addressContainer.removeClass(styles.profile__addressContainer_disabled);
-      }
+      this.addressContainer.addClass(styles.profile__addressContainer_disabled);
+      await this.setAsDefaultBilling(addressID, !togglerSetDefaultBilling.getValue());
+      this.addressContainer.removeClass(styles.profile__addressContainer_disabled);
     });
     togglerSetDefaultShipping.addListener('input', async () => {
-      if (togglerSetDefaultShipping.getValue()) {
-        this.addressContainer.addClass(styles.profile__addressContainer_disabled);
-        await this.setAsDefaultShipping(addressID);
-        this.addressContainer.removeClass(styles.profile__addressContainer_disabled);
-      }
+      this.addressContainer.addClass(styles.profile__addressContainer_disabled);
+      await this.setAsDefaultShipping(addressID, !togglerSetDefaultShipping.getValue());
+      this.addressContainer.removeClass(styles.profile__addressContainer_disabled);
     });
-  }
-
-  private wrapField(label: string, field: BaseComponent) {
-    return div([styles.profile__userInfoDataWrapper], span([styles.profile__userInfoDataLabel], label), field);
   }
 
   public openFirstAddress() {

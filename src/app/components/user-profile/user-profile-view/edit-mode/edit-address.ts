@@ -3,7 +3,7 @@ import FormSelection from '@components/form-ui-elements/formSelection';
 import Toggler from '@components/form-ui-elements/formToggler';
 import { VALID_COUNTRIES } from '@services/registrationValidationService/validCountries';
 import BaseComponent from '@utils/base-component';
-import { button, p } from '@utils/elements';
+import { button } from '@utils/elements';
 
 import styles from '../_user-profile.scss';
 
@@ -64,16 +64,6 @@ class UserAddressEdit extends BaseComponent {
     this.fields.isShipping.setValue(values.isShipping);
     this.fields.isDefaultShipping.setValue(values.isDefaultShipping);
     this.fields.isDefaultBilling.setValue(values.isDefaultBilling);
-    if (this.fields.isDefaultBilling.getValue()) {
-      this.fields.isDefaultBilling.getNode().remove();
-      this.fields.isBilling.getNode().remove();
-      this.append(p([], 'This address is default billing address.'));
-    }
-    if (this.fields.isDefaultShipping.getValue()) {
-      this.fields.isDefaultShipping.getNode().remove();
-      this.fields.isShipping.getNode().remove();
-      this.append(p([], 'This address is default shipping address.'));
-    }
   }
 
   public getValues(): ProfileAddressValues {

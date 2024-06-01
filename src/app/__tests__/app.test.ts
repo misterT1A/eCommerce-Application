@@ -1,6 +1,6 @@
 import styles from '../_app_style.scss';
 import App from '../app';
-// import Pages from '../router/pages';
+import Pages from '../router/pages';
 
 describe('App', () => {
   let app: App;
@@ -15,17 +15,18 @@ describe('App', () => {
     expect(section.tagName).toBe('SECTION');
   });
 
-  // it('should return the required paths for the router', () => {
-  //   const routes = app['createsRoutes']();
+  it('should return the required paths for the router', () => {
+    const routes = app['createsRoutes']();
 
-  //   const pages = [Pages.MAIN, Pages.LOGIN, Pages.REG, Pages.ERROR];
+    const pages = Object.values(Pages);
 
-  //   expect(routes).toHaveLength(4);
+    expect(routes).toHaveLength(pages.length);
 
-  //   routes.forEach((route, index) => {
-  //     expect(route.path).toBe(pages[index]);
-  //     expect(typeof route.callBack).toBe('function');
-  //     expect(Object.prototype.toString.call(route.callBack())).toBe('[object Promise]');
-  //   });
-  // });
+    routes.forEach((route, index) => {
+      expect(route.path).toBe(pages[index]);
+      expect(typeof route.callBack).toBe('function');
+      const cd = route.callBack as () => Promise<unknown>;
+      expect(Object.prototype.toString.call(cd())).toBe('[object Promise]');
+    });
+  });
 });
