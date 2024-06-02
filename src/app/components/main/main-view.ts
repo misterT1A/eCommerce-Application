@@ -1,9 +1,12 @@
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
-import { div, h2, ul } from '@utils/elements';
+import { div, h2, span } from '@utils/elements';
 
 import styles from './_styles.scss';
+import imgKids from '../../../assets/bear-icon.svg';
+import imgSale from '../../../assets/sale-icon.svg';
+import imgVegan from '../../../assets/vegan-icon.svg';
 
 export default class MainView extends BaseComponent {
   protected router: Router;
@@ -16,43 +19,85 @@ export default class MainView extends BaseComponent {
   }
 
   private setContent() {
-    const props: Props[] = [
-      {
-        tag: 'li',
-        className: styles.links,
-        textContent: 'Log In',
-      },
-      {
-        tag: 'li',
-        className: styles.links,
-        textContent: 'Sign Up',
-      },
-    ];
-    this.append(
-      div(
-        [styles.main__section],
-        div(
-          [styles.main__sectionText],
-          h2([styles.main__sectionTitle], 'Enjoy breakfast with brioches!'),
-          ul([styles.main__sectionLinks], ...props.map((prop) => new BaseComponent<HTMLLIElement>(prop)))
-        )
-      )
+    const textContainer = div(
+      [styles.main__sectionText],
+      h2([styles.main__sectionTitle], 'Enjoy breakfast with brioches!'),
+      span([styles.main_text], 'To the catalog')
     );
-    this.addListener('click', (e: Event) => this.navigate(e));
+    const wrapper = div([styles.main__section], textContainer);
+    textContainer.addListener('click', () => this.router.navigate(Pages.CATALOG));
+    this.append(wrapper);
+
+    this.appendChildren([this.setLinksBlock(), this.setVideo()]);
   }
 
-  private navigate(e: Event) {
-    const target = (e.target as HTMLElement)?.textContent;
+  private setVideo() {
+    const title = span([styles.second_img_title], 'Delight in Every Crumb');
+    const titleWraper = div([styles.second_img_title_wrapper], title);
 
-    switch (target) {
-      case 'Log In':
-        this.router.navigate(Pages.LOGIN);
+    const wrapper = div([styles.second_img_wrapper], titleWraper);
+    return wrapper;
+  }
+
+  private setLinksBlock() {
+    const wrapper = div([styles.links_wrapper]);
+
+    const elements = [
+      {
+        text: span([styles.links_text], 'For Kids'),
+        img: new BaseComponent<HTMLImageElement>({ tag: 'img', src: imgKids }),
+      },
+      {
+        text: span([styles.links_text], 'Vegan'),
+        img: new BaseComponent<HTMLImageElement>({ tag: 'img', src: imgVegan }),
+      },
+      {
+        text: span([styles.links_text], 'On sale'),
+        img: new BaseComponent<HTMLImageElement>({ tag: 'img', src: imgSale }),
+      },
+    ];
+    const numberBlocksFroAnim = [styles.block1, styles.block2, styles.block3];
+
+    elements.forEach((elem, index) => {
+      const element = new BaseComponent<HTMLDivElement>(
+        { className: styles.links_block },
+        elem.text,
+        div([styles.links_img_wrapper], elem.img)
+      );
+      element.addClass(numberBlocksFroAnim[index]);
+      element.getNode().setAttribute(`data-link`, elem.text.getNode().textContent as string);
+      wrapper.append(element);
+    });
+
+    wrapper.addListener('click', (e: Event) => this.categoriesHandler(e));
+    return wrapper;
+  }
+
+  private categoriesHandler(e: Event) {
+    const target = e.target as HTMLElement;
+    const parent = (target?.closest(`.${styles.links_block}`) as HTMLElement)?.dataset.link;
+
+    if (!parent) {
+      return;
+    }
+    switch (parent) {
+      case 'For Kids':
+        this.navigateToCatalog('IS_KIDS');
         break;
-      case 'Sign Up':
-        this.router.navigate(Pages.REG);
+      case 'Vegan':
+        this.navigateToCatalog('IS_VEGAN');
+        break;
+      case 'On sale':
+        this.navigateToCatalog('IS_SALE');
         break;
       default:
         break;
     }
+  }
+
+  private navigateToCatalog(filter: string) {
+    this.router.setEmptyUrlCatalog();
+    this.router.setUrlCatalog(filter);
+    this.router.navigateToLastPoint();
   }
 }
