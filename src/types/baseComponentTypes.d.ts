@@ -76,3 +76,12 @@ interface IBaseComponent<T extends HTMLElement = HTMLElement> {
    */
   destroy(): void;
 }
+
+type RangeSelectorProps = {
+  min: number;
+  max: number;
+  initialRange?: [number, number];
+  name?: string;
+  isInputInCents?: boolean;
+  unit?: string;
+};

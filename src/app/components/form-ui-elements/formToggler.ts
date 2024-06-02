@@ -4,7 +4,7 @@ import { input, label, span } from '@utils/elements';
 import styles from './_form-ui-elements.scss';
 
 /**
- * Represents a Checkbox component.
+ * Represents a Toggler component.
  * @extends BaseComponent
  */
 class Toggler extends BaseComponent {
@@ -41,6 +41,13 @@ class Toggler extends BaseComponent {
     this.input.getNode().checked = isChecked;
   }
 
+  /**
+   * Binds the current toggler with another toggler.
+   *
+   * @param {Toggler} toggler - The toggler to bind with.
+   * @param {boolean} [isInverse=true] - If true, the bound toggler will have the opposite value.
+   * @param {boolean} [isDependent=false] - If true, the bound toggler will be checked if the current toggler is checked.
+   */
   public bindWith(toggler: Toggler, isInverse = true, isDependent = false) {
     const bindToggler = toggler;
     this.addListener('input', () => {
