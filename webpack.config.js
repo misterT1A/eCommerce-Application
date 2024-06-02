@@ -67,7 +67,7 @@ module.exports = ({ mode }) => {
           exclude: /node_modules/,
         },
         {
-          test: /\.(jpe?g|jpg|png|webp|gif|svg)$/i,
+          test: /\.(jpe?g|jpg|png|webp|gif|svg|mp4)$/i,
           type: 'asset/resource',
           generator: {
             filename: 'assets/img/[name][ext]',

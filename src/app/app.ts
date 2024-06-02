@@ -2,6 +2,7 @@ import modalConstructor from '@components/disconect/disconect-view';
 import FooterController from '@components/footer/footer-controller';
 import HeaderController from '@components/header/header_controller';
 import type Modal from '@components/modal/modal';
+import ProgressBar from '@components/progress-bar/progress-bar';
 import AuthService from '@services/auth-service';
 import { updateMyCustomerInfo } from '@services/customer-service/my-customer-service';
 import MyCustomer from '@services/customer-service/myCustomer';
@@ -25,6 +26,8 @@ export default class App {
 
   protected footerController: FooterController;
 
+  protected progressBar: ProgressBar;
+
   protected disconnectModal: Modal<BaseComponent>;
 
   constructor() {
@@ -34,6 +37,8 @@ export default class App {
     this.headerController = new HeaderController(this.router);
     this.main = new BaseComponent({ tag: 'main', className: styles.main });
     this.footerController = new FooterController(this.router);
+
+    this.progressBar = new ProgressBar();
 
     this.controller = null;
     this.disconnectModal = modalConstructor();
@@ -61,6 +66,7 @@ export default class App {
   public showContent(parent: HTMLElement) {
     this.wrapper.appendChildren([
       this.headerController.getView.getNode(),
+      this.progressBar.getNode(),
       this.main.getNode(),
       this.footerController.getView.getNode(),
     ]);

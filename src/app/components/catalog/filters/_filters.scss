@@ -19,6 +19,7 @@
     transition: transform 0.6s ease-in-out;
     padding: 8%;
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+
     &--visible {
       transform: translateX(100%);
     }
@@ -39,6 +40,7 @@
   position: absolute;
   top: 1%;
   right: 2%;
+
   @include tablet {
     display: block;
   }
@@ -52,10 +54,12 @@
   border-radius: 20px;
   background-color: transparent;
   transition: all 0.3s linear;
+
   &:active {
     background-color: $card_read_more_btn_color;
     color: #fff;
   }
+
   @media (hover: hover) {
     &:hover {
       background-color: $card_read_more_btn_color;
@@ -111,6 +115,7 @@ input[type='search'] {
     height: 20px;
     width: 20px;
   }
+
   @include tablet {
     display: flex;
   }

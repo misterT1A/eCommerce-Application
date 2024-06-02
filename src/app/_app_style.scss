@@ -31,6 +31,7 @@
   border-radius: 20px;
   background-color: transparent;
   transition: all 0.3s linear;
+
   &:hover {
     background-color: $card_read_more_btn_color;
     color: #fff;
