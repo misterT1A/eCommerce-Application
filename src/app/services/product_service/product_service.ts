@@ -9,6 +9,10 @@ class GetProductsService {
 
   protected filters: Set<string> = new Set();
 
+  protected priceRange: [number, number] = [0, 50000];
+
+  protected priceMaxRange: [number, number] = [0, 50000];
+
   protected sortOrder = '';
 
   protected searchQuery = '';
@@ -74,6 +78,23 @@ class GetProductsService {
     this.chosenCategory = '';
     this.searchQuery = '';
     this.sortOrder = '';
+    this.priceRange = this.priceMaxRange;
+  }
+
+  public setPriceRange(range: [number, number]) {
+    this.priceRange = range;
+  }
+
+  public setPriceMaxRange(range: [number, number]) {
+    this.priceMaxRange = range;
+  }
+
+  public get priceBounds() {
+    return this.priceMaxRange;
+  }
+
+  public getPriceRange() {
+    return this.priceRange;
   }
 
   public setSearchQuery(query: string) {
@@ -89,15 +110,22 @@ class GetProductsService {
     }
   }
 
+  public getPriceFilter() {
+    return `variants.price.centAmount:range (${this.priceRange[0]} to ${this.priceRange[1]})`;
+  }
+
   public applySort(sortType: SortKey) {
     this.sortOrder = SORT[sortType];
   }
 
   public getFilteredProducts() {
     const filtersQuery = Array.from(this.filters);
+    const facet = [`variants.price.centAmount:range(0 to 100000)`];
     if (this.chosenCategory) {
       filtersQuery.push(`categories.id:subtree("${this.chosenCategory}")`);
     }
+
+    filtersQuery.push(this.getPriceFilter());
 
     return this.root
       .productProjections()
@@ -110,6 +138,7 @@ class GetProductsService {
           sort: [this.sortOrder],
           'text.en': this.searchQuery,
           fuzzy: true,
+          facet,
         },
       })
       .execute();
