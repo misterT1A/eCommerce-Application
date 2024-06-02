@@ -1,0 +1,19 @@
+.wrapper {
+  @include flex(flex-start, center, column);
+  width: 100%;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  padding: 5px;
+}
+
+.progress_line {
+  position: relative;
+  z-index: 100000;
+  width: 0%;
+  height: 10px;
+  border-radius: 5px;
+  background-color: $main-color-accent;
+  transition: width 0.2s linear;
+}
