@@ -134,7 +134,6 @@ export default class FilterBlock extends BaseComponent {
     [this.categorySelect, this.subcategorySelect].forEach((select) => select.reset());
     this.sortSelection.reset();
     this.subcategorySelect.addClass(styles.inactive);
-    setTimeout(() => this.removeClass(styles.inactive), 1000);
   }
 
   private handleSearch(query: string) {
@@ -239,7 +238,7 @@ export default class FilterBlock extends BaseComponent {
     }
     if (values.includes(CATALOG_ROOT)) {
       ProductService.resetFilters();
-      this.updateView();
+      this.reset();
       this.categoryChange();
       this.breadcrumbs.update([CATALOG_ROOT]);
     }
