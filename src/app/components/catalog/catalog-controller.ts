@@ -21,7 +21,10 @@ export default class CatalogController extends Controller<CatalogView> {
     ProductsService.resetFilters();
     if (!this.filtersParams) {
       ProductsService.getFilteredProducts()
-        .then((data) => this.view.getProductCardView.setProducts(data.body.results))
+        .then((data) => {
+          this.view.getProductCardView.setProducts(data.body.results);
+          this.view.getFilterBlock.updatePriceRange(data);
+        })
         .catch(() => this.router.navigate(Pages.ERROR, true));
     } else {
       this.view.getFilterBlock.setValues(this.filtersParams);
