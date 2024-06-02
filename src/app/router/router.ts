@@ -1,4 +1,5 @@
 import { CATEGORIES, FILTERS, SORT, SUBCATEGORIES } from '@components/catalog/filters/constants-filters';
+import { isPriceFilter } from '@components/catalog/filters/price-filter-helpers';
 import AuthService from '@services/auth-service';
 
 import Pages from './pages';
@@ -73,6 +74,10 @@ export default class Router {
 
     if (filter in FILTERS) {
       urlSeters.setFilters(parsePath, filter);
+    }
+
+    if (isPriceFilter(filter)) {
+      urlSeters.setParseRange(parsePath, filter);
     }
 
     const catalogUrl = `/${Pages.CATALOG}`;
