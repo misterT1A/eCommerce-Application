@@ -3,7 +3,6 @@ import 'swiper/css/bundle';
 
 import { changeCount, setPrice } from '@components/catalog/card-element/card-model';
 import Modal from '@components/modal/modal';
-import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
 import { button, div, h2, p } from '@utils/elements';
@@ -148,7 +147,9 @@ export default class ProductView extends BaseComponent {
 
     // const cartBtn = button([styles.cart_btn], 'ADD TO CART');
     const backBtn = button([product_styles.back_btn, general_styles.btn], 'BACK TO CATALOG', {
-      onclick: () => this.router.navigate(Pages.CATALOG),
+      onclick: () => {
+        this.router.navigate(this.router.getSavedPath());
+      },
     });
     return div([product_styles.bottom_block], countWrapper, backBtn);
   }

@@ -7,6 +7,8 @@ import * as urlSeters from './router-helpers';
 export default class Router {
   protected routes: IRoute[];
 
+  protected savedPath = '';
+
   constructor(routes: IRoute[]) {
     this.routes = routes;
 
@@ -31,7 +33,12 @@ export default class Router {
       this.navigate(Pages.ERROR, true);
       return;
     }
-
+    if (this.getSavedPath()) {
+      (route.callBack as (name: string[]) => void)(request.resource);
+      this.savedPath = '';
+    } else {
+      // TBD
+    }
     if (request.resource.length && [Pages.PRODUCT].includes(request.path)) {
       (route.callBack as (name: string) => void)(request.resource[0]);
     } else if (request.resource.length && [Pages.CATALOG].includes(request.path)) {
@@ -115,5 +122,13 @@ export default class Router {
 
   public getCurrentPath() {
     return window.location.pathname.slice(1);
+  }
+
+  public savePath() {
+    this.savedPath = this.getCurrentPath();
+  }
+
+  public getSavedPath() {
+    return this.savedPath;
   }
 }
