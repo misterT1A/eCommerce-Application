@@ -1,4 +1,5 @@
 import { CATEGORIES, FILTERS, SORT, SUBCATEGORIES } from '@components/catalog/filters/constants-filters';
+import { isPriceFilter } from '@components/catalog/filters/price-filter-helpers';
 
 type filtersObj = typeof SORT | typeof CATEGORIES | typeof SUBCATEGORIES;
 
@@ -55,6 +56,15 @@ const setFilters = (parsePath: string[], filter: string) => {
   }
 };
 
+const setParseRange = (parsePath: string[], range: string) => {
+  const i = parsePath.findIndex((el) => el.startsWith('PRICE'));
+  if (i === -1) {
+    parsePath.push(range);
+  } else {
+    parsePath.splice(i, 1, range);
+  }
+};
+
 const checkRightURL = (url: string): boolean => {
   const path = url.split('/').splice(1);
   const params = [
@@ -64,7 +74,7 @@ const checkRightURL = (url: string): boolean => {
     ...Object.keys(SORT),
   ];
 
-  return path.every((elem) => params.includes(elem));
+  return path.every((elem) => params.includes(elem) || isPriceFilter(elem));
 };
 
 const sortUrl = (parsePath: string[]): string => {
@@ -77,13 +87,14 @@ const sortUrl = (parsePath: string[]): string => {
   const category = url.find((elem) => categoryKeys.includes(elem)) || '';
   const subCategory = url.find((elem) => subCategKeys.includes(elem)) || '';
   const sortFilters = url.find((elem) => sortKeys.includes(elem)) || '';
+  const priceFilter = url.find((elem) => isPriceFilter(elem)) || '';
 
   const filters = url
     .map((elem) => (filterKeys.includes(elem) ? elem : null))
     .filter((elem) => elem !== null)
     .join('/');
 
-  return [category, subCategory, filters, sortFilters].filter((elem) => elem !== '').join('/');
+  return [category, subCategory, filters, sortFilters, priceFilter].filter((elem) => elem !== '').join('/');
 };
 
-export { setSort, setCategoties, setSubCategories, setFilters, checkRightURL, sortUrl };
+export { setSort, setCategoties, setSubCategories, setFilters, setParseRange, checkRightURL, sortUrl };

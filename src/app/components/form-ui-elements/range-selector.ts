@@ -109,8 +109,11 @@ class RangeSelector extends BaseComponent {
     this.leftBound.getNode().style.width = `${this.getMinValue()}%`;
     let [min, max]: (number | string)[] = this.getValue();
     if (this.params.isInputInCents) {
-      min = (min / 100).toPrecision(2);
-      max = (max / 100).toPrecision(2);
+      min = (min / 100).toFixed(2);
+      max = (max / 100).toFixed(2);
+    } else {
+      min = Number(min).toFixed(2);
+      max = Number(max).toFixed(2);
     }
     this.label.setTextContent(
       `${this.params.name ?? ''}: ${this.params.unit ?? ''}${min} - ${this.params.unit ?? ''}${max}`
@@ -133,9 +136,10 @@ class RangeSelector extends BaseComponent {
     this.inputMax.getNode().value = `${value}`;
   }
 
-  private getNormalizedValue(value: number) {
-    const normalizedValue = Math.abs(Math.round((value * 100) / (this.params.max - this.params.min)));
-    return normalizedValue;
+  private getNormalizedValue(value: number): number {
+    const min = Math.min(this.params.min, this.params.max);
+    const max = Math.max(this.params.min, this.params.max);
+    return ((value - min) * 100) / (max - min);
   }
 
   private convertValue(value: number) {
@@ -173,6 +177,19 @@ class RangeSelector extends BaseComponent {
    */
   public reset() {
     this.setValue([this.params.min, this.params.max]);
+  }
+
+  public updateRange(range: [number, number]) {
+    const [min, max] = range;
+    if (min > this.convertValue(this.getMinValue())) {
+      this.setMinValue(0);
+    }
+    if (max < this.convertValue(this.getMaxValue())) {
+      this.setMaxValue(100);
+    }
+    this.params.min = min;
+    this.params.max = max;
+    this.redraw();
   }
 }
 

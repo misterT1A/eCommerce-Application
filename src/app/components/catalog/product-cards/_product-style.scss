@@ -1,10 +1,12 @@
 .product_wrapper {
   width: 75%;
   display: grid;
-  grid-template-columns: repeat(3, minmax(200px, 300px));
+  grid-template-columns: repeat(3, minmax(250px, 300px));
   gap: 25px;
   opacity: 1;
   transition: opacity 0.2s linear;
+  flex-grow: 1;
+  justify-content: center;
 }
 
 .hide {
@@ -26,13 +28,13 @@
 
 @media screen and (max-width: 800px) {
   .product_wrapper {
-    grid-template-columns: repeat(2, minmax(200px, 300px));
+    grid-template-columns: repeat(2, minmax(250px, 300px));
   }
 }
 
 @media screen and (max-width: 600px) {
   .product_wrapper {
-    grid-template-columns: minmax(200px, 300px);
+    grid-template-columns: minmax(250px, 300px);
     justify-content: center;
   }
 }
