@@ -129,7 +129,6 @@ export default class FilterBlock extends BaseComponent {
       (select) => select.reset()
     );
     this.subcategorySelect.addClass(styles.inactive);
-    setTimeout(() => this.removeClass(styles.inactive), 1000);
   }
 
   public updatePriceRange(data: ClientResponse<ProductProjectionPagedSearchResponse>) {
@@ -247,7 +246,7 @@ export default class FilterBlock extends BaseComponent {
     }
     if (values.includes(CATALOG_ROOT)) {
       ProductService.resetFilters();
-      this.updateView();
+      this.reset();
       this.categoryChange();
       this.breadcrumbs.update([CATALOG_ROOT]);
     }

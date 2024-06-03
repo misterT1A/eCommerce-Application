@@ -87,6 +87,7 @@ export default class Card extends BaseComponent {
         changeCount((e.target as HTMLElement).parentElement, false);
         break;
       case 'READ MORE':
+        this.router.savePath();
         this.router.navigateToProduct(this.props.key);
         break;
       // case 'Buy':

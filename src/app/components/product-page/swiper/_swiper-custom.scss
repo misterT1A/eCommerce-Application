@@ -8,7 +8,7 @@
 }
 
 .modal {
-  max-width: 1000px;
+  max-width: 100%;
   overflow: hidden;
   gap: 15px;
 }
@@ -16,11 +16,11 @@
 .slide {
   @include flex(center, center, column);
   max-width: 100%;
-  min-height: 500px;
+  min-height: 600px;
   height: fit-content;
   overflow: hidden;
-  background-color: rgb(170, 125, 125);
-
+  background-color: $color-light;
+  border-radius: 10px;
   @include mobile {
     min-height: 200px;
     max-height: 250px;
@@ -31,7 +31,7 @@
   border-radius: 20px;
   max-width: 1100px;
   width: 100%;
-  max-height: 500px;
+  max-height: 600px;
   object-fit: contain;
 
   @include tablet {
