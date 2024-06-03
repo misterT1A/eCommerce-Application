@@ -40,7 +40,7 @@ class ChangePasswordMode {
             notificationEmitter.showMessage({
               messageType: 'success',
               title: 'Password changed!',
-              text: 'Password updated.',
+              text: 'Your password was updated.',
             });
             modal.close();
           } else {

@@ -51,7 +51,7 @@ class EditAddress {
           MyCustomer.setCustomer(resUpdateAddress.customer);
           this.view.profileAddresses.updateView();
           this.view.openAddress(id);
-          notificationEmitter.showMessage({ messageType: 'success', title: 'Saved!', text: 'Address is updated!' });
+          notificationEmitter.showMessage({ messageType: 'success', title: 'Saved!', text: 'Address was updated.' });
         } else {
           showErrorMessages(resUpdateAddress);
         }

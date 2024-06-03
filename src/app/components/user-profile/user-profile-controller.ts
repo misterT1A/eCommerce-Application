@@ -1,6 +1,7 @@
 import Controller from '@components/controller';
 import type HeaderController from '@components/header/header_controller';
 import type Modal from '@components/modal/modal';
+import notificationEmitter from '@components/notifications/notifications-controller';
 import AuthService from '@services/auth-service';
 import MyCustomer from '@services/customer-service/myCustomer';
 import type Router from '@src/app/router/router';
@@ -58,6 +59,13 @@ class ProfileController extends Controller<ProfileView> {
       this.headerController,
       (modal?: Modal<EditModeForm>) => this.deleteAccountMode.enable(() => this.logout(), modal)
     );
+    if (MyCustomer.version === 1) {
+      notificationEmitter.showMessage({
+        messageType: 'info',
+        title: `Hi, ${MyCustomer.firstName ?? ''}!`,
+        text: 'You can activate the edit mode ✏️ to manage all your profile details. You also have the option to modify your personal information and addresses on the account page itself.',
+      });
+    }
   }
 
   private setListeners() {

@@ -1,4 +1,5 @@
 import Modal from '@components/modal/modal';
+import notificationEmitter from '@components/notifications/notifications-controller';
 import AuthService from '@services/auth-service';
 import { deleteAccount } from '@services/customer-service/my-customer-service';
 
@@ -26,6 +27,11 @@ class DeleteAccount {
       if (res.success) {
         await logout();
         modal.close();
+        notificationEmitter.showMessage({
+          messageType: 'warning',
+          title: 'Account was deleted!',
+          text: `If you have an existing account, please log in to access your profile. If you don't have an account, you can create a new one.`,
+        });
         modalEditMode?.close();
       } else {
         deleteAcc.confirmButton.getNode().disabled = false;
