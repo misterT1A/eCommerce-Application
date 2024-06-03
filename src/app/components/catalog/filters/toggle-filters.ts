@@ -8,8 +8,8 @@ export default class ToggleFiltersBlock extends BaseComponent {
   constructor(private filtersBlock: FilterBlock) {
     super({ className: styles['toggle-filters'] });
     this.addListener('click', () => {
-      this.filtersBlock.addClass(styles['filterBlock--visible']);
-      document.body.style.overflow = 'hidden';
+      this.filtersBlock.addClass(styles['overlay--visible']);
+      this.filtersBlock.filters.addClass(styles['filterBlock--visible']);
     });
     window.addEventListener('resize', () => this.resizeHandler());
 
@@ -18,13 +18,15 @@ export default class ToggleFiltersBlock extends BaseComponent {
 
   private resizeHandler() {
     const width = window.innerWidth;
-    const isFiltersBlockVisible = this.filtersBlock.getNode().classList.contains(styles['filterBlock--visible']);
+    const isFiltersBlockVisible = this.filtersBlock.filters
+      .getNode()
+      .classList.contains(styles['filterBlock--visible']);
 
     if (isFiltersBlockVisible) {
       if (width > 1100) {
-        document.body.style.overflow = '';
+        this.filtersBlock.removeClass(styles['overlay--visible']);
       } else {
-        document.body.style.overflow = 'hidden';
+        this.filtersBlock.addClass(styles['overlay--visible']);
       }
     }
   }
