@@ -26,6 +26,21 @@ $main-color-error: #d82700;
   text-align: center;
 }
 
+.profile__userInfo,
+.profile__userAddresses,
+.profile__footer {
+  opacity: 0;
+  animation: slideIn 0.4s forwards;
+}
+
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    transform: translateY(0);
+  }
+}
+
 .profile__userInfo {
   grid-area: 2 / 1 / 3 / 2;
   display: flex;
@@ -35,15 +50,21 @@ $main-color-error: #d82700;
   border-radius: 20px;
   background-color: #ffffff;
   min-width: 250px;
+
+  transform: translateX(-100%);
+
   .profile__button {
     margin-top: auto;
   }
 }
+
 .profile__userAddresses {
   grid-area: 2 / 2 / 3 / 3;
   padding: 20px;
   border-radius: 20px;
   background-color: #ffffff;
+
+  transform: translateX(100%);
 }
 
 .profile__userInfoHeader {
@@ -78,6 +99,7 @@ $main-color-error: #d82700;
 .profile__userInfoDataID {
   cursor: pointer;
   position: relative;
+
   &::after {
     content: '';
     width: 12px;
@@ -146,6 +168,7 @@ $main-color-error: #d82700;
   flex-direction: column;
   gap: 15px;
   min-height: 300px;
+
   &_disabled {
     opacity: 0.7;
     pointer-events: none;
@@ -166,6 +189,7 @@ $main-color-error: #d82700;
   background-color: transparent;
   text-align: left;
   cursor: pointer;
+
   &_active {
     color: #aa4e41;
   }
@@ -177,28 +201,34 @@ $main-color-error: #d82700;
   padding: 15px;
   gap: 10px;
   grid-area: 3 / 1 / 4 / 3;
+
+  transform: translateY(100%);
+
   .profile__button {
     max-width: 200px;
     flex-grow: 1;
   }
 }
 
-@media (width <= 970px) {
+@media (width <=970px) {
   .profile__userInfo {
     grid-area: 2 / 1 / 3 / 3;
   }
+
   .profile__userAddresses {
     grid-area: 3 / 1 / 4 / 3;
   }
+
   .profile .profile__button {
     max-width: 200px;
   }
+
   .profile__footer {
     grid-area: 4 / 1 / 5 / 3;
   }
 }
 
-@media (width <= 768px) {
+@media (width <=768px) {
   .profile__userAddresses {
     grid-template-columns: 1fr 1fr;
   }
@@ -218,6 +248,7 @@ $main-color-error: #d82700;
   .profile__footer {
     grid-area: 4 / 1 / 5 / 3;
     flex-direction: column;
+
     .profile__button {
       max-width: 100%;
     }
@@ -247,6 +278,7 @@ $main-color-error: #d82700;
 
 .profile__addressesListItemText {
   font-size: 14px;
+
   &_small {
     font-size: 12px;
   }
@@ -290,12 +322,14 @@ $main-color-error: #d82700;
   gap: 5px;
   flex-wrap: wrap;
 }
+
 .profile__editButtonsWrapper,
 .profile__addressButtonsWrapper {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 5px;
   margin-top: auto;
+
   .profile__button {
     flex-grow: 1;
   }
@@ -321,6 +355,7 @@ $main-color-error: #d82700;
   justify-content: center;
   align-items: center;
   gap: 15px;
+
   .profile__button {
     width: 100%;
   }
@@ -385,11 +420,13 @@ $main-color-error: #d82700;
   height: 16px;
   opacity: 0.9;
   background-color: transparent;
+
   .profile__editModeCardIcon {
     width: 100%;
     height: 100%;
     fill: #aa4e41;
   }
+
   @media (pointer: fine) and (hover: hover) {
     &:hover {
       opacity: 1;
@@ -411,10 +448,11 @@ $main-color-error: #d82700;
   padding-right: 20px;
 }
 
-@media (width <= 684px) {
+@media (width <=684px) {
   .profile__editModePersonalInfoSection {
     grid-area: 1 / 1 / 2 / 3;
   }
+
   .profile__editModeAddressesSection {
     grid-area: 2 / 1 / 3 / 3;
   }

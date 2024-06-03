@@ -7,6 +7,10 @@
   padding: 10px;
   padding-top: 0;
 
+  opacity: 0;
+  transform: translateX(-100%);
+  animation: slideIn 0.4s forwards;
+
   @include tablet {
     position: fixed;
     width: 60%;
@@ -22,6 +26,13 @@
 
     &--visible {
       transform: translateX(100%);
+    }
+  }
+
+  @keyframes slideIn {
+    to {
+      opacity: 1;
+      transform: translateX(0);
     }
   }
 
@@ -109,6 +120,7 @@ input[type='search'] {
   box-shadow: 0px 2px 16px -4px rgba(0, 0, 0, 0.2);
   color: $card_read_more_btn_color;
   cursor: pointer;
+
   &-btn {
     background: center / contain no-repeat;
     background-image: URL(../../../../assets/filters.svg);

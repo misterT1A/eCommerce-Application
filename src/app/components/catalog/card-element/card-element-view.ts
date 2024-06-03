@@ -77,6 +77,11 @@ export default class Card extends BaseComponent {
     return div([styles.pay_block], price, countWrapper);
   }
 
+  public setAnimDelay(index: number) {
+    const delay = 0.2 + index / 20;
+    this.getNode().style.animationDelay = `${delay}s`;
+  }
+
   private handler(e: Event) {
     const target = (e.target as HTMLElement)?.textContent;
     switch (target) {

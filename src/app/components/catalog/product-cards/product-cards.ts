@@ -25,7 +25,7 @@ export default class ProductCards extends BaseComponent {
         return;
       }
 
-      products.forEach((product) => {
+      products.forEach((product, index) => {
         const price = product.masterVariant.prices?.[0];
 
         const props: ICardProps = {
@@ -37,6 +37,7 @@ export default class ProductCards extends BaseComponent {
         };
 
         const card = new Card(props, this.router);
+        card.setAnimDelay(index);
         this.append(card);
       });
     });
