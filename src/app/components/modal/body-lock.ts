@@ -43,3 +43,17 @@ export default function scrollControl() {
     },
   };
 }
+
+export function lockBackground(background?: HTMLElement) {
+  const element = background;
+  if (element) {
+    element.inert = true;
+  }
+}
+
+export function unlockBackground(background?: HTMLElement) {
+  const element = background;
+  if (element) {
+    element.inert = false;
+  }
+}

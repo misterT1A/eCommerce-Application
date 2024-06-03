@@ -18,7 +18,7 @@ class DeleteAddress {
 
   public enable(id: string) {
     const deleteAddress = new UserAddressDelete(id);
-    const modal = new Modal({ title: 'Are you sure?', content: deleteAddress });
+    const modal = new Modal({ title: 'Are you sure?', content: deleteAddress, parent: this.view.getNode() });
     modal.open();
     deleteAddress.confirmButton.addListener('click', async () => {
       const actualizeCustomer = await prepareMyCustomer(() => this.logout());

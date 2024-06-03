@@ -2,12 +2,14 @@ import BaseComponent from '@utils/base-component';
 import { button, div, h2, svg } from '@utils/elements';
 
 import styles from './_modal.scss';
-import scrollControl from './body-lock';
+import scrollControl, { lockBackground, unlockBackground } from './body-lock';
 
 interface IModalProps<T extends BaseComponent> {
   title: string;
 
   content: T;
+
+  parent?: HTMLElement;
 
   withoutCloseBtn?: boolean;
 
@@ -21,12 +23,11 @@ class Modal<T extends BaseComponent> extends BaseComponent {
 
   private scrollControl = scrollControl();
 
-  constructor(modalProps: IModalProps<T>) {
+  constructor(private modalProps: IModalProps<T>) {
     super({ tag: 'div', className: styles.overlay });
     this.modal = div([styles.modal]);
     const header = div([styles.modal__header]);
     const closeButton = button([styles.modal__close], '', { type: 'button' });
-
     closeButton.append(svg(`/assets/img/notif-close.svg#close`, styles.modal__closeIcon));
     closeButton.addListener('click', () => this.close());
     if (modalProps.title) {
@@ -50,6 +51,7 @@ class Modal<T extends BaseComponent> extends BaseComponent {
 
   public open() {
     document.body.append(this.getNode());
+    lockBackground(this.modalProps.parent);
     this.isSubModal = document.body.classList.contains(styles.bodyLock);
     if (!this.isSubModal) {
       this.scrollControl.lock();
@@ -63,6 +65,7 @@ class Modal<T extends BaseComponent> extends BaseComponent {
       if (!this.isSubModal) {
         this.scrollControl.unlock();
       }
+      unlockBackground(this.modalProps.parent);
     }, 300);
   }
 }

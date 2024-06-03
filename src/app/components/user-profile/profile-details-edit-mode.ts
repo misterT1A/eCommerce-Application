@@ -23,7 +23,7 @@ class EditModeProfile {
       date: MyCustomer.dateOfBirth ?? '',
       email: MyCustomer.email ?? '',
     });
-    const userInfoEditModal = new Modal({ title: 'Profile Info', content: editForm });
+    const userInfoEditModal = new Modal({ title: 'Profile Info', content: editForm, parent: this.view.getNode() });
     userInfoEditModal.open();
     editForm.applyButton.addListener('click', async () => {
       const actualizeCustomer = await prepareMyCustomer(() => logout());

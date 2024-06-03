@@ -54,7 +54,7 @@ class AddAddress {
 
   public enable(logout: () => Promise<void>) {
     const addressForm = new UserAddressEdit();
-    const modal = new Modal({ title: 'Add Address', content: addressForm });
+    const modal = new Modal({ title: 'Add Address', content: addressForm, parent: this.view.getNode() });
     modal.open();
     addressForm.applyButton.setTextContent('ADD ADDRESS');
     addressForm.applyButton.addListener('click', async () => {

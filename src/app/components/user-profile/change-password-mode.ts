@@ -18,7 +18,7 @@ class ChangePasswordMode {
 
   public enable() {
     const changePasswordForm = new ChangePassword();
-    const modal = new Modal({ title: 'Change Password', content: changePasswordForm });
+    const modal = new Modal({ title: 'Change Password', content: changePasswordForm, parent: this.view.getNode() });
     modal.open();
     changePasswordForm.addListener('input', () => processPasswordData(changePasswordForm));
     changePasswordForm.confirmButton.addListener('click', async () => {
@@ -40,7 +40,7 @@ class ChangePasswordMode {
             notificationEmitter.showMessage({
               messageType: 'success',
               title: 'Password changed!',
-              text: 'Password updated.',
+              text: 'Your password was updated.',
             });
             modal.close();
           } else {

@@ -23,7 +23,7 @@ class EditAddress {
 
   public enable(id: string) {
     const addressForm = new UserAddressEdit();
-    const userInfoEditModal = new Modal({ title: 'Edit Address', content: addressForm });
+    const userInfoEditModal = new Modal({ title: 'Edit Address', content: addressForm, parent: this.view.getNode() });
     userInfoEditModal.open();
     addressForm.setValues(getAddressValuesById(id));
     addressForm.applyButton.addListener('click', async () => {
@@ -51,7 +51,7 @@ class EditAddress {
           MyCustomer.setCustomer(resUpdateAddress.customer);
           this.view.profileAddresses.updateView();
           this.view.openAddress(id);
-          notificationEmitter.showMessage({ messageType: 'success', title: 'Saved!', text: 'Address is updated!' });
+          notificationEmitter.showMessage({ messageType: 'success', title: 'Saved!', text: 'Address was updated.' });
         } else {
           showErrorMessages(resUpdateAddress);
         }
