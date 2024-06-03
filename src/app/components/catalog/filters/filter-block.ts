@@ -125,11 +125,11 @@ export default class FilterBlock extends BaseComponent {
     await ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
     this.breadcrumbs.update([CATALOG_ROOT]);
     this.router.setEmptyUrlCatalog();
-    this.removeClass(styles.blur);
+    this.filters.removeClass(styles.blur);
   }
 
   private updateView() {
-    this.addClass(styles.blur);
+    this.filters.addClass(styles.blur);
     [this.salesFilter, this.veganFilter, this.forKidsFilter].forEach((filter) => filter.setValue(false));
     [this.searchInput, this.categorySelect, this.subcategorySelect, this.sortSelection, this.priceFilter].forEach(
       (select) => select.reset()
