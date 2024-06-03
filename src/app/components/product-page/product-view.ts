@@ -148,7 +148,7 @@ export default class ProductView extends BaseComponent {
     // const cartBtn = button([styles.cart_btn], 'ADD TO CART');
     const backBtn = button([product_styles.back_btn, general_styles.btn], 'BACK TO CATALOG', {
       onclick: () => {
-        this.router.navigate(this.router.getSavedPath());
+        this.router.navigateToCatalogFromProduct();
       },
     });
     return div([product_styles.bottom_block], countWrapper, backBtn);
