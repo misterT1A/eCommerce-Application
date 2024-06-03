@@ -2,6 +2,7 @@ import BaseComponent from '@utils/base-component';
 import { button, div, h2, svg } from '@utils/elements';
 
 import styles from './_modal.scss';
+import scrollControl from './body-lock';
 
 interface IModalProps<T extends BaseComponent> {
   title: string;
@@ -16,9 +17,9 @@ interface IModalProps<T extends BaseComponent> {
 class Modal<T extends BaseComponent> extends BaseComponent {
   public modal: BaseComponent<HTMLElement>;
 
-  private scroll = 0;
-
   private isSubModal = false;
+
+  private scrollControl = scrollControl();
 
   constructor(modalProps: IModalProps<T>) {
     super({ tag: 'div', className: styles.overlay });
@@ -51,9 +52,7 @@ class Modal<T extends BaseComponent> extends BaseComponent {
     document.body.append(this.getNode());
     this.isSubModal = document.body.classList.contains(styles.bodyLock);
     if (!this.isSubModal) {
-      this.scroll = window.scrollY;
-      document.body.style.top = `-${this.scroll}px`;
-      document.body.classList.add(styles.bodyLock);
+      this.scrollControl.lock();
     }
   }
 
@@ -62,8 +61,7 @@ class Modal<T extends BaseComponent> extends BaseComponent {
     setTimeout(() => {
       this.destroy();
       if (!this.isSubModal) {
-        document.body.classList.remove(styles.bodyLock);
-        window.scrollTo({ top: this.scroll, behavior: 'instant' });
+        this.scrollControl.unlock();
       }
     }, 300);
   }
