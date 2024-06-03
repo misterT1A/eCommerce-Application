@@ -22,8 +22,8 @@
   }
 }
 
-@mixin important {
-  @each $property, $value in & {
-    #{$property}: #{$value} !important;
-  }
-}
+// @mixin important {
+//   @each $property, $value in & {
+//     #{$property}: #{$value} !important;
+//   }
+// }
