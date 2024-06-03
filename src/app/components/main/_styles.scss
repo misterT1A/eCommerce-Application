@@ -2,6 +2,7 @@
   width: 100%;
   @include flex(center, center, column);
   gap: 20px;
+  overflow: hidden;
 }
 
 .links {
