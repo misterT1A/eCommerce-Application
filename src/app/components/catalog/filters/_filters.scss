@@ -22,21 +22,24 @@
     padding: 8%;
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 
+    animation: none;
+    opacity: 1;
+
     &--visible {
       transform: translateX(100%);
-    }
-  }
-
-  @keyframes slideIn {
-    to {
-      opacity: 1;
-      transform: translateX(0);
     }
   }
 
   @include mobile {
     width: 90%;
     padding: 15%;
+  }
+}
+
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 
