@@ -1,27 +1,33 @@
+import type { ClientResponse, ProductProjectionPagedSearchResponse } from '@commercetools/platform-sdk';
+
 import FormField from '@components/form-ui-elements/formField';
 import FormSelection from '@components/form-ui-elements/formSelection';
 import Toggler from '@components/form-ui-elements/formToggler';
+import type RangeSelector from '@components/form-ui-elements/range-selector';
 import ProductService from '@services/product_service/product_service';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
-import { button } from '@utils/elements';
+import { button, div } from '@utils/elements';
 import { sortProducts, transformCategoryName, transformCategoryNamesForView } from '@utils/filters-helpers';
 
 import styles from './_filters.scss';
 import type { FilterKeys, SortKey } from './constants-filters';
 import { CATALOG_ROOT, CATEGORIES, SORT, SUBCATEGORIES } from './constants-filters';
+import {
+  SORT_SELECTION,
+  getPriceFilter,
+  getPriceFromUrl,
+  getPriceSelector,
+  getSortSelector,
+  isPriceFilter,
+  updatePriceRange,
+} from './price-filter-helpers';
 import type Breadcrumbs from '../breadcrumbs/breadcrumbs';
 import type ProductCards from '../product-cards/product-cards';
 
-enum SORT_SELECTION {
-  TITLE = 'Sort By',
-  PRICE_DESC = 'Descending price',
-  PRICE_ASC = 'Ascending price',
-  A_Z = 'A-Z',
-  Z_A = 'Z-A',
-}
-
 export default class FilterBlock extends BaseComponent {
+  public filters: BaseComponent;
+
   private closeButton: BaseComponent<HTMLButtonElement>;
 
   private resetButton: BaseComponent<HTMLButtonElement>;
@@ -42,20 +48,24 @@ export default class FilterBlock extends BaseComponent {
 
   private sortSelection: FormSelection;
 
+  private priceFilter: RangeSelector;
+
   constructor(
     private productCardsBlock: ProductCards,
     private breadcrumbs: Breadcrumbs,
-
-    private router: Router
+    private router: Router,
+    private scrollControl: IScrollController
   ) {
-    super({ tag: 'div', className: styles.filterBlock });
+    super({ tag: 'div', className: styles.overlay });
+    this.filters = div([styles.filterBlock]);
     this.resetButton = button([styles['reset-btn']], 'RESET FILTERS', {
       onclick: () => this.reset(),
     });
     this.closeButton = button([styles['close-btn']], '', {
       onclick: () => {
-        this.removeClass(styles['filterBlock--visible']);
-        document.body.style.overflow = '';
+        this.filters.removeClass(styles['filterBlock--visible']);
+        this.removeClass(styles['overlay--visible']);
+        this.scrollControl.unlock();
       },
     });
     this.searchForm = new BaseComponent<HTMLFormElement>(
@@ -67,25 +77,23 @@ export default class FilterBlock extends BaseComponent {
     this.subcategorySelect.addClass(styles.inactive);
     this.salesFilter = new Toggler('On sale');
     this.veganFilter = new Toggler('Vegan');
+    this.priceFilter = getPriceSelector();
     this.forKidsFilter = new Toggler('For kids');
-    this.sortSelection = new FormSelection(SORT_SELECTION.TITLE, [
-      SORT_SELECTION.PRICE_DESC,
-      SORT_SELECTION.PRICE_ASC,
-      SORT_SELECTION.A_Z,
-      SORT_SELECTION.Z_A,
-    ]);
-    this.appendChildren([
+    this.sortSelection = getSortSelector();
+    this.filters.appendChildren([
       this.closeButton,
       this.resetButton,
       this.searchForm,
       this.categorySelect,
       this.subcategorySelect,
       this.sortSelection,
+      this.priceFilter,
       this.salesFilter,
       this.veganFilter,
       this.forKidsFilter,
     ]);
     this.initListeners();
+    this.append(this.filters);
   }
 
   private initListeners() {
@@ -101,21 +109,14 @@ export default class FilterBlock extends BaseComponent {
         this.handleSearch('');
       }
     });
-    this.categorySelect.addListener('change', () => {
-      this.handleCategoryChange();
-    });
-    this.salesFilter.addListener('change', () => {
-      this.handleFiltersChange('IS_SALE');
-    });
-    this.veganFilter.addListener('change', () => {
-      this.handleFiltersChange('IS_VEGAN');
-    });
-    this.forKidsFilter.addListener('change', () => {
-      this.handleFiltersChange('IS_KIDS');
-    });
+    this.categorySelect.addListener('change', () => this.handleCategoryChange());
+    this.salesFilter.addListener('change', () => this.handleFiltersChange('IS_SALE'));
+    this.veganFilter.addListener('change', () => this.handleFiltersChange('IS_VEGAN'));
+    this.forKidsFilter.addListener('change', () => this.handleFiltersChange('IS_KIDS'));
     this.sortSelection.addListener('change', () => {
       this.handleSortChange(sortProducts(this.sortSelection.getValue()));
     });
+    this.priceFilter.addListener('change', () => this.handlePriceRangeChange());
   }
 
   public async reset() {
@@ -130,10 +131,15 @@ export default class FilterBlock extends BaseComponent {
   private updateView() {
     this.addClass(styles.blur);
     [this.salesFilter, this.veganFilter, this.forKidsFilter].forEach((filter) => filter.setValue(false));
-    this.searchInput.reset();
-    [this.categorySelect, this.subcategorySelect].forEach((select) => select.reset());
-    this.sortSelection.reset();
+    [this.searchInput, this.categorySelect, this.subcategorySelect, this.sortSelection, this.priceFilter].forEach(
+      (select) => select.reset()
+    );
     this.subcategorySelect.addClass(styles.inactive);
+  }
+
+  public updatePriceRange(data: ClientResponse<ProductProjectionPagedSearchResponse>) {
+    updatePriceRange(data);
+    this.priceFilter.updateRange(ProductService.priceBounds);
   }
 
   private handleSearch(query: string) {
@@ -151,9 +157,7 @@ export default class FilterBlock extends BaseComponent {
     } else {
       this.subcategorySelect.destroy();
       this.subcategorySelect = new FormSelection('Subcategory', transformCategoryNamesForView(subcategoryKeys));
-      this.subcategorySelect.addListener('change', () => {
-        this.handleSubcategoryChange();
-      });
+      this.subcategorySelect.addListener('change', () => this.handleSubcategoryChange());
       this.categorySelect.getNode().insertAdjacentElement('afterend', this.subcategorySelect.getNode());
     }
     this.breadcrumbs.update([CATALOG_ROOT, this.categorySelect.getValue()]);
@@ -170,6 +174,12 @@ export default class FilterBlock extends BaseComponent {
     const categoryKey = Object.keys(CATEGORIES).find((key) => CATEGORIES[key] === categoryID) ?? '';
     this.router.setUrlCatalog(categoryKey);
     ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
+  }
+
+  public handlePriceRangeChange() {
+    ProductService.setPriceRange(this.priceFilter.getValue());
+    ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
+    this.router.setUrlCatalog(getPriceFilter());
   }
 
   private handleSubcategoryChange() {
@@ -236,12 +246,20 @@ export default class FilterBlock extends BaseComponent {
       this.salesFilter.setValue(true);
       ProductService.applyFilter('IS_SALE');
     }
+    const priceFilter = values.find((el) => isPriceFilter(el));
+    if (priceFilter) {
+      ProductService.setPriceRange(getPriceFromUrl(priceFilter));
+    }
     if (values.includes(CATALOG_ROOT)) {
       ProductService.resetFilters();
       this.reset();
       this.categoryChange();
       this.breadcrumbs.update([CATALOG_ROOT]);
     }
-    ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
+    ProductService.getFilteredProducts().then((data) => {
+      this.productCardsBlock.setProducts(data.body.results);
+      this.updatePriceRange(data);
+      this.priceFilter.setValue(ProductService.getPriceRange());
+    });
   }
 }

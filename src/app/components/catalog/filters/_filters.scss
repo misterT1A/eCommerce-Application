@@ -1,6 +1,4 @@
 .filterBlock {
-  position: sticky;
-  top: 2%;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -131,4 +129,26 @@ input[type='search'] {
   @include tablet {
     display: flex;
   }
+}
+
+.overlay {
+  position: sticky;
+  top: 2%;
+  z-index: 70;
+}
+
+.overlay--visible {
+  position: sticky;
+  top: 2%;
+  position: fixed;
+  inset: 0 0 0 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(1px);
+  z-index: 70;
+  padding: 15px;
+  opacity: 1;
+  animation: fade-in 0.2s ease-in forwards;
+  transition: 0.2s;
 }
