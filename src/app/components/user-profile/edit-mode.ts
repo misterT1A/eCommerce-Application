@@ -73,6 +73,7 @@ class EditMode {
     if (!this.editView) {
       return;
     }
+    this.editView.saveButton.getNode().disabled = true;
     const userActions = getUserInfoUpdateRequest(this.editView.editUserInfo.getValues()).actions;
     const addressActions: CustomerUpdateAction[] = [];
     this.addresses.forEach((address, id) => {
@@ -90,6 +91,7 @@ class EditMode {
       version: MyCustomer.version ?? 1,
       actions,
     });
+    this.editView.saveButton.getNode().disabled = false;
     if (res.success) {
       MyCustomer.setCustomer(res.customer);
       this.view.profileAddresses.updateView();
@@ -109,6 +111,7 @@ class EditMode {
   public openAddressModal(id: string, values: ProfileAddressValues) {
     const edit = new UserAddressEdit();
     const modal = new Modal({ title: 'Edit Address', content: edit });
+    edit.applyButton.setTextContent('APPLY');
     edit.setValues(values);
     edit.applyButton.addListener('click', () => {
       const constFormValues = edit.getValues();
