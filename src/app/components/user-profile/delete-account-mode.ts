@@ -12,7 +12,7 @@ class DeleteAccount {
 
   public enable(logout: () => Promise<void>, modalEditMode?: Modal<EditModeForm>) {
     const deleteAcc = new UserDelete();
-    const modal = new Modal({ title: 'Are you sure?', content: deleteAcc });
+    const modal = new Modal({ title: 'Are you sure?', content: deleteAcc, parent: this.view.getNode() });
     modal.open();
     deleteAcc.confirmButton.addListener('click', async () => {
       deleteAcc.confirmButton.getNode().disabled = true;

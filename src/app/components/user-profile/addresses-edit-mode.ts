@@ -23,7 +23,7 @@ class EditAddress {
 
   public enable(id: string) {
     const addressForm = new UserAddressEdit();
-    const userInfoEditModal = new Modal({ title: 'Edit Address', content: addressForm });
+    const userInfoEditModal = new Modal({ title: 'Edit Address', content: addressForm, parent: this.view.getNode() });
     userInfoEditModal.open();
     addressForm.setValues(getAddressValuesById(id));
     addressForm.applyButton.addListener('click', async () => {

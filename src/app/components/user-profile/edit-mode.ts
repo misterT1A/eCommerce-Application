@@ -43,7 +43,12 @@ class EditMode {
         ...MyCustomer.getAddressType(address.id ?? ''),
       });
     });
-    const modal = new Modal({ title: 'Edit Account Details', content: this.editView, wide: true });
+    const modal = new Modal({
+      title: 'Edit Account Details',
+      content: this.editView,
+      wide: true,
+      parent: this.view.getNode(),
+    });
     modal.open();
     this.editView.deleteAccount.addListener('click', () => {
       this.deleteAccount(modal);
@@ -110,7 +115,7 @@ class EditMode {
 
   public openAddressModal(id: string, values: ProfileAddressValues) {
     const edit = new UserAddressEdit();
-    const modal = new Modal({ title: 'Edit Address', content: edit });
+    const modal = new Modal({ title: 'Edit Address', content: edit, parent: this.editView?.getNode() });
     edit.applyButton.setTextContent('APPLY');
     edit.setValues(values);
     edit.applyButton.addListener('click', () => {

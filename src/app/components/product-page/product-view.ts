@@ -92,7 +92,7 @@ export default class ProductView extends BaseComponent {
     const scrollbar = div(['swiper-scrollbar']);
 
     swiperWrapper.addListener('click', () => {
-      const modal = new Modal({ title: '', content: this.setModalContent(data) });
+      const modal = new Modal({ title: '', content: this.setModalContent(data), parent: this.getNode() });
       modal.addClass(swiper_styles.overlay);
       modal.modal.addClass(swiper_styles.modal);
       modal.open();

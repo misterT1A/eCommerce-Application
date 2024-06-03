@@ -18,7 +18,7 @@ class ChangePasswordMode {
 
   public enable() {
     const changePasswordForm = new ChangePassword();
-    const modal = new Modal({ title: 'Change Password', content: changePasswordForm });
+    const modal = new Modal({ title: 'Change Password', content: changePasswordForm, parent: this.view.getNode() });
     modal.open();
     changePasswordForm.addListener('input', () => processPasswordData(changePasswordForm));
     changePasswordForm.confirmButton.addListener('click', async () => {
