@@ -1,3 +1,4 @@
+import scrollControl from '@components/modal/body-lock';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
 import { div } from '@utils/elements';
@@ -17,12 +18,19 @@ export default class CatalogView extends BaseComponent {
 
   private toggleFiltersBlock: ToggleFiltersBlock;
 
+  private scrollControl = scrollControl();
+
   constructor(protected router: Router) {
     super({ tag: 'section', className: styles.wrapper });
     this.productCardsBlock = new ProductCards(this.router);
     this.breadCrumbsBlock = new Breadcrumbs(this);
-    this.filtersBlock = new FiltersBlock(this.productCardsBlock, this.breadCrumbsBlock, this.router);
-    this.toggleFiltersBlock = new ToggleFiltersBlock(this.filtersBlock);
+    this.filtersBlock = new FiltersBlock(
+      this.productCardsBlock,
+      this.breadCrumbsBlock,
+      this.router,
+      this.scrollControl
+    );
+    this.toggleFiltersBlock = new ToggleFiltersBlock(this.filtersBlock, this.scrollControl);
     const mainContent = div([styles.mainContent], this.filtersBlock, this.productCardsBlock);
 
     this.appendChildren([this.breadCrumbsBlock, this.toggleFiltersBlock, mainContent]);
