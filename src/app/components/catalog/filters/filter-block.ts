@@ -7,7 +7,7 @@ import type RangeSelector from '@components/form-ui-elements/range-selector';
 import ProductService from '@services/product_service/product_service';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
-import { button } from '@utils/elements';
+import { button, div } from '@utils/elements';
 import { sortProducts, transformCategoryName, transformCategoryNamesForView } from '@utils/filters-helpers';
 
 import styles from './_filters.scss';
@@ -26,6 +26,8 @@ import type Breadcrumbs from '../breadcrumbs/breadcrumbs';
 import type ProductCards from '../product-cards/product-cards';
 
 export default class FilterBlock extends BaseComponent {
+  public filters: BaseComponent;
+
   private closeButton: BaseComponent<HTMLButtonElement>;
 
   private resetButton: BaseComponent<HTMLButtonElement>;
@@ -51,16 +53,19 @@ export default class FilterBlock extends BaseComponent {
   constructor(
     private productCardsBlock: ProductCards,
     private breadcrumbs: Breadcrumbs,
-    private router: Router
+    private router: Router,
+    private scrollControl: IScrollController
   ) {
-    super({ tag: 'div', className: styles.filterBlock });
+    super({ tag: 'div', className: styles.overlay });
+    this.filters = div([styles.filterBlock]);
     this.resetButton = button([styles['reset-btn']], 'RESET FILTERS', {
       onclick: () => this.reset(),
     });
     this.closeButton = button([styles['close-btn']], '', {
       onclick: () => {
-        this.removeClass(styles['filterBlock--visible']);
-        document.body.style.overflow = '';
+        this.filters.removeClass(styles['filterBlock--visible']);
+        this.removeClass(styles['overlay--visible']);
+        this.scrollControl.unlock();
       },
     });
     this.searchForm = new BaseComponent<HTMLFormElement>(
@@ -75,7 +80,7 @@ export default class FilterBlock extends BaseComponent {
     this.priceFilter = getPriceSelector();
     this.forKidsFilter = new Toggler('For kids');
     this.sortSelection = getSortSelector();
-    this.appendChildren([
+    this.filters.appendChildren([
       this.closeButton,
       this.resetButton,
       this.searchForm,
@@ -88,6 +93,7 @@ export default class FilterBlock extends BaseComponent {
       this.forKidsFilter,
     ]);
     this.initListeners();
+    this.append(this.filters);
   }
 
   private initListeners() {
