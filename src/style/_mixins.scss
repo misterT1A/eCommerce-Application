@@ -21,9 +21,3 @@
     @content;
   }
 }
-
-// @mixin important {
-//   @each $property, $value in & {
-//     #{$property}: #{$value} !important;
-//   }
-// }

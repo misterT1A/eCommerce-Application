@@ -60,10 +60,7 @@
 }
 
 .main_img_wrapper {
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  flex-direction: column !important;
+  @include flex(center, center, column);
   max-width: 500px;
   width: 100%;
   height: 500px;
