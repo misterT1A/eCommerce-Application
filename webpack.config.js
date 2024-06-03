@@ -57,7 +57,7 @@ module.exports = ({ mode }) => {
           ],
         },
         {
-          test: /.css$/,
+          test: /\.css$/,
           use: [isDevMode ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader'],
           include: /node_modules/,
         },
