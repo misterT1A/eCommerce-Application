@@ -53,7 +53,8 @@ export default class FilterBlock extends BaseComponent {
   constructor(
     private productCardsBlock: ProductCards,
     private breadcrumbs: Breadcrumbs,
-    private router: Router
+    private router: Router,
+    private scrollControl: IScrollController
   ) {
     super({ tag: 'div', className: styles.overlay });
     this.filters = div([styles.filterBlock]);
@@ -64,6 +65,7 @@ export default class FilterBlock extends BaseComponent {
       onclick: () => {
         this.filters.removeClass(styles['filterBlock--visible']);
         this.removeClass(styles['overlay--visible']);
+        this.scrollControl.unlock();
       },
     });
     this.searchForm = new BaseComponent<HTMLFormElement>(
