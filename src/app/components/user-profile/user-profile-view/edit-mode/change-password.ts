@@ -8,6 +8,7 @@ class ChangePassword extends BaseComponent {
   public fields = {
     currentPassword: new FormField('Current password', 'password'),
     newPassword: new FormField('New password', 'password'),
+    confirmPassword: new FormField('Confirm new password', 'password'),
   } as const;
 
   public confirmButton: BaseComponent<HTMLButtonElement>;
@@ -15,13 +16,19 @@ class ChangePassword extends BaseComponent {
   constructor() {
     super({ tag: 'div', className: styles.profile__changePassword }, p([styles.profile__text], ''));
     this.confirmButton = button([styles.profile__button], 'APPLY', { type: 'button' });
-    this.appendChildren([this.fields.currentPassword, this.fields.newPassword, this.confirmButton]);
+    this.appendChildren([
+      this.fields.currentPassword,
+      this.fields.newPassword,
+      this.fields.confirmPassword,
+      this.confirmButton,
+    ]);
   }
 
   public getValues() {
     return {
       currentPassword: this.fields.currentPassword.getValue(),
       newPassword: this.fields.newPassword.getValue(),
+      confirmPassword: this.fields.confirmPassword.getValue(),
     };
   }
 }

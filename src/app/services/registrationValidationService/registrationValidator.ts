@@ -61,10 +61,13 @@ class RegistrationValidator {
     };
   }
 
-  public static processPasswords(formData: { currentPassword: string; newPassword: string }) {
+  public static processPasswords(formData: { currentPassword: string; newPassword: string; confirmPassword: string }) {
+    const confirmPassword =
+      formData.newPassword === formData.confirmPassword ? [] : [`The password confirmation doesn't match!`];
     return {
       currentPassword: this.validateField(formData.currentPassword, 'password'),
       newPassword: this.validateField(formData.newPassword, 'password'),
+      confirmPassword,
     };
   }
 
