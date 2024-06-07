@@ -65,7 +65,7 @@ export function processPasswordData(form: ChangePassword) {
     if (errors.length > 0) {
       isValidForm = false;
     }
-    const field = form.fields[key as 'newPassword' | 'currentPassword'];
+    const field = form.fields[key as 'newPassword' | 'currentPassword' | 'confirmPassword'];
     field.updateErrors(errors);
   });
   return {
