@@ -76,3 +76,31 @@ interface IBaseComponent<T extends HTMLElement = HTMLElement> {
    */
   destroy(): void;
 }
+
+type RangeSelectorProps = {
+  /**
+   * Left bound of range
+   */
+  min: number;
+  /**
+   * Right bound of range
+   */
+  max: number;
+  /**
+   * Initial range as a tuple of two numbers.
+   */
+  initialRange?: [number, number];
+  /**
+   * Name attribute for the range selector.
+   */
+  name?: string;
+  /**
+   * Flag indicating if the input values are in cents.
+   * If isInputInCents = true the values displayed on the selector will be divided by 100.
+   */
+  isInputInCents?: boolean;
+  /**
+   * Unit of the range values.
+   */
+  unit?: string;
+};

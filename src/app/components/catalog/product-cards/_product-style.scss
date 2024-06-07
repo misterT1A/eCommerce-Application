@@ -1,0 +1,42 @@
+.product_wrapper {
+  padding: 15px;
+  width: 75%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(200px, 300px));
+  gap: 25px;
+  opacity: 1;
+  transition: opacity 0.2s linear;
+  flex-grow: 1;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.hide {
+  opacity: 0;
+}
+
+.title_noFound {
+  text-align: center;
+  font-size: 20px;
+  color: $card_read_more_btn_color;
+  grid-column: 1 / span 3;
+}
+
+@media screen and (max-width: 1100px) {
+  .product_wrapper {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 850px) {
+  .product_wrapper {
+    grid-template-columns: repeat(2, minmax(200px, 300px));
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .product_wrapper {
+    grid-template-columns: minmax(200px, 300px);
+    justify-content: center;
+  }
+}

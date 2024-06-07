@@ -1,5 +1,12 @@
+import modalConstructor from '@components/disconect/disconect-view';
 import FooterController from '@components/footer/footer-controller';
 import HeaderController from '@components/header/header_controller';
+import type Modal from '@components/modal/modal';
+import ProgressBar from '@components/progress-bar/progress-bar';
+import AuthService from '@services/auth-service';
+import { updateMyCustomerInfo } from '@services/customer-service/my-customer-service';
+import MyCustomer from '@services/customer-service/myCustomer';
+import ProductService from '@services/product_service/product_service';
 import BaseComponent from '@utils/base-component';
 
 import styles from './_app_style.scss';
@@ -19,6 +26,10 @@ export default class App {
 
   protected footerController: FooterController;
 
+  protected progressBar: ProgressBar;
+
+  protected disconnectModal: Modal<BaseComponent>;
+
   constructor() {
     this.router = new Router(this.createsRoutes());
 
@@ -27,12 +38,35 @@ export default class App {
     this.main = new BaseComponent({ tag: 'main', className: styles.main });
     this.footerController = new FooterController(this.router);
 
+    this.progressBar = new ProgressBar();
+
     this.controller = null;
+    this.disconnectModal = modalConstructor();
+
+    this.setListeners();
+  }
+
+  private setListeners() {
+    document.addEventListener('DOMContentLoaded', async () => {
+      await AuthService.sessionStateHandler();
+      await ProductService.getCommercetoolsData();
+      await updateMyCustomerInfo();
+      this.headerController.updateTextLoggined(MyCustomer.fullNameShort);
+      this.footerController.setContent();
+      this.router.navigateToLastPoint();
+    });
+
+    window.addEventListener('offline', () => {
+      this.disconnectModal = modalConstructor();
+      this.disconnectModal.open();
+    });
+    window.addEventListener('online', () => this.disconnectModal.close());
   }
 
   public showContent(parent: HTMLElement) {
     this.wrapper.appendChildren([
       this.headerController.getView.getNode(),
+      this.progressBar.getNode(),
       this.main.getNode(),
       this.footerController.getView.getNode(),
     ]);
@@ -71,11 +105,38 @@ export default class App {
         },
       },
       {
+        path: Pages.CATALOG,
+        callBack: async (filtersParams: string[]) => {
+          const { default: CatalogController } = await import('@components/catalog/catalog-controller');
+          await this.hideMain();
+          this.controller = new CatalogController(this.router, filtersParams);
+          this.setContent();
+        },
+      },
+      {
+        path: Pages.PRODUCT,
+        callBack: async (productName: string) => {
+          const { default: ProductController } = await import('@components/product-page/product-controller');
+          await this.hideMain();
+          this.controller = new ProductController(this.router, productName);
+          this.setContent();
+        },
+      },
+      {
         path: Pages.ERROR,
         callBack: async () => {
           const { default: Controller } = await import('@components/404/404_controller');
           await this.hideMain();
           this.controller = new Controller(this.router);
+          this.setContent();
+        },
+      },
+      {
+        path: Pages.ACCOUNT,
+        callBack: async () => {
+          const { default: Controller } = await import('@components/user-profile/user-profile-controller');
+          await this.hideMain();
+          this.controller = new Controller(this.router, this.headerController);
           this.setContent();
         },
       },

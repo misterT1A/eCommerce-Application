@@ -5,10 +5,12 @@ import FormField from '@components/form-ui-elements/formField';
 import type HeaderController from '@components/header/header_controller';
 import notificationEmitter from '@components/notifications/notifications-controller';
 import AuthService from '@services/auth-service';
+import MyCustomer from '@services/customer-service/myCustomer';
 import RegistrationValidator from '@services/registrationValidationService/registrationValidator';
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import type BaseComponent from '@utils/base-component';
+import { showErrorMessages } from '@utils/errors-handling';
 import { assertsArrayOfStrings } from '@utils/is-array-of-strings';
 
 import { prepareCustomerDraft } from './registration-adapters';
@@ -97,21 +99,20 @@ class RegistrationController extends Controller<RegistrationView> {
 
   private async sendRequest(customerDraft: CustomerDraft) {
     this.getView.disableButton();
-    AuthService.signUp(customerDraft).then((response) => {
-      if (response.success) {
-        notificationEmitter.showMessage({
-          messageType: 'success',
-          title: 'Account created!',
-          text: 'Access your profile to control your personal information and preferences.',
-        });
-        this.router.navigate(Pages.MAIN);
-        this.headerController.changeTextLoggined();
-      } else {
-        const errors = response.errors ? response.errors : [response.message];
-        errors.forEach((text) => notificationEmitter.showMessage({ messageType: 'error', text }));
-        this.getView.unlockButton();
-      }
-    });
+    const response = await AuthService.signUp(customerDraft);
+    if (response.success) {
+      notificationEmitter.showMessage({
+        messageType: 'success',
+        title: 'Account created!',
+        text: 'Access your profile to control your personal information and preferences.',
+      });
+      MyCustomer.setCustomer(response.customer);
+      this.router.navigate(Pages.MAIN);
+      this.headerController.changeTextLoggined(MyCustomer.fullNameShort);
+    } else {
+      showErrorMessages(response);
+      this.getView.unlockButton();
+    }
   }
 }
 

@@ -1,5 +1,5 @@
 import BaseComponent from '@utils/base-component';
-import { button, div, input, label, li, span, ul } from '@utils/elements';
+import { button, div, input, label, li, span, svg, ul } from '@utils/elements';
 
 import styles from './_form-ui-elements.scss';
 
@@ -25,6 +25,9 @@ class FormSelection extends BaseComponent<HTMLFormElement> {
     private value = ''
   ) {
     super({ tag: 'form', action: '', className: styles.form__selection }, label([styles.form__inputLabel], title));
+    const overlay = div([styles.form__selectionOverlay]);
+    overlay.addListener('click', () => this.hideList());
+    this.append(overlay);
     this.button = button([styles.form__selectionButton], '', { type: 'button', value: '' });
     this.button.addListener('click', () => this.toggleList());
     this.addListener('input', () => this.updateAppearance());
@@ -37,7 +40,12 @@ class FormSelection extends BaseComponent<HTMLFormElement> {
       );
     });
     this.appendChildren([
-      div([styles.form__selectionButtonWrapper], this.button, ul([styles.form__selectionList], ...listItems)),
+      div(
+        [styles.form__selectionButtonWrapper],
+        svg('/assets/img/arrow.svg#arrow', styles.form__selectionIcon),
+        this.button,
+        ul([styles.form__selectionList], ...listItems)
+      ),
     ]);
   }
 
@@ -57,7 +65,7 @@ class FormSelection extends BaseComponent<HTMLFormElement> {
    * Sets the specified option as checked.
    * @param {string} option - The option to set as checked.
    */
-  public setOptionChecked(option: string) {
+  public setValue(option: string) {
     if (this.inputs.has(option)) {
       const inputOption = this.inputs.get(option)?.getNode();
       if (!(inputOption instanceof HTMLInputElement)) {
@@ -82,6 +90,17 @@ class FormSelection extends BaseComponent<HTMLFormElement> {
    */
   public getValue(): string {
     return this.value;
+  }
+
+  /**
+   * Resets the form selection by unchecking options.
+   */
+  public reset() {
+    this.inputs.forEach((item) => {
+      const fieldInput = item;
+      fieldInput.getNode().checked = false;
+    });
+    this.updateAppearance();
   }
 }
 

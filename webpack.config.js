@@ -25,7 +25,7 @@ module.exports = ({ mode }) => {
           loader: 'html-loader',
         },
         {
-          test: /\.(c|sa|sc)ss$/i,
+          test: /\.(sa|sc)ss$/i,
           exclude: /\.module\.(c|sa|sc)ss$/i,
           use: [
             isDevMode ? 'style-loader' : MiniCssExtractPlugin.loader,
@@ -57,12 +57,17 @@ module.exports = ({ mode }) => {
           ],
         },
         {
+          test: /\.css$/,
+          use: [isDevMode ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader'],
+          include: /node_modules/,
+        },
+        {
           test: /\.ts$/i,
           use: 'ts-loader',
           exclude: /node_modules/,
         },
         {
-          test: /\.(jpe?g|jpg|png|webp|gif|svg)$/i,
+          test: /\.(jpe?g|jpg|png|webp|gif|svg|mp4)$/i,
           type: 'asset/resource',
           generator: {
             filename: 'assets/img/[name][ext]',
@@ -91,6 +96,7 @@ module.exports = ({ mode }) => {
     output: {
       filename: 'index.js',
       path: path.resolve(__dirname, './dist'),
+      publicPath: '/',
       clean: true,
       assetModuleFilename: 'assets/[name][ext]',
     },

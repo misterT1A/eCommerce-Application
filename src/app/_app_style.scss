@@ -12,13 +12,32 @@
   min-height: 70vh;
   padding: 60px;
   transition: 0.3s;
-  @include flex(center, center, column);
+  @include flex(center, flex-start, column);
 
-  @media (width <=500px) {
+  @media (width <=1000px) {
+    padding: 40px;
+  }
+
+  @media (width <=850px) {
     padding: 20px;
   }
 }
 
 .main_hide {
   opacity: 0;
+}
+
+.btn {
+  padding: 5px 0;
+  color: $card_read_more_btn_color;
+  font-size: 16px;
+  border: 1px solid $card_read_more_btn_color;
+  border-radius: 20px;
+  background-color: transparent;
+  transition: all 0.3s linear;
+
+  &:hover {
+    background-color: $card_read_more_btn_color;
+    color: #fff;
+  }
 }

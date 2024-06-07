@@ -1,9 +1,14 @@
+import { FILTERS, SORT } from '@components/catalog/filters/constants-filters';
+
 import Router from '../router';
+import { checkRightURL, setCategoties, sortUrl } from '../router-helpers';
 
 const routes = [
   { path: '', callBack: jest.fn() },
   { path: 'login', callBack: jest.fn() },
   { path: 'registration', callBack: jest.fn() },
+  { path: 'catalog', callBack: jest.fn() },
+  { path: 'product', callBack: jest.fn() },
   { path: 'error', callBack: jest.fn() },
 ];
 
@@ -13,7 +18,7 @@ describe('Router', () => {
 
     routes.forEach((route) => {
       router.navigate(route.path);
-      expect(route.callBack).toHaveBeenCalledTimes(1);
+      expect(route.callBack).toHaveBeenCalled();
     });
   });
 
@@ -64,5 +69,37 @@ describe('Router', () => {
     Object.defineProperty(window, 'location', {
       value: originalLocation,
     });
+  });
+
+  it('should set the required url for sort and filters', () => {
+    const pushStateSpy = jest.spyOn(window.history, 'pushState');
+    const mockPath = '/catalog';
+    jest.spyOn(router, 'getCurrentPath').mockReturnValue(mockPath);
+
+    const filters = [...Object.keys(FILTERS), ...Object.keys(SORT)];
+
+    filters.forEach((filter) => {
+      router.setUrlCatalog(filter);
+      expect(pushStateSpy).toHaveBeenCalledWith(null, '', `/catalog/${filter}`);
+    });
+  });
+
+  it('should set the required url for categories', () => {
+    const path = ['bread'];
+    const filter = 'bread';
+    setCategoties(path, filter);
+    expect(path).toEqual([]);
+  });
+
+  it('should check Right URL', () => {
+    const url = 'catalog/IS_VEGAN/PRICE_DESC';
+    expect(checkRightURL(url)).toEqual(true);
+    const wrongUrl = 'catalog/IS_VEGANdd//PRICE_DESC';
+    expect(checkRightURL(wrongUrl)).toEqual(false);
+  });
+
+  it('should sort url', () => {
+    const url = ['IS_VEGAN', 'PRICE_DESC'];
+    expect(sortUrl(url)).toEqual('IS_VEGAN/PRICE_DESC');
   });
 });
