@@ -56,7 +56,8 @@ export default class HeaderView extends BaseComponent {
     const svgBasket = svg(`/assets/img/basketIcon.svg#svgElem`, styles.basketLogoFill);
     const basketIcon = new BaseComponent({ className: styles.basketLogo }, svgBasket);
     basketIcon.addListener('click', () => {
-      svgBasket.classList.toggle(styles.basketLogoActive);
+      // svgBasket.classList.toggle(styles.basketLogoActive);
+      this.router.navigate(Pages.CART);
     });
 
     const wrapper = new BaseComponent({ className: styles.menuBlock }, userIcon, basketIcon);
