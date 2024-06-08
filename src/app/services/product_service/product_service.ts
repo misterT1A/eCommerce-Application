@@ -13,11 +13,15 @@ class GetProductsService {
 
   protected priceMaxRange: [number, number] = [0, 50000];
 
-  protected sortOrder = '';
+  protected sortOrder = 'price asc';
 
   protected searchQuery = '';
 
   protected chosenCategory = '';
+
+  protected defaultCardsCount = 3;
+
+  protected cardsCount = 0;
 
   constructor() {
     this.root = AuthService.getRoot();
@@ -77,7 +81,7 @@ class GetProductsService {
     this.filters.clear();
     this.chosenCategory = '';
     this.searchQuery = '';
-    this.sortOrder = '';
+    this.sortOrder = 'price asc';
     this.priceRange = this.priceMaxRange;
   }
 
@@ -118,7 +122,7 @@ class GetProductsService {
     this.sortOrder = SORT[sortType];
   }
 
-  public getFilteredProducts() {
+  public getFilteredProducts(isAddNewCards = false) {
     const filtersQuery = Array.from(this.filters);
     const facet = [`variants.price.centAmount:range(0 to 100000)`];
     if (this.chosenCategory) {
@@ -127,19 +131,29 @@ class GetProductsService {
 
     filtersQuery.push(this.getPriceFilter());
 
+    const params = {
+      priceCurrency: 'EUR',
+      filter: filtersQuery,
+      limit: this.defaultCardsCount,
+      offset: 0,
+      sort: [this.sortOrder],
+      'text.en': this.searchQuery,
+      fuzzy: true,
+      facet,
+    };
+
+    if (isAddNewCards) {
+      // params.limit = this.cardsCount;
+      this.cardsCount += this.defaultCardsCount;
+      params.offset = this.cardsCount;
+      // console.log(this.cardsCount);
+    }
+
     return this.root
       .productProjections()
       .search()
       .get({
-        queryArgs: {
-          priceCurrency: 'EUR',
-          filter: filtersQuery,
-          limit: 100,
-          sort: [this.sortOrder],
-          'text.en': this.searchQuery,
-          fuzzy: true,
-          facet,
-        },
+        queryArgs: params,
       })
       .execute();
   }

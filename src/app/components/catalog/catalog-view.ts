@@ -1,7 +1,8 @@
 import scrollControl from '@components/modal/body-lock';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
-import { div } from '@utils/elements';
+import { button, div } from '@utils/elements';
+import setLazyLoader from '@utils/lazy loader/lazy-loader';
 
 import styles from './_catalog_style.scss';
 import Breadcrumbs from './breadcrumbs/breadcrumbs';
@@ -20,6 +21,8 @@ export default class CatalogView extends BaseComponent {
 
   private scrollControl = scrollControl();
 
+  protected lazyLoader: BaseComponent | null;
+
   constructor(protected router: Router) {
     super({ tag: 'section', className: styles.wrapper });
     this.productCardsBlock = new ProductCards(this.router);
@@ -34,6 +37,8 @@ export default class CatalogView extends BaseComponent {
     const mainContent = div([styles.mainContent], this.filtersBlock, this.productCardsBlock);
 
     this.appendChildren([this.breadCrumbsBlock, this.toggleFiltersBlock, mainContent]);
+
+    this.lazyLoader = null;
   }
 
   public get getProductCardView() {
@@ -46,5 +51,25 @@ export default class CatalogView extends BaseComponent {
 
   public get getRouter() {
     return this.router;
+  }
+
+  public addLazyLoader() {
+    if (!this.lazyLoader) {
+      this.lazyLoader = setLazyLoader();
+      this.append(this.lazyLoader);
+    }
+  }
+
+  public setAddButton(callback: () => void) {
+    const btn = button([styles.add_btn], 'Add products', {
+      onclick: () => callback(),
+    });
+    this.append(btn);
+  }
+
+  public destroyAddButton() {
+    const btn = this.getChildren[this.getChildren.length - 1];
+    console.log(btn);
+    btn.destroy();
   }
 }

@@ -12,13 +12,17 @@ export default class ProductCards extends BaseComponent {
     super({ className: styles.product_wrapper });
   }
 
-  public setProducts(products: ProductProjection[]) {
+  public setProducts(products: ProductProjection[], isAddNewCards = false) {
     if (!products) {
       return;
     }
 
     this.hideBlock().then(() => {
-      this.showBlock();
+      this.removeClass(styles.hide);
+
+      if (!isAddNewCards) {
+        this.destroyChildren();
+      }
 
       if (!products.length) {
         this.showNotFoundTitle();
@@ -55,8 +59,8 @@ export default class ProductCards extends BaseComponent {
     });
   }
 
-  private showBlock() {
-    this.removeClass(styles.hide);
-    this.destroyChildren();
-  }
+  // private showBlock() {
+
+  //   this.destroyChildren();
+  // }
 }

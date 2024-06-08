@@ -14,3 +14,26 @@
   gap: 1%;
   width: 100%;
 }
+
+.add_btn {
+  margin: 0 auto;
+  padding: 5px;
+  color: $card_read_more_btn_color;
+  font-size: 16px;
+  border: 1px solid $card_read_more_btn_color;
+  border-radius: 20px;
+  background-color: transparent;
+  transition: all 0.3s linear;
+
+  &:active {
+    background-color: $card_read_more_btn_color;
+    color: #fff;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: $card_read_more_btn_color;
+      color: #fff;
+    }
+  }
+}
