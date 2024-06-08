@@ -140,6 +140,15 @@ export default class App {
           this.setContent();
         },
       },
+      {
+        path: Pages.CART,
+        callBack: async () => {
+          const { default: CartController } = await import('@components/cart/cart-controller');
+          await this.hideMain();
+          this.controller = new CartController(this.router);
+          this.setContent();
+        },
+      },
     ];
   }
 
