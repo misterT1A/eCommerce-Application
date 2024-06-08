@@ -21,7 +21,9 @@ export default class CatalogView extends BaseComponent {
 
   private scrollControl = scrollControl();
 
-  protected lazyLoader: BaseComponent | null;
+  protected loader: BaseComponent | null;
+
+  protected addButton: BaseComponent | null;
 
   constructor(protected router: Router) {
     super({ tag: 'section', className: styles.wrapper });
@@ -38,7 +40,8 @@ export default class CatalogView extends BaseComponent {
 
     this.appendChildren([this.breadCrumbsBlock, this.toggleFiltersBlock, mainContent]);
 
-    this.lazyLoader = null;
+    this.loader = null;
+    this.addButton = null;
   }
 
   public get getProductCardView() {
@@ -53,23 +56,48 @@ export default class CatalogView extends BaseComponent {
     return this.router;
   }
 
-  public addLazyLoader() {
-    if (!this.lazyLoader) {
-      this.lazyLoader = setLazyLoader();
-      this.append(this.lazyLoader);
-    }
-  }
-
   public setAddButton(callback: () => void) {
-    const btn = button([styles.add_btn], 'Add products', {
+    this.addButton = button([styles.add_btn], 'Show more', {
       onclick: () => callback(),
     });
-    this.append(btn);
+    this.append(this.addButton);
   }
 
   public destroyAddButton() {
-    const btn = this.getChildren[this.getChildren.length - 1];
-    console.log(btn);
-    btn.destroy();
+    if (this.addButton) {
+      this.addButton.destroy();
+    }
+  }
+
+  private hideAddButton() {
+    this.addButton?.addClass(styles.hide);
+  }
+
+  private showAddButton() {
+    this.addButton?.removeClass(styles.hide);
+  }
+
+  private addLoader() {
+    if (!this.loader) {
+      this.loader = setLazyLoader();
+      this.append(this.loader);
+    }
+  }
+
+  private destroyLoader() {
+    if (this.loader) {
+      this.loader.destroy();
+      this.loader = null;
+    }
+  }
+
+  public showLoader() {
+    this.hideAddButton();
+    this.addLoader();
+  }
+
+  public hideLoader() {
+    this.destroyLoader();
+    this.showAddButton();
   }
 }

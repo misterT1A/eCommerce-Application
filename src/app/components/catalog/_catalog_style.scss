@@ -17,11 +17,11 @@
 
 .add_btn {
   margin: 0 auto;
-  padding: 5px;
+  padding: 10px;
   color: $card_read_more_btn_color;
-  font-size: 16px;
+  font-size: 20px;
   border: 1px solid $card_read_more_btn_color;
-  border-radius: 20px;
+  border-radius: 30px;
   background-color: transparent;
   transition: all 0.3s linear;
 
@@ -36,4 +36,8 @@
       color: #fff;
     }
   }
+}
+
+.hide {
+  display: none;
 }

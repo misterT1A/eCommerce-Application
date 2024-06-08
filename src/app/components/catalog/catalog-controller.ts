@@ -39,9 +39,10 @@ export default class CatalogController extends Controller<CatalogView> {
   }
 
   private addCardsToContent() {
-    // this.view.addLazyLoader();
+    this.view.showLoader();
     ProductsService.getFilteredProducts(true)
       .then((data) => {
+        this.view.hideLoader();
         console.log('add', data);
         this.view.getProductCardView.setProducts(data.body.results, true);
         this.view.getFilterBlock.updatePriceRange(data);
