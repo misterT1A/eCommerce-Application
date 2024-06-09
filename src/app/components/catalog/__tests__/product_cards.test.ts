@@ -1,5 +1,8 @@
+import type { ProductProjectionPagedSearchResponse } from '@commercetools/platform-sdk';
+
 import Router from '@src/app/router/router';
 
+import CatalogView from '../catalog-view';
 import ProductCards from '../product-cards/product-cards';
 
 const routes = [
@@ -14,17 +17,21 @@ const routes = [
 describe('ProductCards', () => {
   let products: ProductCards;
   let router: Router;
+  let catalogView: CatalogView;
 
   beforeEach(() => {
     router = new Router(routes);
-    products = new ProductCards(router);
+    catalogView = new CatalogView(router);
+    products = new ProductCards(router, catalogView);
+    console.log(router);
   });
 
   it('should show not found title', async () => {
     const showNotFoundSpy = jest.spyOn(products, 'showNotFoundTitle').mockImplementation(jest.fn());
+    const body = { results: [] } as unknown as ProductProjectionPagedSearchResponse;
 
     const hideBlockPromise = new Promise<void>((resolve) => {
-      products.setProducts([]);
+      products.setProducts(body);
 
       setTimeout(() => {
         resolve();
@@ -32,7 +39,7 @@ describe('ProductCards', () => {
     });
     await hideBlockPromise;
 
-    products.setProducts([]);
+    products.setProducts(body);
 
     expect(showNotFoundSpy).toHaveBeenCalled();
 
