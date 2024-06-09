@@ -180,6 +180,7 @@ export default class FilterBlock extends BaseComponent {
   }
 
   public handlePriceRangeChange() {
+    this.setDefaultCardsCount();
     ProductService.setPriceRange(this.priceFilter.getValue());
     ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body));
     this.router.setUrlCatalog(getPriceFilter());
@@ -202,12 +203,14 @@ export default class FilterBlock extends BaseComponent {
   }
 
   private handleFiltersChange(filterValue: FilterKeys) {
+    this.setDefaultCardsCount();
     ProductService.applyFilter(filterValue);
     ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body));
     this.router.setUrlCatalog(filterValue);
   }
 
   private handleSortChange(value: SortKey) {
+    this.setDefaultCardsCount();
     ProductService.applySort(value);
     ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body));
     this.router.setUrlCatalog(value);
