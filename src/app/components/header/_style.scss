@@ -110,6 +110,28 @@
   z-index: 12;
 }
 
+.basketLogo {
+  position: relative;
+}
+
+.cart_count_wrapper {
+  @include flex(center, center, row);
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 5;
+
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: $header_menuBtn_color;
+  font-size: 14px;
+  color: #fff;
+}
+
+@media not all and (hover: none) {
+}
+
 @media screen and (max-width: 1000px) {
   .burgerBtn {
     display: flex;

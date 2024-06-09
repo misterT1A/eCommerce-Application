@@ -3,7 +3,7 @@ import AuthService from '@services/auth-service';
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
-import { svg } from '@utils/elements';
+import { span, svg } from '@utils/elements';
 
 import menuStyle from './_dropMenu.scss';
 import styles from './_style.scss';
@@ -30,6 +30,8 @@ export default class HeaderView extends BaseComponent {
     this.setLogo();
     this.setIconsBlock();
     this.setDropMenu();
+
+    this.setCartCount(2);
   }
 
   private setBurgerComponents() {
@@ -62,6 +64,14 @@ export default class HeaderView extends BaseComponent {
 
     const wrapper = new BaseComponent({ className: styles.menuBlock }, userIcon, basketIcon);
     this.append(wrapper);
+  }
+
+  public setCartCount(count: number) {
+    if (count > 0) {
+      const countElem = span([styles.cart_count_wrapper], count.toString());
+      const parrent = this.getChildren[3].getChildren[1];
+      parrent.append(countElem);
+    }
   }
 
   private setDropMenu() {
