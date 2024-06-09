@@ -9,7 +9,7 @@ import setLazyLoader from '@utils/lazy loader/lazy-loader';
 
 import styles from './_product-style.scss';
 import Card from '../card-element/card-element-view';
-import isNeedAddButton from '../catalog-model';
+// import isNeedAddButton from '../catalog-model';
 import type CatalogView from '../catalog-view';
 
 export default class ProductCards extends BaseComponent {
@@ -37,7 +37,7 @@ export default class ProductCards extends BaseComponent {
     if (isAddNewCards) {
       this.createCards(products);
 
-      if (isNeedAddButton(body) && !this.addButton) {
+      if (this.isNeedAddButton(body) && !this.addButton) {
         this.setAddButton();
       }
     } else {
@@ -52,7 +52,7 @@ export default class ProductCards extends BaseComponent {
 
         this.createCards(products);
 
-        if (isNeedAddButton(body)) {
+        if (this.isNeedAddButton(body)) {
           this.setAddButton();
         }
       });
@@ -148,10 +148,19 @@ export default class ProductCards extends BaseComponent {
         this.hideLoader();
         this.setProducts(data.body, true);
         this.MainView.getFilterBlock.updatePriceRange(data);
-        if (!isNeedAddButton(data.body)) {
+        if (!this.isNeedAddButton(data.body)) {
           this.destroyAddButton();
         }
       })
       .catch(() => this.router.navigate(Pages.ERROR, true));
+  }
+
+  private isNeedAddButton(body: ProductProjectionPagedSearchResponse) {
+    if (!body || !body.total) {
+      return false;
+    }
+    const cardsOnPage = body.count + body.offset;
+
+    return cardsOnPage < body.total;
   }
 }
