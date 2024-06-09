@@ -142,7 +142,7 @@ export default class ProductCards extends BaseComponent {
 
     ProductService.getFilteredProducts(true)
       .then((data) => {
-        if (countCards > 6) {
+        if (countCards > ProductService.getDefaultCardsCount()) {
           this.router.setUrlCatalog(`CARDS_${countCards}`, data.body.total);
         }
         this.hideLoader();
