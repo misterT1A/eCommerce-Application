@@ -1,7 +1,5 @@
-// import type { ProductProjection } from '@commercetools/platform-sdk';
-
 import Controller from '@components/controller';
-import ProductsService from '@services/product_service/product_service';
+import ProductService from '@services/product_service/product_service';
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 
@@ -18,11 +16,11 @@ export default class CatalogController extends Controller<CatalogView> {
   }
 
   private initContent() {
-    ProductsService.resetFilters();
+    ProductService.resetFilters();
     if (!this.filtersParams) {
-      ProductsService.getFilteredProducts()
+      ProductService.getFilteredProducts()
         .then((data) => {
-          this.view.getProductCardView.setProducts(data.body.results);
+          this.view.getProductCardView.setProducts(data.body);
           this.view.getFilterBlock.updatePriceRange(data);
         })
         .catch(() => this.router.navigate(Pages.ERROR, true));

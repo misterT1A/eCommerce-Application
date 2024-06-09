@@ -3,6 +3,11 @@ import { isPriceFilter } from '@components/catalog/filters/price-filter-helpers'
 
 type filtersObj = typeof SORT | typeof CATEGORIES | typeof SUBCATEGORIES;
 
+const isCountCards = (filter: string) => {
+  const pattern = /^CARDS_\d+$/;
+  return pattern.test(filter);
+};
+
 const isDeleteElem = (parsePath: string[], filter: string) => {
   const elemForDelete = parsePath.find((elem) => elem === filter);
   if (elemForDelete) {
@@ -65,6 +70,30 @@ const setParseRange = (parsePath: string[], range: string) => {
   }
 };
 
+const setCountCards = (parsePath: string[], filter: string, countCards: number) => {
+  const elemForChange = parsePath.find((elem) => isCountCards(elem));
+  if (elemForChange === filter) {
+    parsePath.splice(parsePath.indexOf(elemForChange), 1);
+    return;
+  }
+
+  const count = filter.replace(/\D/g, '');
+  if (+count > countCards && elemForChange) {
+    parsePath.splice(parsePath.indexOf(elemForChange), 1, `CARDS_${countCards}`);
+    return;
+  }
+
+  if (+count > countCards) {
+    return;
+  }
+
+  if (elemForChange) {
+    parsePath.splice(parsePath.indexOf(elemForChange), 1, `CARDS_${count}`);
+  } else {
+    parsePath.push(`CARDS_${count}`);
+  }
+};
+
 const checkRightURL = (url: string): boolean => {
   const path = url.split('/').splice(1);
   const params = [
@@ -74,7 +103,7 @@ const checkRightURL = (url: string): boolean => {
     ...Object.keys(SORT),
   ];
 
-  return path.every((elem) => params.includes(elem) || isPriceFilter(elem));
+  return path.every((elem) => params.includes(elem) || isPriceFilter(elem) || isCountCards(elem));
 };
 
 const sortUrl = (parsePath: string[]): string => {
@@ -88,13 +117,24 @@ const sortUrl = (parsePath: string[]): string => {
   const subCategory = url.find((elem) => subCategKeys.includes(elem)) || '';
   const sortFilters = url.find((elem) => sortKeys.includes(elem)) || '';
   const priceFilter = url.find((elem) => isPriceFilter(elem)) || '';
+  const countCards = url.find((elem) => isCountCards(elem)) || '';
 
   const filters = url
     .map((elem) => (filterKeys.includes(elem) ? elem : null))
     .filter((elem) => elem !== null)
     .join('/');
 
-  return [category, subCategory, filters, sortFilters, priceFilter].filter((elem) => elem !== '').join('/');
+  return [category, subCategory, filters, sortFilters, priceFilter, countCards].filter((elem) => elem !== '').join('/');
 };
 
-export { setSort, setCategoties, setSubCategories, setFilters, setParseRange, checkRightURL, sortUrl };
+export {
+  setSort,
+  setCategoties,
+  setSubCategories,
+  setFilters,
+  setParseRange,
+  checkRightURL,
+  sortUrl,
+  isCountCards,
+  setCountCards,
+};
