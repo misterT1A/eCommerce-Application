@@ -19,7 +19,11 @@ class GetProductsService {
 
   protected chosenCategory = '';
 
-  protected defaultCardsCount = 3;
+  protected DEFAULTCARDSCOUNT = 6;
+
+  protected limitCardsCount = this.DEFAULTCARDSCOUNT;
+
+  protected quantityToAddCount = 3;
 
   protected cardsCount = 0;
 
@@ -83,6 +87,12 @@ class GetProductsService {
     this.searchQuery = '';
     this.sortOrder = 'price asc';
     this.priceRange = this.priceMaxRange;
+    this.limitCardsCount = this.DEFAULTCARDSCOUNT;
+    this.cardsCount = 0;
+  }
+
+  public getDefaultCardsCount() {
+    return this.DEFAULTCARDSCOUNT;
   }
 
   public setPriceRange(range: [number, number]) {
@@ -99,6 +109,24 @@ class GetProductsService {
 
   public getPriceRange() {
     return this.priceRange;
+  }
+
+  public setOffsetCardsCount() {
+    if (this.cardsCount < 6) {
+      this.cardsCount += this.DEFAULTCARDSCOUNT;
+      return this.cardsCount + this.quantityToAddCount;
+    }
+    this.cardsCount += this.quantityToAddCount;
+    return this.cardsCount + this.quantityToAddCount;
+  }
+
+  public setDefaultCardsCount(count: number) {
+    this.limitCardsCount = count;
+  }
+
+  public resetDefaultCardsCount() {
+    this.limitCardsCount = this.DEFAULTCARDSCOUNT;
+    this.cardsCount = 0;
   }
 
   public setSearchQuery(query: string) {
@@ -134,7 +162,7 @@ class GetProductsService {
     const params = {
       priceCurrency: 'EUR',
       filter: filtersQuery,
-      limit: this.defaultCardsCount,
+      limit: this.limitCardsCount,
       offset: 0,
       sort: [this.sortOrder],
       'text.en': this.searchQuery,
@@ -143,10 +171,12 @@ class GetProductsService {
     };
 
     if (isAddNewCards) {
-      // params.limit = this.cardsCount;
-      this.cardsCount += this.defaultCardsCount;
+      if (this.limitCardsCount > this.DEFAULTCARDSCOUNT) {
+        this.cardsCount = this.limitCardsCount;
+      }
+      this.limitCardsCount = this.quantityToAddCount;
+      params.limit = this.limitCardsCount;
       params.offset = this.cardsCount;
-      // console.log(this.cardsCount);
     }
 
     return this.root

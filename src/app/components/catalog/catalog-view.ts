@@ -1,8 +1,8 @@
 import scrollControl from '@components/modal/body-lock';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
-import { button, div } from '@utils/elements';
-import setLazyLoader from '@utils/lazy loader/lazy-loader';
+import { div } from '@utils/elements';
+// import setLazyLoader from '@utils/lazy loader/lazy-loader';
 
 import styles from './_catalog_style.scss';
 import Breadcrumbs from './breadcrumbs/breadcrumbs';
@@ -21,13 +21,9 @@ export default class CatalogView extends BaseComponent {
 
   private scrollControl = scrollControl();
 
-  protected loader: BaseComponent | null;
-
-  protected addButton: BaseComponent | null;
-
   constructor(protected router: Router) {
     super({ tag: 'section', className: styles.wrapper });
-    this.productCardsBlock = new ProductCards(this.router);
+    this.productCardsBlock = new ProductCards(this.router, this);
     this.breadCrumbsBlock = new Breadcrumbs(this);
     this.filtersBlock = new FiltersBlock(
       this.productCardsBlock,
@@ -39,9 +35,6 @@ export default class CatalogView extends BaseComponent {
     const mainContent = div([styles.mainContent], this.filtersBlock, this.productCardsBlock);
 
     this.appendChildren([this.breadCrumbsBlock, this.toggleFiltersBlock, mainContent]);
-
-    this.loader = null;
-    this.addButton = null;
   }
 
   public get getProductCardView() {
@@ -54,50 +47,5 @@ export default class CatalogView extends BaseComponent {
 
   public get getRouter() {
     return this.router;
-  }
-
-  public setAddButton(callback: () => void) {
-    this.addButton = button([styles.add_btn], 'Show more', {
-      onclick: () => callback(),
-    });
-    this.append(this.addButton);
-  }
-
-  public destroyAddButton() {
-    if (this.addButton) {
-      this.addButton.destroy();
-    }
-  }
-
-  private hideAddButton() {
-    this.addButton?.addClass(styles.hide);
-  }
-
-  private showAddButton() {
-    this.addButton?.removeClass(styles.hide);
-  }
-
-  private addLoader() {
-    if (!this.loader) {
-      this.loader = setLazyLoader();
-      this.append(this.loader);
-    }
-  }
-
-  private destroyLoader() {
-    if (this.loader) {
-      this.loader.destroy();
-      this.loader = null;
-    }
-  }
-
-  public showLoader() {
-    this.hideAddButton();
-    this.addLoader();
-  }
-
-  public hideLoader() {
-    this.destroyLoader();
-    this.showAddButton();
   }
 }
