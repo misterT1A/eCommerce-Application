@@ -17,6 +17,7 @@ describe('Catalog card element', () => {
 
   const props: ICardProps = {
     key: 'key',
+    id: 'kjhkjhkjh',
     img: [{ url: 'url' }],
     title: 'title',
     description: 'description',

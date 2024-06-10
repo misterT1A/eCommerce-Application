@@ -1,4 +1,5 @@
-import scrollControl from '@components/modal/body-lock';
+import type HeaderController from '@components/header/header_controller';
+import scrollControl from '@components/modal/modal-helpers';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
 import { div } from '@utils/elements';
@@ -21,9 +22,12 @@ export default class CatalogView extends BaseComponent {
 
   private scrollControl = scrollControl();
 
-  constructor(protected router: Router) {
+  constructor(
+    protected router: Router,
+    private headerController: HeaderController
+  ) {
     super({ tag: 'section', className: styles.wrapper });
-    this.productCardsBlock = new ProductCards(this.router, this);
+    this.productCardsBlock = new ProductCards(this.router, this, headerController);
     this.breadCrumbsBlock = new Breadcrumbs(this);
     this.filtersBlock = new FiltersBlock(
       this.productCardsBlock,

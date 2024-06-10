@@ -1,3 +1,4 @@
+import HeaderController from '@components/header/header_controller';
 import Router from '@src/app/router/router';
 
 import CatalogView from '../catalog-view';
@@ -13,10 +14,11 @@ const routes = [
 
 describe('Catalog', () => {
   const router = new Router(routes);
+  const headerController = new HeaderController(router);
   let view: CatalogView;
 
   beforeEach(() => {
-    view = new CatalogView(router);
+    view = new CatalogView(router, headerController);
   });
 
   test('should get content view', () => {
