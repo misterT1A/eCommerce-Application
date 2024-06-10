@@ -1,6 +1,28 @@
-.cart {
+.wrapper {
+  @include flex(center, flex-start, column);
+  gap: 20px;
+  padding: 20px 30px;
   background-color: $color-light;
   border-radius: 15px;
   width: 100%;
-  height: 50vh;
+}
+
+.cart_inner {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(300px, 1fr) minmax(300px, 400px);
+}
+
+.title {
+  font-size: 30px;
+  color: $main-color-accent;
+}
+
+.cards_wrapper {
+  @include flex(center, flex-start, column);
+  width: 100%;
+}
+
+.sum_block {
+  @include flex(center, flex-start, column);
 }
