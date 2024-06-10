@@ -143,6 +143,7 @@
 @media screen and (max-width: 900px) {
   .cart_inner {
     @include flex(center, space-between, column);
+    gap: 20px;
   }
 
   .sum {
