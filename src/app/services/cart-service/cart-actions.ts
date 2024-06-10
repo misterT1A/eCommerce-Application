@@ -47,7 +47,7 @@ export const updateProductsInCart = async (...products: { productID: string; cou
     acc.push(actionDescription);
     return acc;
   }, []);
-  return CartService.changeCart(actions);
+  return CartService.changeCartEntries(actions);
 };
 
 export const clearCart = async () => {

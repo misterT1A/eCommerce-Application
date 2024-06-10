@@ -3,6 +3,7 @@ import type HeaderController from '@components/header/header_controller';
 import type Modal from '@components/modal/modal';
 import notificationEmitter from '@components/notifications/notifications-controller';
 import AuthService from '@services/auth-service';
+import CurrentCart from '@services/cart-service/currentCart';
 import MyCustomer from '@services/customer-service/myCustomer';
 import type Router from '@src/app/router/router';
 
@@ -90,6 +91,7 @@ class ProfileController extends Controller<ProfileView> {
   private async logout() {
     await AuthService.logout();
     this.headerController.getView.changeTextNotLoginned();
+    this.headerController.setCartCount(CurrentCart.totalCount);
     this.router.navigateToLastPoint();
   }
 }

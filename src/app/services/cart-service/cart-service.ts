@@ -12,17 +12,22 @@ class CartApiService {
   }
 
   public async createNewCustomerCart(ID: Customer['id']) {
-    await AuthService.getRoot()
-      .carts()
-      .post({ body: { currency: 'EUR', customerId: ID } })
-      .execute()
-      .then((response) => {
-        CurrentCart.setCart(response.body);
-        console.log('Корзина успешно создана:', CurrentCart.getCart);
-      })
-      .catch((error) => {
-        console.error('Ошибка при создании корзины:', error);
-      });
+    try {
+      const cartCreateResp = await AuthService.getRoot()
+        .carts()
+        .post({ body: { currency: 'EUR', customerId: ID } })
+        .execute();
+      return {
+        cartID: cartCreateResp.body.id,
+      };
+    } catch (error) {
+      const errorsResponse = processErrorResponse(error);
+      showErrorMessages(errorsResponse);
+      console.error('Ошибка при создании корзины:', error);
+      return {
+        cartID: '',
+      };
+    }
   }
 
   public async createAnonymousCart() {
@@ -79,7 +84,7 @@ class CartApiService {
       .execute();
   }
 
-  public async changeCart(actions: CartUpdateAction[]) {
+  public async changeCartEntries(actions: CartUpdateAction[]) {
     if (!CurrentCart.isCart()) {
       if (!AuthService.isAuthorized()) {
         await this.createAnonymousCart();
