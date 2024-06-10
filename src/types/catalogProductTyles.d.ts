@@ -1,5 +1,6 @@
 interface ICardProps {
   key: string;
+  id: string;
   img: IImgCard[];
   title: string;
   description: string;
