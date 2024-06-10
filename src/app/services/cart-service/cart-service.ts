@@ -1,6 +1,7 @@
-// import type { Cart } from '@commercetools/platform-sdk';
+import type { Cart, CartUpdateAction } from '@commercetools/platform-sdk';
 
 import AuthService from '@services/auth-service';
+import { processErrorResponse, showErrorMessages } from '@utils/errors-handling';
 
 import CurrentCart from './currentCart';
 
@@ -29,7 +30,7 @@ class CartApiService {
     }
     AuthService.getRoot()
       .carts()
-      .withId({ ID: CurrentCart.id as string })
+      .withId({ ID: CurrentCart.id ?? '' })
       .post({
         body: {
           version: CurrentCart.version,
@@ -52,20 +53,46 @@ class CartApiService {
       });
   }
 
-  // public updateCart(ID: Cart['id']) {
-  //   AuthService.getRoot()
-  //     .carts()
-  //     .withId({ ID })
-  //     .get()
-  //     .execute()
-  //     .then((response) => {
-  //       CurrentCart.setCart(response.body);
-  //       console.log('Корзина успешно обновлена:', CurrentCart.getCart);
-  //     })
-  //     .catch((error) => {
-  //       console.error('Ошибка при обновлении корзины:', error);
-  //     });
-  // }
+  public async changeCart(actions: CartUpdateAction[]) {
+    if (!CurrentCart.isCart()) {
+      await this.createCart();
+    }
+    try {
+      const changeCartResp = await AuthService.getRoot()
+        .carts()
+        .withId({ ID: CurrentCart.id ?? '' })
+        .post({
+          body: {
+            version: CurrentCart.version,
+            actions,
+          },
+        })
+        .execute();
+      CurrentCart.setCart(changeCartResp.body);
+      return {
+        success: true,
+        actions,
+      };
+    } catch (error) {
+      const errorsResponse = processErrorResponse(error);
+      showErrorMessages(errorsResponse);
+      return {
+        success: false,
+      };
+    }
+  }
+
+  public async updateCart(ID: Cart['id']) {
+    try {
+      const response = await AuthService.getRoot().carts().withId({ ID }).get().execute();
+      console.log('Корзина успешно обновлена:', CurrentCart.getCart);
+      CurrentCart.setCart(response.body);
+    } catch (error) {
+      const errorsResponse = processErrorResponse(error);
+      showErrorMessages(errorsResponse);
+      console.error('Ошибка при обновлении корзины:', error);
+    }
+  }
 
   // public getCart(ID: Cart['id']) {
   //   return AuthService.getRoot().carts().withId({ ID }).get().execute();
