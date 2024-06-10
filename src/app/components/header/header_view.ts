@@ -30,8 +30,6 @@ export default class HeaderView extends BaseComponent {
     this.setLogo();
     this.setIconsBlock();
     this.setDropMenu();
-
-    this.setCartCount(2);
   }
 
   private setBurgerComponents() {
@@ -58,7 +56,6 @@ export default class HeaderView extends BaseComponent {
     const svgBasket = svg(`/assets/img/basketIcon.svg#svgElem`, styles.basketLogoFill);
     const basketIcon = new BaseComponent({ className: styles.basketLogo }, svgBasket);
     basketIcon.addListener('click', () => {
-      // svgBasket.classList.toggle(styles.basketLogoActive);
       this.router.navigate(Pages.CART);
     });
 
@@ -66,11 +63,17 @@ export default class HeaderView extends BaseComponent {
     this.append(wrapper);
   }
 
+  // throw 0 to remove counter, and another number above 0 to display the counter
   public setCartCount(count: number) {
+    const parrent = this.getChildren[3].getChildren[1];
     if (count > 0) {
       const countElem = span([styles.cart_count_wrapper], count.toString());
-      const parrent = this.getChildren[3].getChildren[1];
       parrent.append(countElem);
+    } else {
+      const countElem = parrent.getChildren[0];
+      if (countElem) {
+        parrent.destroyChildren();
+      }
     }
   }
 
