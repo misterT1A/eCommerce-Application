@@ -38,6 +38,10 @@ $main-color-error: #d82700;
   transition: 0.2s;
 }
 
+.overlay_loader {
+  backdrop-filter: none;
+}
+
 .modal {
   display: flex;
   flex-direction: column;
