@@ -1,6 +1,9 @@
 // import type { Cart } from '@commercetools/platform-sdk';
 
+import type { ClientResponse, Customer } from '@commercetools/platform-sdk';
+
 import AuthService from '@services/auth-service';
+import MyCustomer from '@services/customer-service/myCustomer';
 
 import CurrentCart from './currentCart';
 
@@ -9,10 +12,10 @@ class CartApiService {
     CurrentCart.setCart(JSON.parse(localStorage.getItem('cartNetN') as string) || null);
   }
 
-  public async createCart() {
+  public async createNewCustomerCart(ID: Customer['id']) {
     await AuthService.getRoot()
       .carts()
-      .post({ body: { currency: 'EUR' } })
+      .post({ body: { currency: 'EUR', customerId: ID } })
       .execute()
       .then((response) => {
         CurrentCart.setCart(response.body);
@@ -23,9 +26,23 @@ class CartApiService {
       });
   }
 
+  public async createAnonymousCart() {
+    await AuthService.getRoot()
+      .carts()
+      .post({ body: { currency: 'EUR' } })
+      .execute()
+      .then((response) => {
+        CurrentCart.setCart(response.body);
+        console.log('Анонимная корзина успешно создана:', CurrentCart.getCart);
+      })
+      .catch((error) => {
+        console.error('Ошибка при создании анонимной корзины:', error);
+      });
+  }
+
   public async addToCart(productId: string) {
     if (!CurrentCart.isCart()) {
-      await this.createCart();
+      await this.createAnonymousCart();
     }
     AuthService.getRoot()
       .carts()
@@ -45,11 +62,22 @@ class CartApiService {
       .execute()
       .then((response) => {
         CurrentCart.setCart(response.body);
-        console.log('Товар добавлен в корзину', CurrentCart.getCart);
+        console.log('Товар добавлен в корзину, всего товаров в корзине:', CurrentCart.totalQuantity);
       })
       .catch((error) => {
         console.error('Ошибка при добавлении товара в корзину:', error);
       });
+  }
+
+  public getCustomerCart(): Promise<ClientResponse> | undefined {
+    if (!AuthService.isAuthorized()) {
+      return undefined;
+    }
+    return AuthService.getRoot()
+      .carts()
+      .withCustomerId({ customerId: MyCustomer.id as string })
+      .get()
+      .execute();
   }
 
   // public updateCart(ID: Cart['id']) {
