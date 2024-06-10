@@ -8,6 +8,7 @@ class CurrentCart {
       this.cart = cart;
       localStorage.setItem('cartNetN', JSON.stringify(cart));
     }
+    console.log('Current Cart state', this.cart);
   }
 
   public static isCart() {

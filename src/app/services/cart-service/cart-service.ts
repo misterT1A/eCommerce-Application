@@ -27,7 +27,6 @@ class CartApiService {
     if (!CurrentCart.isCart()) {
       await this.createCart();
     }
-
     AuthService.getRoot()
       .carts()
       .withId({ ID: CurrentCart.id as string })
