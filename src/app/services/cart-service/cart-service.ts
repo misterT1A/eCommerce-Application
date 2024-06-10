@@ -1,18 +1,16 @@
-import type { ByProjectKeyRequestBuilder, Cart } from '@commercetools/platform-sdk';
+// import type { Cart } from '@commercetools/platform-sdk';
+
+import AuthService from '@services/auth-service';
 
 import CurrentCart from './currentCart';
-import AuthService from '../auth-service';
 
 class CartApiService {
-  private root: ByProjectKeyRequestBuilder;
-
   constructor() {
-    this.root = AuthService.getRoot();
     CurrentCart.setCart(JSON.parse(localStorage.getItem('cartNetN') as string) || null);
   }
 
   public async createCart() {
-    await this.root
+    await AuthService.getRoot()
       .carts()
       .post({ body: { currency: 'EUR' } })
       .execute()
@@ -29,7 +27,7 @@ class CartApiService {
     if (!CurrentCart.isCart()) {
       await this.createCart();
     }
-    this.root
+    AuthService.getRoot()
       .carts()
       .withId({ ID: CurrentCart.id as string })
       .post({
@@ -52,26 +50,25 @@ class CartApiService {
       .catch((error) => {
         console.error('Ошибка при добавлении товара в корзину:', error);
       });
-    //
   }
 
-  public updateCart(ID: Cart['id']) {
-    this.root
-      .carts()
-      .withId({ ID })
-      .get()
-      .execute()
-      .then((response) => {
-        CurrentCart.setCart(response.body);
-        console.log('Корзина успешно обновлена:', CurrentCart.getCart);
-      })
-      .catch((error) => {
-        console.error('Ошибка при обновлении корзины:', error);
-      });
-  }
+  // public updateCart(ID: Cart['id']) {
+  //   AuthService.getRoot()
+  //     .carts()
+  //     .withId({ ID })
+  //     .get()
+  //     .execute()
+  //     .then((response) => {
+  //       CurrentCart.setCart(response.body);
+  //       console.log('Корзина успешно обновлена:', CurrentCart.getCart);
+  //     })
+  //     .catch((error) => {
+  //       console.error('Ошибка при обновлении корзины:', error);
+  //     });
+  // }
 
   // public getCart(ID: Cart['id']) {
-  //   return this.root.carts().withId({ ID }).get().execute();
+  //   return AuthService.getRoot().carts().withId({ ID }).get().execute();
   // }
 }
 
