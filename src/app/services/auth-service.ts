@@ -34,7 +34,11 @@ class AuthenticationService {
   private PROJECT_KEY: string = process.env.CTP_PROJECT_KEY || '';
 
   constructor() {
-    this.root = this.createRoot(this.getAnonymousClient());
+    if (!this.isAuthorized) {
+      this.root = this.createRoot(this.getAnonymousClient());
+    } else {
+      this.root = this.createRoot(this.getRefreshClient(Session.AUTH));
+    }
   }
 
   protected createRoot(client: Client): ByProjectKeyRequestBuilder {
@@ -137,19 +141,34 @@ class AuthenticationService {
   }
 
   public async login(email: string, password: string): Promise<ILoginResult> {
+    const customerCredentials = {
+      email,
+      password,
+    };
+    const mergeCarts = {
+      anonymousCart: {
+        typeId: 'cart',
+        id: CurrentCart.id,
+      },
+      anonymousCartSignInMode: 'MergeWithExistingCustomerCart',
+    };
+    if (CurrentCart.isCart()) {
+      Object.assign(customerCredentials, mergeCarts);
+    }
+
     return new Promise<ILoginResult>((resolve) => {
       const root = this.createRoot(this.getPasswordFlowClient(email, password));
       root
         .login()
         .post({
-          body: {
-            email,
-            password,
-            anonymousId: CurrentCart.id,
-          },
+          body: customerCredentials,
         })
         .execute()
         .then((result) => {
+          if (result.body.cart) {
+            console.log('Customer cart from Commercetools', result.body.cart);
+            CurrentCart.setCart(result.body.cart);
+          }
           this.root = root;
           resolve({
             success: true,
@@ -181,7 +200,12 @@ class AuthenticationService {
         })
         .execute();
       if (customerResponse.statusCode === 201) {
-        return await this.login(customerDraft.email, customerDraft.password ?? '');
+        // return await this.login(customerDraft.email, customerDraft.password ?? '');
+        return {
+          success: true,
+          message: 'OK',
+          customer: customerResponse.body.customer,
+        };
       }
       return { success: false, message: 'Failed to create an account.' };
     } catch (errorResponse: unknown) {
