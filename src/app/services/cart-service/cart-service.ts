@@ -27,7 +27,7 @@ class CartApiService {
     if (!CurrentCart.isCart()) {
       await this.createCart();
     }
-    console.log(CurrentCart.id);
+
     AuthService.getRoot()
       .carts()
       .withId({ ID: CurrentCart.id as string })
@@ -71,10 +71,6 @@ class CartApiService {
   // public getCart(ID: Cart['id']) {
   //   return AuthService.getRoot().carts().withId({ ID }).get().execute();
   // }
-
-  public showLP() {
-    console.log('dfd');
-  }
 }
 
 const CartService = new CartApiService();

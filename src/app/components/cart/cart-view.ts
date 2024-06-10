@@ -1,10 +1,11 @@
 import type { Cart } from '@commercetools/platform-sdk';
 
-import CartService from '@services/cart-service/cart-service';
+import { setPrice } from '@components/catalog/card-element/card-model';
+import FormField from '@components/form-ui-elements/formField';
 import CurrentCart from '@services/cart-service/currentCart';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
-import { div, span } from '@utils/elements';
+import { button, div, span } from '@utils/elements';
 
 import styles from './_cart.scss';
 import Card from './card-element/card-element';
@@ -16,20 +17,7 @@ export default class CartView extends BaseComponent {
     super({ className: styles.wrapper });
     this.router = router;
     this.cart = CurrentCart.getCart;
-    // CartService.createCart().then(() => console.log(CurrentCart.getCart));
 
-    // setTimeout(() => {
-    //   CartService.addToCart('103ab460-284b-4046-a8a8-df061ff1fb14');
-    //   // CartService.addToCart('f2d03d06-a5a2-45eb-b14d-92e355398b5c');
-    // }, 3000);
-
-    // setTimeout(() => {
-    //   // CartService.addToCart('103ab460-284b-4046-a8a8-df061ff1fb14');
-    //   CartService.addToCart('f2d03d06-a5a2-45eb-b14d-92e355398b5c');
-    // }, 6000);
-
-    console.log(this.cart);
-    CartService.showLP();
     this.setContent();
   }
 
@@ -38,8 +26,12 @@ export default class CartView extends BaseComponent {
 
     const cardsBlock = new BaseComponent({ className: styles.cards_wrapper }, this.setCardsBlock());
     const totalSumBlock = this.setTotalSumBlock();
+    const promoBlock = this.setPromoBlock();
 
-    this.appendChildren([title, new BaseComponent({ className: styles.cart_inner }, cardsBlock, totalSumBlock)]);
+    this.appendChildren([
+      title,
+      new BaseComponent({ className: styles.cart_inner }, cardsBlock, totalSumBlock, promoBlock),
+    ]);
   }
 
   private setCardsBlock() {
@@ -55,6 +47,34 @@ export default class CartView extends BaseComponent {
   }
 
   private setTotalSumBlock() {
-    return div([styles.sum_block]);
+    const title = span([styles.sum_title], 'ORDER SUMMARY');
+    const subTotal = div(
+      [styles.sum_subTotal],
+      span([styles.sum_subTotal_title], 'SUBTOTAL'),
+      span([styles.sum_subTotal_price], setPrice(this.cart?.totalPrice.centAmount))
+    );
+
+    const deliveryblock = new FormField('Select delivery date', 'date');
+
+    const deliveryDesc = div(
+      [styles.sum_deliveryDesc],
+      span([styles.sum_deliveryDesc_item], 'FREE Monday-Saturday all-day delivery on orders over £40 with DHL.'),
+      span([styles.sum_deliveryDesc_item], 'For orders under £40, delivery with DHL starts at £5.00'),
+      span([styles.sum_deliveryDesc_item], 'Premium delivery starts at £9.95')
+    );
+
+    const totalsum = div(
+      [styles.sum_total],
+      span([styles.sum_total_title], 'TOTAL'),
+      span([styles.sum_total_price], setPrice(this.cart?.totalPrice.centAmount))
+    );
+
+    const chekoutBtn = button([styles.sum_checkoutBtn], 'PROCEED TO CHECKOUT');
+
+    return div([styles.sum_block], title, subTotal, deliveryblock, deliveryDesc, totalsum, chekoutBtn);
+  }
+
+  private setPromoBlock() {
+    return div([styles.promo_block]);
   }
 }
