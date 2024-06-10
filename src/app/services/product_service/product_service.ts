@@ -1,12 +1,8 @@
-import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk';
-
 import type { CategoryKey, FilterKeys, SortKey } from '@components/catalog/filters/constants-filters';
 import { CATEGORIES, FILTERS, SORT, SUBCATEGORIES } from '@components/catalog/filters/constants-filters';
 import AuthService from '@services/auth-service';
 
 class GetProductsService {
-  protected root: ByProjectKeyRequestBuilder;
-
   protected filters: Set<string> = new Set();
 
   protected priceRange: [number, number] = [0, 50000];
@@ -26,10 +22,6 @@ class GetProductsService {
   protected quantityToAddCount = 3;
 
   protected cardsCount = 0;
-
-  constructor() {
-    this.root = AuthService.getRoot();
-  }
 
   public setChosenCategory(category: string) {
     if (!category) {
@@ -63,7 +55,7 @@ class GetProductsService {
   }
 
   public async getSubcategories(categoryId: CategoryKey) {
-    return this.root
+    return AuthService.getRoot()
       .categories()
       .get({
         queryArgs: {
@@ -74,11 +66,11 @@ class GetProductsService {
   }
 
   public getCategories() {
-    return this.root.categories().get().execute();
+    return AuthService.getRoot().categories().get().execute();
   }
 
   public getProductByName(name: string) {
-    return this.root.productProjections().withKey({ key: name }).get().execute();
+    return AuthService.getRoot().productProjections().withKey({ key: name }).get().execute();
   }
 
   public resetFilters() {
@@ -179,7 +171,7 @@ class GetProductsService {
       params.offset = this.cardsCount;
     }
 
-    return this.root
+    return AuthService.getRoot()
       .productProjections()
       .search()
       .get({
