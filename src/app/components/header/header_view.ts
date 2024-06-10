@@ -1,5 +1,6 @@
 import logo from '@assets/headerLogo.svg';
 import AuthService from '@services/auth-service';
+import CartService from '@services/cart-service/cart-service';
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
@@ -58,6 +59,7 @@ export default class HeaderView extends BaseComponent {
     basketIcon.addListener('click', () => {
       // svgBasket.classList.toggle(styles.basketLogoActive);
       this.router.navigate(Pages.CART);
+      CartService.addToCart('103ab460-284b-4046-a8a8-df061ff1fb14');
     });
 
     const wrapper = new BaseComponent({ className: styles.menuBlock }, userIcon, basketIcon);

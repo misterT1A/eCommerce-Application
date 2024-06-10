@@ -12,6 +12,7 @@ import { ClientBuilder } from '@commercetools/sdk-client-v2';
 
 import { processErrorResponse } from '@utils/errors-handling';
 
+import CurrentCart from './cart-service/currentCart';
 import { tokenCacheAnon, tokenCacheAuth } from './token-cache';
 
 enum Session {
@@ -144,6 +145,7 @@ class AuthenticationService {
           body: {
             email,
             password,
+            anonymousId: CurrentCart.id,
           },
         })
         .execute()
@@ -189,8 +191,7 @@ class AuthenticationService {
 
   public async logout(): Promise<void> {
     localStorage.clear();
-    // localStorage.removeItem(`${Session.AUTH}-${this.PROJECT_KEY}`);
-    // localStorage.removeItem('loggedIn');
+    CurrentCart.deleteCart();
     await this.sessionStateHandler();
     console.log('logout');
   }
