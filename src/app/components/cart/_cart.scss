@@ -7,6 +7,12 @@
   width: 100%;
 }
 
+.empty_title {
+  padding: 40px;
+  font-size: 30px;
+  color: $main-color-accent;
+}
+
 .cart_inner {
   width: 100%;
   display: grid;

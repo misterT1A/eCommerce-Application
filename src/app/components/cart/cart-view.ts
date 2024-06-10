@@ -38,6 +38,10 @@ export default class CartView extends BaseComponent {
     const products = this.cart?.lineItems;
     const wrapper = div([styles.cards_wrapper]);
 
+    if (!products) {
+      return span([styles.empty_title], 'Cart is empty');
+    }
+
     products?.forEach((product) => {
       const card = new Card(product);
       wrapper.append(card);
@@ -47,11 +51,12 @@ export default class CartView extends BaseComponent {
   }
 
   private setTotalSumBlock() {
+    const products = this.cart?.lineItems;
     const title = span([styles.sum_title], 'ORDER SUMMARY');
     const subTotal = div(
       [styles.sum_subTotal],
       span([styles.sum_subTotal_title], 'SUBTOTAL'),
-      span([styles.sum_subTotal_price], setPrice(this.cart?.totalPrice.centAmount))
+      span([styles.sum_subTotal_price], 'Cart is empty')
     );
 
     const deliveryblock = new FormField('Select delivery date', 'date');
@@ -66,10 +71,17 @@ export default class CartView extends BaseComponent {
     const totalsum = div(
       [styles.sum_total],
       span([styles.sum_total_title], 'TOTAL'),
-      span([styles.sum_total_price], setPrice(this.cart?.totalPrice.centAmount))
+      span([styles.sum_total_price], 'Cart is empty')
     );
 
     const chekoutBtn = button([styles.sum_checkoutBtn], 'PROCEED TO CHECKOUT');
+    chekoutBtn.getNode().disabled = true;
+
+    if (products) {
+      subTotal.getChildren[1].setTextContent(setPrice(this.cart?.totalPrice.centAmount));
+      totalsum.getChildren[1].setTextContent(setPrice(this.cart?.totalPrice.centAmount));
+      chekoutBtn.getNode().disabled = false;
+    }
 
     return div([styles.sum_block], title, subTotal, deliveryblock, deliveryDesc, totalsum, chekoutBtn);
   }
