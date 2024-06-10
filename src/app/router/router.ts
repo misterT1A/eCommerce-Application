@@ -1,5 +1,6 @@
 import { CATEGORIES, FILTERS, SORT, SUBCATEGORIES } from '@components/catalog/filters/constants-filters';
 import { isPriceFilter } from '@components/catalog/filters/price-filter-helpers';
+import { closeModals } from '@components/modal/modal';
 import AuthService from '@services/auth-service';
 
 import Pages from './pages';
@@ -51,6 +52,7 @@ export default class Router {
     if (!popstate) {
       window.history.pushState(null, '', `/${url}`);
     }
+    closeModals();
   }
 
   public setUrlCatalog(filter: string, cardsCount?: number) {
