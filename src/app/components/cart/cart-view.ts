@@ -3,6 +3,7 @@ import type { Cart } from '@commercetools/platform-sdk';
 import { setPrice } from '@components/catalog/card-element/card-model';
 import FormField from '@components/form-ui-elements/formField';
 import CurrentCart from '@services/cart-service/currentCart';
+import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
 import { button, div, span } from '@utils/elements';
@@ -39,7 +40,13 @@ export default class CartView extends BaseComponent {
     const wrapper = div([styles.cards_wrapper]);
 
     if (!products) {
-      return span([styles.empty_title], 'Cart is empty');
+      return div(
+        [styles.empty_wrapper],
+        span([styles.empty_title], 'Your Cart is Empty'),
+        button([styles.sum_checkoutBtn, styles.empty_button], 'BACK TO CATALOG', {
+          onclick: () => this.router.navigate(Pages.CATALOG),
+        })
+      );
     }
 
     products?.forEach((product) => {
