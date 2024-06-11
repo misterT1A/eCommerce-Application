@@ -66,7 +66,7 @@ class CartApiService {
       .execute()
       .then((response) => {
         CurrentCart.setCart(response.body);
-        console.log('Товар добавлен в корзину, всего товаров в корзине:', CurrentCart.totalQuantity);
+        console.log('Товар добавлен в корзину, всего товаров в корзине:', CurrentCart.totalCount);
       })
       .catch((error) => {
         console.error('Ошибка при добавлении товара в корзину:', error);
