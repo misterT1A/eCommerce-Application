@@ -38,16 +38,22 @@ export default class CartView extends BaseComponent {
     const products = this.cart?.lineItems;
     const wrapper = div([styles.cards_wrapper]);
 
-    if (!products) {
+    if (!products?.length) {
       return span([styles.empty_title], 'Cart is empty');
     }
 
     products?.forEach((product) => {
-      const card = new Card(product);
+      const card = new Card(product, this);
       wrapper.append(card);
     });
 
     return wrapper;
+  }
+
+  public updateView() {
+    this.destroyChildren();
+    this.cart = CurrentCart.getCart;
+    this.setContent();
   }
 
   private setTotalSumBlock() {

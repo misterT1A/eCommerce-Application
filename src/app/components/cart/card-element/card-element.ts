@@ -1,21 +1,31 @@
-import type { LineItem } from '@commercetools/platform-sdk';
+import type { CartUpdateAction, LineItem } from '@commercetools/platform-sdk';
 
 import { setPrice } from '@components/catalog/card-element/card-model';
+import CartService from '@services/cart-service/cart-service';
+import CurrentCart from '@services/cart-service/currentCart';
 import BaseComponent from '@utils/base-component';
-import { div, span } from '@utils/elements';
+import { div, span, svg } from '@utils/elements';
 import setLoader from '@utils/loader/loader-view';
 
 import styles from './_styles.scss';
+import type CartView from '../cart-view';
 
 export default class Card extends BaseComponent {
-  constructor(protected props: LineItem) {
-    super({ className: styles.card_element });
+  constructor(
+    protected props: LineItem,
+    protected cartView: CartView
+  ) {
+    super({ className: styles.card_element, data: { id: props.productId } });
 
     this.setContent();
   }
 
   private setContent() {
-    this.appendChildren([this.setCardImg((this.props.variant.images as IImgCard[])[0].url), this.setDescription()]);
+    this.appendChildren([
+      this.setCardImg((this.props.variant.images as IImgCard[])[0].url),
+      this.setDescription(),
+      this.setRemoveButton(),
+    ]);
   }
 
   private setCardImg(url: string) {
@@ -42,5 +52,19 @@ export default class Card extends BaseComponent {
     const title = span([styles.description_title], this.props.name.en);
     const price = span([styles.description_price], setPrice(this.props.price.value.centAmount));
     return div([styles.description_wrapper], title, price);
+  }
+
+  private setRemoveButton() {
+    const removeButton = span([styles.removeButton], '', svg('/assets/img/cross.svg#cross', styles.svg__removeButton));
+    const actionDescription: CartUpdateAction = {
+      action: 'removeLineItem',
+      lineItemId: CurrentCart.getLineItemIdByProductId(this.props.productId),
+      quantity: this.props.quantity,
+    };
+    removeButton.addListener('click', async () => {
+      await CartService.changeCartEntries([actionDescription]);
+      this.cartView.updateView();
+    });
+    return removeButton;
   }
 }
