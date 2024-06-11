@@ -28,8 +28,26 @@
 .cards_wrapper {
   @include flex(center, flex-start, column);
   width: 100%;
+  padding-right: 10px;
 
   transform: translateX(-100%);
+
+  max-height: 550px;
+  overflow-y: auto;
+
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba($main-color-accent, 0.7);
+    border-radius: 2px;
+  }
+
+  ::-webkit-scrollbar-track-piece {
+    background: #fff;
+    border-radius: 2px;
+  }
 }
 
 .sum {
@@ -39,6 +57,7 @@
     border-radius: 20px;
     background-color: #fff;
     padding: 15px;
+    height: fit-content;
 
     transform: translateX(100%);
   }
