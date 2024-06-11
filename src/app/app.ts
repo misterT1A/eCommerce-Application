@@ -4,6 +4,8 @@ import HeaderController from '@components/header/header_controller';
 import type Modal from '@components/modal/modal';
 import ProgressBar from '@components/progress-bar/progress-bar';
 import AuthService from '@services/auth-service';
+import CartService from '@services/cart-service/cart-service';
+import CurrentCart from '@services/cart-service/currentCart';
 import { updateMyCustomerInfo } from '@services/customer-service/my-customer-service';
 import MyCustomer from '@services/customer-service/myCustomer';
 import ProductService from '@services/product_service/product_service';
@@ -49,6 +51,10 @@ export default class App {
   private setListeners() {
     document.addEventListener('DOMContentLoaded', async () => {
       await AuthService.sessionStateHandler();
+      if (CurrentCart.id) {
+        await CartService.updateCart(CurrentCart.id);
+        this.headerController.setCartCount(CurrentCart.totalCount);
+      }
       await ProductService.getCommercetoolsData();
       await updateMyCustomerInfo();
       this.headerController.updateTextLoggined(MyCustomer.fullNameShort);
@@ -109,7 +115,7 @@ export default class App {
         callBack: async (filtersParams: string[]) => {
           const { default: CatalogController } = await import('@components/catalog/catalog-controller');
           await this.hideMain();
-          this.controller = new CatalogController(this.router, filtersParams);
+          this.controller = new CatalogController(this.router, filtersParams, this.headerController);
           this.setContent();
         },
       },

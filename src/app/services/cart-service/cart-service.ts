@@ -1,9 +1,8 @@
-// import type { Cart } from '@commercetools/platform-sdk';
-
-import type { ClientResponse, Customer } from '@commercetools/platform-sdk';
+import type { Cart, CartUpdateAction, ClientResponse, Customer } from '@commercetools/platform-sdk';
 
 import AuthService from '@services/auth-service';
 import MyCustomer from '@services/customer-service/myCustomer';
+import { processErrorResponse, showErrorMessages } from '@utils/errors-handling';
 
 import CurrentCart from './currentCart';
 
@@ -13,17 +12,22 @@ class CartApiService {
   }
 
   public async createNewCustomerCart(ID: Customer['id']) {
-    await AuthService.getRoot()
-      .carts()
-      .post({ body: { currency: 'EUR', customerId: ID } })
-      .execute()
-      .then((response) => {
-        CurrentCart.setCart(response.body);
-        console.log('Корзина успешно создана:', CurrentCart.getCart);
-      })
-      .catch((error) => {
-        console.error('Ошибка при создании корзины:', error);
-      });
+    try {
+      const cartCreateResp = await AuthService.getRoot()
+        .carts()
+        .post({ body: { currency: 'EUR', customerId: ID } })
+        .execute();
+      return {
+        cartID: cartCreateResp.body.id,
+      };
+    } catch (error) {
+      const errorsResponse = processErrorResponse(error);
+      showErrorMessages(errorsResponse);
+      console.error('Ошибка при создании корзины:', error);
+      return {
+        cartID: '',
+      };
+    }
   }
 
   public async createAnonymousCart() {
@@ -46,7 +50,7 @@ class CartApiService {
     }
     AuthService.getRoot()
       .carts()
-      .withId({ ID: CurrentCart.id as string })
+      .withId({ ID: CurrentCart.id ?? '' })
       .post({
         body: {
           version: CurrentCart.version,
@@ -80,20 +84,50 @@ class CartApiService {
       .execute();
   }
 
-  // public updateCart(ID: Cart['id']) {
-  //   AuthService.getRoot()
-  //     .carts()
-  //     .withId({ ID })
-  //     .get()
-  //     .execute()
-  //     .then((response) => {
-  //       CurrentCart.setCart(response.body);
-  //       console.log('Корзина успешно обновлена:', CurrentCart.getCart);
-  //     })
-  //     .catch((error) => {
-  //       console.error('Ошибка при обновлении корзины:', error);
-  //     });
-  // }
+  public async changeCartEntries(actions: CartUpdateAction[]) {
+    if (!CurrentCart.isCart()) {
+      if (!AuthService.isAuthorized()) {
+        await this.createAnonymousCart();
+      } else {
+        await this.createNewCustomerCart(MyCustomer.id ?? '');
+      }
+    }
+    try {
+      const changeCartResp = await AuthService.getRoot()
+        .carts()
+        .withId({ ID: CurrentCart.id ?? '' })
+        .post({
+          body: {
+            version: CurrentCart.version,
+            actions,
+          },
+        })
+        .execute();
+      CurrentCart.setCart(changeCartResp.body);
+      return {
+        success: true,
+        actions,
+      };
+    } catch (error) {
+      const errorsResponse = processErrorResponse(error);
+      showErrorMessages(errorsResponse);
+      return {
+        success: false,
+      };
+    }
+  }
+
+  public async updateCart(ID: Cart['id']) {
+    try {
+      const response = await AuthService.getRoot().carts().withId({ ID }).get().execute();
+      console.log('Корзина успешно обновлена:', CurrentCart.getCart);
+      CurrentCart.setCart(response.body);
+    } catch (error) {
+      const errorsResponse = processErrorResponse(error);
+      showErrorMessages(errorsResponse);
+      console.error('Ошибка при обновлении корзины:', error);
+    }
+  }
 
   // public getCart(ID: Cart['id']) {
   //   return AuthService.getRoot().carts().withId({ ID }).get().execute();

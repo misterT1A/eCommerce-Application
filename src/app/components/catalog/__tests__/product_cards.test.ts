@@ -1,5 +1,6 @@
 import type { ProductProjectionPagedSearchResponse } from '@commercetools/platform-sdk';
 
+import HeaderController from '@components/header/header_controller';
 import Router from '@src/app/router/router';
 
 import CatalogView from '../catalog-view';
@@ -18,11 +19,14 @@ describe('ProductCards', () => {
   let products: ProductCards;
   let router: Router;
   let catalogView: CatalogView;
+  let headerController: HeaderController;
 
   beforeEach(() => {
     router = new Router(routes);
-    catalogView = new CatalogView(router);
-    products = new ProductCards(router, catalogView);
+
+    headerController = new HeaderController(router);
+    catalogView = new CatalogView(router, headerController);
+    products = new ProductCards(router, catalogView, headerController);
     console.log(router);
   });
 

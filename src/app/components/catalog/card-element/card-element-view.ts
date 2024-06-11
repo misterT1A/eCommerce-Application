@@ -4,6 +4,7 @@ import AddToCart from '@components/form-ui-elements/addToCartToggler';
 import Count from '@components/form-ui-elements/countInput';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
+import debounce from '@utils/debounce';
 import { button, div, h2, p } from '@utils/elements';
 import setLoader from '@utils/loader/loader-view';
 
@@ -11,9 +12,9 @@ import styles from './_card-style.scss';
 import { setPrice, setShortDescription } from './card-model';
 
 export default class Card extends BaseComponent {
-  private addBtn = new AddToCart();
+  public addBtn = new AddToCart();
 
-  private count = new Count();
+  public count = new Count();
 
   constructor(
     protected props: ICardProps,
@@ -83,20 +84,14 @@ export default class Card extends BaseComponent {
   }
 
   private setInputHandlers() {
-    this.addListener('input', (e) => {
-      const isAddInput = (e.target as HTMLInputElement)?.dataset.name === 'add-to-cart-input';
-      if (!this.count.getValue() || this.count.getValue() <= 0) {
-        if (this.addBtn.getValue()) {
-          this.addBtn.unselect();
-          // TODO: remove elected product from cart
-        }
-        this.count.setValue(1);
-      } else if (this.addBtn.getValue()) {
-        if (isAddInput) {
-          // TODO: add to cart with specified count
-        } else {
-          // TODO: change count of selected product in cart
-        }
+    const debouncedInputEvent = debounce(() => {
+      const inputEvent = new Event('input', { bubbles: true });
+      this.getNode().dispatchEvent(inputEvent);
+    }, 300);
+    this.count.addListener('input', (e) => {
+      if (this.addBtn.getValue() || this.count.getValue() < 0) {
+        e.stopPropagation();
+        debouncedInputEvent();
       }
     });
   }

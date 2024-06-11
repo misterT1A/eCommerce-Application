@@ -1,4 +1,5 @@
 import Controller from '@components/controller';
+import type HeaderController from '@components/header/header_controller';
 import ProductService from '@services/product_service/product_service';
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
@@ -8,9 +9,10 @@ import CatalogView from './catalog-view';
 export default class CatalogController extends Controller<CatalogView> {
   constructor(
     protected router: Router,
-    protected filtersParams: string[]
+    protected filtersParams: string[],
+    private headerController: HeaderController
   ) {
-    super(new CatalogView(router));
+    super(new CatalogView(router, headerController));
 
     this.initContent();
   }

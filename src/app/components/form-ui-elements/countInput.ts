@@ -21,8 +21,17 @@ class Count extends BaseComponent {
     this.countMinus = button([styles.form__countMinus], '-', { type: 'button' });
     this.countPlus = button([styles.form__countPlus], '+', { type: 'button' });
     this.appendChildren([this.countMinus, this.input, this.countPlus]);
-    this.countMinus.addListener('click', () => this.decrease());
-    this.countPlus.addListener('click', () => this.increase());
+    this.addListener('click', (e) => {
+      const { target } = e;
+      if (target instanceof HTMLButtonElement) {
+        if (target.textContent === '+') {
+          this.increase();
+        }
+        if (target.textContent === '-') {
+          this.decrease();
+        }
+      }
+    });
   }
 
   public getValue(): number {
@@ -47,6 +56,9 @@ class Count extends BaseComponent {
   public decrease() {
     const current = this.getValue();
     this.setValue(current - 1);
+    if (current < 1) {
+      this.setValue(0);
+    }
     this.inputEvent();
   }
 }

@@ -51,6 +51,28 @@ class CurrentCart {
     }
     return 0;
   }
+
+  public static getProductCountByID(productID: string) {
+    const { products } = this;
+    if (products.length) {
+      const selectedProduct = products.find((product) => product.productId === productID);
+      return selectedProduct?.quantity ?? 0;
+    }
+    return 0;
+  }
+
+  public static getLineItemIdByProductId(productID: string) {
+    const { products } = this;
+    if (products.length) {
+      const selectedProduct = products.find((product) => product.productId === productID);
+      return selectedProduct?.id ?? '';
+    }
+    return '';
+  }
+
+  public static get totalCount() {
+    return this.cart?.totalLineItemQuantity ?? 0;
+  }
 }
 
 export default CurrentCart;

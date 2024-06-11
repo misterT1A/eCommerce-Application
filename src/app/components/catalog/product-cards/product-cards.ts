@@ -1,11 +1,18 @@
 import type { ProductProjection, ProductProjectionPagedSearchResponse } from '@commercetools/platform-sdk';
 
+import type HeaderController from '@components/header/header_controller';
+import Modal from '@components/modal/modal';
+import notificationEmitter from '@components/notifications/notifications-controller';
+import { getMessage, updateProductsInCart } from '@services/cart-service/cart-actions';
+import CurrentCart from '@services/cart-service/currentCart';
 import ProductService from '@services/product_service/product_service';
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
+import debounce from '@utils/debounce';
 import { button, div, h2 } from '@utils/elements';
 import setLazyLoader from '@utils/lazy loader/lazy-loader';
+import setLoader from '@utils/loader/loader-view';
 
 import styles from './_product-style.scss';
 import Card from '../card-element/card-element-view';
@@ -19,7 +26,8 @@ export default class ProductCards extends BaseComponent {
 
   constructor(
     protected router: Router,
-    protected MainView: CatalogView
+    protected MainView: CatalogView,
+    private headerController: HeaderController
   ) {
     super({ className: styles.product_wrapper });
 
@@ -65,13 +73,53 @@ export default class ProductCards extends BaseComponent {
 
       const props: ICardProps = {
         key: product.key as string,
+        id: product.id ?? '',
         img: product.masterVariant.images as IImgCard[],
         title: product.name.en,
         description: product.description?.en as string,
         price,
+        isSelected: CurrentCart.getProductCountByID(product.id) > 0,
+        count: CurrentCart.getProductCountByID(product.id),
       };
 
       const card = new Card(props, this.router);
+      const handler = async () => {
+        const loader = new Modal({
+          title: '',
+          content: setLoader(),
+          loader: true,
+          parent: this.getNode(),
+        });
+        if (!card.count.getValue() || card.count.getValue() <= 0) {
+          if (card.addBtn.getValue()) {
+            card.addBtn.unselect();
+            loader.open();
+            const resp = await updateProductsInCart({ productID: props.id, count: 0 });
+            if (resp.success && resp.actions) {
+              notificationEmitter.showMessage({
+                messageType: 'success',
+                ...getMessage(resp.actions[0], product.name.en ?? ''),
+              });
+            }
+            loader.close();
+          }
+          card.count.setValue(1);
+        } else if (card.addBtn.getValue()) {
+          loader.open();
+          const resp = await updateProductsInCart({ productID: props.id, count: card.count.getValue() });
+          if (resp.success && resp.actions) {
+            notificationEmitter.showMessage({
+              messageType: 'success',
+              ...getMessage(resp.actions[0], product.name.en ?? ''),
+            });
+          }
+          loader.close();
+        }
+        this.headerController.setCartCount(CurrentCart.totalCount);
+      };
+      const debounced = debounce(handler, 100);
+
+      card.addListener('input', debounced);
       card.setAnimDelay(index);
       this.append(card);
     });
