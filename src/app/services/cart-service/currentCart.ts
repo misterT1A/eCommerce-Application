@@ -35,10 +35,6 @@ class CurrentCart {
     return this.cart?.totalPrice.centAmount;
   }
 
-  public static get totalQuantity() {
-    return this.cart?.totalLineItemQuantity;
-  }
-
   public static get products(): LineItem[] {
     return this.cart?.lineItems ?? [];
   }
