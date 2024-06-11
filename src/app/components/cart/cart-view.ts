@@ -2,6 +2,7 @@ import type { Cart } from '@commercetools/platform-sdk';
 
 import { setPrice } from '@components/catalog/card-element/card-model';
 import FormField from '@components/form-ui-elements/formField';
+import type HeaderController from '@components/header/header_controller';
 import CurrentCart from '@services/cart-service/currentCart';
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
@@ -14,7 +15,10 @@ import Card from './card-element/card-element';
 export default class CartView extends BaseComponent {
   protected cart: Cart | null;
 
-  constructor(protected router: Router) {
+  constructor(
+    protected router: Router,
+    protected headerController: HeaderController
+  ) {
     super({ className: styles.wrapper });
     this.router = router;
     this.cart = CurrentCart.getCart;
@@ -23,6 +27,8 @@ export default class CartView extends BaseComponent {
   }
 
   private setContent() {
+    this.headerController.setCartCount(CurrentCart.totalCount);
+
     const title = span([styles.title], 'Your Cart');
 
     const cardsBlock = new BaseComponent({ className: styles.cards_wrapper }, this.setCardsBlock());

@@ -151,7 +151,7 @@ export default class App {
         callBack: async () => {
           const { default: CartController } = await import('@components/cart/cart-controller');
           await this.hideMain();
-          this.controller = new CartController(this.router);
+          this.controller = new CartController(this.router, this.headerController);
           this.setContent();
         },
       },
