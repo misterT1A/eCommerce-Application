@@ -39,11 +39,11 @@ export default class BurgerMenu extends BaseComponent {
         textContent: 'CATALOG',
         className: styles.menuBtn,
       },
-      // {
-      //   tag: 'span',
-      //   textContent: 'ABOUT US',
-      //   className: styles.menuBtn,
-      // },
+      {
+        tag: 'span',
+        textContent: 'ABOUT US',
+        className: styles.menuBtn,
+      },
     ];
     props.forEach((prop) => wrapper.append(new BaseComponent(prop)));
     this.contentWrapper.append(wrapper);
@@ -53,7 +53,6 @@ export default class BurgerMenu extends BaseComponent {
     const isAuthorized = AuthService.isAuthorized();
     const wrapper = div([styles.userWrapper]);
     const props: Props[] = [
-      // { tag: 'li', className: styles.menuBtn, textContent: 'J. DOE' },
       {
         tag: 'li',
         className: styles.menuBtn,
@@ -64,11 +63,6 @@ export default class BurgerMenu extends BaseComponent {
         className: styles.menuBtn,
         textContent: 'Sign Up',
       },
-      // {
-      //   tag: 'li',
-      //   className: styles.menuBtn,
-      //   textContent: 'Log Out',
-      // },
     ];
     props.forEach((prop) => {
       if (prop.textContent !== 'Log Out') {
@@ -128,9 +122,9 @@ export default class BurgerMenu extends BaseComponent {
       case 'CATALOG':
         this.router.navigate(Pages.CATALOG);
         break;
-      // case 'ABOUT US':
-      //   // this.router.navigate(Pages.);
-      //   break;
+      case 'ABOUT US':
+        this.router.navigate(Pages.ABOUT);
+        break;
       case 'Log In':
         this.router.navigate(Pages.LOGIN);
         break;
