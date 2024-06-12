@@ -3,6 +3,8 @@ import type { Cart } from '@commercetools/platform-sdk';
 import { setPrice } from '@components/catalog/card-element/card-model';
 import FormField from '@components/form-ui-elements/formField';
 import type HeaderController from '@components/header/header_controller';
+import notificationEmitter from '@components/notifications/notifications-controller';
+import CartService from '@services/cart-service/cart-service';
 import CurrentCart from '@services/cart-service/currentCart';
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
@@ -78,41 +80,65 @@ export default class CartView extends BaseComponent {
       span([styles.sum_subTotal_title], 'SUBTOTAL'),
       span([styles.sum_subTotal_price], 'Cart is empty')
     );
-
     const deliveryblock = new FormField('Select delivery date', 'date');
-
     const deliveryDesc = div(
       [styles.sum_deliveryDesc],
       span([styles.sum_deliveryDesc_item], 'FREE Monday-Saturday all-day delivery on orders over £40 with DHL.'),
       span([styles.sum_deliveryDesc_item], 'For orders under £40, delivery with DHL starts at £5.00'),
       span([styles.sum_deliveryDesc_item], 'Premium delivery starts at £9.95')
     );
-
-    const totalsum = div(
-      [styles.sum_total],
-      span([styles.sum_total_title], 'TOTAL'),
-      span([styles.sum_total_price], 'Cart is empty')
-    );
-
+    const totalSum = div([styles.sum_total], span([styles.sum_total_title], 'TOTAL'), div([styles.sum_total_price]));
     const chekoutBtn = button([styles.sum_checkoutBtn], 'PROCEED TO CHECKOUT');
-    chekoutBtn.getNode().disabled = true;
+    // chekoutBtn.getNode().disabled = true;
 
     if (products) {
-      subTotal.getChildren[1].setTextContent(setPrice(this.cart?.totalPrice.centAmount));
-      totalsum.getChildren[1].setTextContent(setPrice(this.cart?.totalPrice.centAmount));
-      chekoutBtn.getNode().disabled = false;
+      subTotal.getChildren[1].setTextContent(setPrice(this.cart?.totalPrice.centAmount, '0 €'));
+      this.calculateTotalSum(totalSum);
     }
+    // chekoutBtn.getNode().disabled = false;
 
-    return div([styles.sum_block], title, subTotal, deliveryblock, deliveryDesc, totalsum, chekoutBtn);
+    return div([styles.sum_block], title, subTotal, deliveryblock, deliveryDesc, totalSum, chekoutBtn);
+  }
+
+  private calculateTotalSum(totalSum: BaseComponent) {
+    totalSum.getChildren[1].setTextContent(setPrice(this.cart?.totalPrice.centAmount, '0 €'));
+    if (CurrentCart.getCart?.discountCodes.length) {
+      let fullPrice;
+      const resultPrice = this.cart?.totalPrice.centAmount;
+      const discountedPrice = this.cart?.discountOnTotalPrice?.discountedAmount.centAmount;
+      if (resultPrice && discountedPrice) {
+        fullPrice = resultPrice + discountedPrice;
+        totalSum.getChildren[1].setTextContent('');
+        totalSum.getChildren[1].appendChildren([
+          span([styles.full_price], setPrice(fullPrice)),
+          span([styles.discounted_price], setPrice(resultPrice)),
+        ]);
+      } else {
+        totalSum.getChildren[1].setTextContent('');
+        totalSum.getChildren[1].appendChildren([
+          span([styles.full_price], setPrice((resultPrice as number) * 2 ?? 0)),
+          span([styles.discounted_price], setPrice(resultPrice)),
+        ]);
+      }
+    }
   }
 
   private setPromoBlock() {
     const promoCodeInput = new FormField('Promo Code', 'text');
     promoCodeInput.addClass(styles.promo__input);
-    return div(
-      [styles.promo_block],
-      promoCodeInput,
-      button([general_styles.btn, styles.promo__btn], 'APPLY PROMO CODE')
-    );
+    const promoBtn = button([general_styles.btn, styles.promo__btn], 'APPLY PROMO CODE');
+    promoBtn.addListener('click', async () => {
+      const response = await CartService.changeCartEntries([
+        {
+          action: 'addDiscountCode',
+          code: promoCodeInput.getValue().trim(),
+        },
+      ]);
+      if (response.success) {
+        notificationEmitter.showMessage({ messageType: 'success', text: 'Promo Code is applied!' });
+        this.updateView();
+      }
+    });
+    return div([styles.promo_block], promoCodeInput, promoBtn);
   }
 }

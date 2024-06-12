@@ -130,6 +130,16 @@
   }
 }
 
+.discounted_price {
+  color: $main-color-accent;
+  font-size: 20px;
+  margin-left: 5px;
+}
+
+.full_price {
+  text-decoration: line-through;
+}
+
 .empty_wrapper {
   @include flex(center, flex-start, column);
   gap: 10px;
@@ -156,7 +166,7 @@
   // grid-column: 1 / span 2;
   width: 100%;
   transform: translateY(100%);
-  @include flex(end, center, row);
+  @include flex(end, start, row);
   gap: 15px;
   padding: 15px;
 
