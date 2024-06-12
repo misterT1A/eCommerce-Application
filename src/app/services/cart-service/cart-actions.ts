@@ -50,8 +50,20 @@ export const updateProductsInCart = async (...products: { productID: string; cou
   return CartService.changeCartEntries(actions);
 };
 
-export const clearCart = async () => {
+export const clearCart = () => {
   // update cart
-  const products = CurrentCart.products.map((lineItem) => ({ productID: lineItem.id, count: 0 }));
-  await updateProductsInCart(...products);
+  const products = CurrentCart.products.map((lineItem) => ({ productID: lineItem.productId, count: 0 }));
+  return updateProductsInCart(...products);
 };
+
+export async function actualizeCart() {
+  const cartId = JSON.parse(localStorage.getItem('cartNetN') ?? '');
+  const cartVersion = CurrentCart.version;
+  console.log(cartId?.id ?? '');
+  if (cartId?.id ?? '') {
+    await CartService.updateCart(cartId?.id ?? '');
+  }
+  return {
+    hasChanged: cartId !== CurrentCart.id || cartVersion !== CurrentCart.version,
+  };
+}
