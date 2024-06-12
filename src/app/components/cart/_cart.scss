@@ -29,16 +29,18 @@
   max-height: 550px;
   overflow-y: auto;
 
-  ::-webkit-scrollbar {
+  transition: 0.5s;
+
+  &::-webkit-scrollbar {
     width: 5px;
   }
 
-  ::-webkit-scrollbar-thumb {
+  &::-webkit-scrollbar-thumb {
     background: rgba($main-color-accent, 0.7);
     border-radius: 2px;
   }
 
-  ::-webkit-scrollbar-track-piece {
+  &::-webkit-scrollbar-track-piece {
     background: #fff;
     border-radius: 2px;
   }
