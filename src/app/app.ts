@@ -155,6 +155,15 @@ export default class App {
           this.setContent();
         },
       },
+      {
+        path: Pages.ABOUT,
+        callBack: async () => {
+          const { default: Controller } = await import('@components/about us/about_us-controller');
+          await this.hideMain();
+          this.controller = new Controller(this.router);
+          this.setContent();
+        },
+      },
     ];
   }
 
