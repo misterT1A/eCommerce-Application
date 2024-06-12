@@ -4,7 +4,7 @@ import { setPrice } from '@components/catalog/card-element/card-model';
 import CartService from '@services/cart-service/cart-service';
 import CurrentCart from '@services/cart-service/currentCart';
 import BaseComponent from '@utils/base-component';
-import { div, span, svg } from '@utils/elements';
+import { div, p, span, svg } from '@utils/elements';
 import setLoader from '@utils/loader/loader-view';
 
 import styles from './_styles.scss';
@@ -15,7 +15,7 @@ export default class Card extends BaseComponent {
     protected props: LineItem,
     protected cartView: CartView
   ) {
-    super({ className: styles.card_element, data: { id: props.productId } });
+    super({ className: styles.card_element /* data: { id: props.productId } */ });
 
     this.setContent();
   }
@@ -50,7 +50,15 @@ export default class Card extends BaseComponent {
 
   private setDescription() {
     const title = span([styles.description_title], this.props.name.en);
+
     const price = span([styles.description_price], setPrice(this.props.price.value.centAmount));
+    if (this.props.price.discounted) {
+      price.addClass(styles.price_throgh);
+      price.append(p([styles.price_discount], setPrice(this.props.price.discounted.value.centAmount)));
+    } else {
+      price.addClass(styles.price);
+    }
+
     return div([styles.description_wrapper], title, price);
   }
 
