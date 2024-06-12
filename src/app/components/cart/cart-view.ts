@@ -52,7 +52,12 @@ export default class CartView extends BaseComponent {
 
     this.appendChildren([
       title,
-      new BaseComponent({ className: styles.cart_inner }, cardsBlockWrapper, totalSumBlock, promoBlock, buttonsBlock),
+      new BaseComponent(
+        { className: styles.cart_inner },
+        cardsBlockWrapper,
+        totalSumBlock,
+        div([styles.cart_buttons_block], promoBlock, buttonsBlock)
+      ),
     ]);
   }
 
@@ -69,12 +74,9 @@ export default class CartView extends BaseComponent {
   }
 
   public async updateView() {
-    // this.destroyChildren();
-    // this.cart = CurrentCart.getCart;
-    // this.setContent();
     this.cart = CurrentCart.getCart;
     await this.updateCards();
-    this.updatePrice();
+    this.calculateTotalSum();
     this.headerController.setCartCount(CurrentCart.totalCount);
   }
 
@@ -112,15 +114,6 @@ export default class CartView extends BaseComponent {
     );
   }
 
-  public updatePrice() {
-    const { products } = CurrentCart;
-    if (products) {
-      const price = this.cart?.totalPrice.centAmount;
-      this.subTotal?.getChildren[1].setTextContent(setPrice(price, `0 €`));
-      this.totalSum?.getChildren[1].setTextContent(setPrice(price, `0 €`));
-    }
-  }
-
   private setTotalSumBlock() {
     const products = this.cart?.lineItems;
     const title = span([styles.sum_title], 'ORDER SUMMARY');
@@ -131,34 +124,32 @@ export default class CartView extends BaseComponent {
       span([styles.sum_deliveryDesc_item], 'For orders under £40, delivery with DHL starts at £5.00'),
       span([styles.sum_deliveryDesc_item], 'Premium delivery starts at £9.95')
     );
-    const totalSum = div([styles.sum_total], span([styles.sum_total_title], 'TOTAL'), div([styles.sum_total_price]));
+    this.totalSum = div([styles.sum_total], span([styles.sum_total_title], 'TOTAL'), div([styles.sum_total_price]));
     const chekoutBtn = button([styles.sum_checkoutBtn], 'PROCEED TO CHECKOUT');
-    // chekoutBtn.getNode().disabled = true;
 
     if (products) {
-      this.calculateTotalSum(totalSum);
+      this.calculateTotalSum();
     }
-    // chekoutBtn.getNode().disabled = false;
 
-    return div([styles.sum_block], title, deliveryblock, deliveryDesc, totalSum, chekoutBtn);
+    return div([styles.sum_block], title, deliveryblock, deliveryDesc, this.totalSum, chekoutBtn);
   }
 
-  private calculateTotalSum(totalSum: BaseComponent) {
-    totalSum.getChildren[1].setTextContent(setPrice(this.cart?.totalPrice.centAmount, '0 €'));
+  private calculateTotalSum() {
+    this.totalSum?.getChildren[1].setTextContent(setPrice(this.cart?.totalPrice.centAmount, '0 €'));
     if (CurrentCart.getCart?.discountCodes.length) {
       let fullPrice;
       const resultPrice = this.cart?.totalPrice.centAmount;
       const discountedPrice = this.cart?.discountOnTotalPrice?.discountedAmount.centAmount;
       if (resultPrice && discountedPrice) {
         fullPrice = resultPrice + discountedPrice;
-        totalSum.getChildren[1].setTextContent('');
-        totalSum.getChildren[1].appendChildren([
+        this.totalSum?.getChildren[1].setTextContent('');
+        this.totalSum?.getChildren[1].appendChildren([
           span([styles.full_price], setPrice(fullPrice)),
           span([styles.discounted_price], setPrice(resultPrice)),
         ]);
       } else {
-        totalSum.getChildren[1].setTextContent('');
-        totalSum.getChildren[1].appendChildren([
+        this.totalSum?.getChildren[1].setTextContent('');
+        this.totalSum?.getChildren[1].appendChildren([
           span([styles.full_price], setPrice((resultPrice as number) * 2 ?? 0)),
           span([styles.discounted_price], setPrice(resultPrice)),
         ]);
@@ -186,7 +177,7 @@ export default class CartView extends BaseComponent {
   }
 
   private setButtonsBlock() {
-    const clearCartButton = button([styles.sum_checkoutBtn, styles.empty_button], 'CLEAR CART');
+    const clearCartButton = button([styles.sum_checkoutBtn, styles.clear_button], 'CLEAR CART');
     const clearCartHandler = async () => {
       const loader = new Modal({ loader: true, title: '', content: setLoader(), parent: this.getNode() });
       loader.open();
@@ -204,13 +195,6 @@ export default class CartView extends BaseComponent {
         });
         this.updateView();
       }
-      // } else if (clearCartResp.reason === 409) {
-      //     const currentCart = await actualizeCart();
-      //     if (currentCart.hasChanged) {
-      //       await this.updateView();
-      //     }
-      //     await clearCartHandler()
-      //   }
     };
     clearCartButton.addListener('click', async () => clearCartHandler());
 
