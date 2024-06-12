@@ -114,8 +114,8 @@ export default class CartView extends BaseComponent {
     const { products } = CurrentCart;
     if (products) {
       const price = this.cart?.totalPrice.centAmount;
-      this.subTotal?.getChildren[1].setTextContent(price ? setPrice(price) : `0`);
-      this.totalSum?.getChildren[1].setTextContent(price ? setPrice(price) : `0`);
+      this.subTotal?.getChildren[1].setTextContent(setPrice(price, `0 €`));
+      this.totalSum?.getChildren[1].setTextContent(setPrice(price, `0 €`));
     }
   }
 
