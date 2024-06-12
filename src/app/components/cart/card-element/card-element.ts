@@ -58,7 +58,6 @@ export default class Card extends BaseComponent {
     } else {
       price.addClass(styles.price);
     }
-    console.log(this.props);
 
     return div([styles.description_wrapper], title, price);
   }

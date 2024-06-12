@@ -75,11 +75,6 @@ export default class CartView extends BaseComponent {
   private setTotalSumBlock() {
     const products = this.cart?.lineItems;
     const title = span([styles.sum_title], 'ORDER SUMMARY');
-    const subTotal = div(
-      [styles.sum_subTotal],
-      span([styles.sum_subTotal_title], 'SUBTOTAL'),
-      span([styles.sum_subTotal_price], 'Cart is empty')
-    );
     const deliveryblock = new FormField('Select delivery date', 'date');
     const deliveryDesc = div(
       [styles.sum_deliveryDesc],
@@ -92,12 +87,11 @@ export default class CartView extends BaseComponent {
     // chekoutBtn.getNode().disabled = true;
 
     if (products) {
-      subTotal.getChildren[1].setTextContent(setPrice(this.cart?.totalPrice.centAmount, '0 €'));
       this.calculateTotalSum(totalSum);
     }
     // chekoutBtn.getNode().disabled = false;
 
-    return div([styles.sum_block], title, subTotal, deliveryblock, deliveryDesc, totalSum, chekoutBtn);
+    return div([styles.sum_block], title, deliveryblock, deliveryDesc, totalSum, chekoutBtn);
   }
 
   private calculateTotalSum(totalSum: BaseComponent) {
