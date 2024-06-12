@@ -6,6 +6,7 @@ import type HeaderController from '@components/header/header_controller';
 import Modal from '@components/modal/modal';
 import notificationEmitter from '@components/notifications/notifications-controller';
 import { actualizeCart, clearCart } from '@services/cart-service/cart-actions';
+import CartService from '@services/cart-service/cart-service';
 import CurrentCart from '@services/cart-service/currentCart';
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
@@ -15,6 +16,7 @@ import setLoader from '@utils/loader/loader-view';
 
 import styles from './_cart.scss';
 import Card from './card-element/card-element';
+import general_styles from '../../_app_style.scss';
 
 export default class CartView extends BaseComponent {
   protected cart: Cart | null;
@@ -122,41 +124,65 @@ export default class CartView extends BaseComponent {
   private setTotalSumBlock() {
     const products = this.cart?.lineItems;
     const title = span([styles.sum_title], 'ORDER SUMMARY');
-    this.subTotal = div(
-      [styles.sum_subTotal],
-      span([styles.sum_subTotal_title], 'SUBTOTAL'),
-      span([styles.sum_subTotal_price], 'Cart is empty')
-    );
-
     const deliveryblock = new FormField('Select delivery date', 'date');
-
     const deliveryDesc = div(
       [styles.sum_deliveryDesc],
       span([styles.sum_deliveryDesc_item], 'FREE Monday-Saturday all-day delivery on orders over £40 with DHL.'),
       span([styles.sum_deliveryDesc_item], 'For orders under £40, delivery with DHL starts at £5.00'),
       span([styles.sum_deliveryDesc_item], 'Premium delivery starts at £9.95')
     );
-
-    this.totalSum = div(
-      [styles.sum_total],
-      span([styles.sum_total_title], 'TOTAL'),
-      span([styles.sum_total_price], 'Cart is empty')
-    );
-
+    const totalSum = div([styles.sum_total], span([styles.sum_total_title], 'TOTAL'), div([styles.sum_total_price]));
     const chekoutBtn = button([styles.sum_checkoutBtn], 'PROCEED TO CHECKOUT');
-    chekoutBtn.getNode().disabled = true;
+    // chekoutBtn.getNode().disabled = true;
 
     if (products) {
-      chekoutBtn.getNode().disabled = false;
+      this.calculateTotalSum(totalSum);
     }
+    // chekoutBtn.getNode().disabled = false;
 
-    this.updatePrice();
+    return div([styles.sum_block], title, deliveryblock, deliveryDesc, totalSum, chekoutBtn);
+  }
 
-    return div([styles.sum_block], title, this.subTotal, deliveryblock, deliveryDesc, this.totalSum, chekoutBtn);
+  private calculateTotalSum(totalSum: BaseComponent) {
+    totalSum.getChildren[1].setTextContent(setPrice(this.cart?.totalPrice.centAmount, '0 €'));
+    if (CurrentCart.getCart?.discountCodes.length) {
+      let fullPrice;
+      const resultPrice = this.cart?.totalPrice.centAmount;
+      const discountedPrice = this.cart?.discountOnTotalPrice?.discountedAmount.centAmount;
+      if (resultPrice && discountedPrice) {
+        fullPrice = resultPrice + discountedPrice;
+        totalSum.getChildren[1].setTextContent('');
+        totalSum.getChildren[1].appendChildren([
+          span([styles.full_price], setPrice(fullPrice)),
+          span([styles.discounted_price], setPrice(resultPrice)),
+        ]);
+      } else {
+        totalSum.getChildren[1].setTextContent('');
+        totalSum.getChildren[1].appendChildren([
+          span([styles.full_price], setPrice((resultPrice as number) * 2 ?? 0)),
+          span([styles.discounted_price], setPrice(resultPrice)),
+        ]);
+      }
+    }
   }
 
   private setPromoBlock() {
-    return div([styles.promo_block]);
+    const promoCodeInput = new FormField('Promo Code', 'text');
+    promoCodeInput.addClass(styles.promo__input);
+    const promoBtn = button([general_styles.btn, styles.promo__btn], 'APPLY PROMO CODE');
+    promoBtn.addListener('click', async () => {
+      const response = await CartService.changeCartEntries([
+        {
+          action: 'addDiscountCode',
+          code: promoCodeInput.getValue().trim(),
+        },
+      ]);
+      if (response.success) {
+        notificationEmitter.showMessage({ messageType: 'success', text: 'Promo Code is applied!' });
+        this.updateView();
+      }
+    });
+    return div([styles.promo_block], promoCodeInput, promoBtn);
   }
 
   private setButtonsBlock() {

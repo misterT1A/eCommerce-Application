@@ -28,14 +28,19 @@ export default class MainView extends BaseComponent {
     textContainer.addListener('click', () => this.router.navigate(Pages.CATALOG));
     this.append(wrapper);
 
-    this.appendChildren([this.setLinksBlock(), this.setVideo()]);
+    this.appendChildren([this.setLinksBlock(), this.setPromo()]);
   }
 
-  private setVideo() {
-    const title = span([styles.second_img_title], 'Delight in Every Crumb');
-    const titleWraper = div([styles.second_img_title_wrapper], title);
+  private setPromo() {
+    const promo1Title = span([styles.second_img_title], "Get 25% off you cart order with promo code 'CRISPY25'!");
+    const promo2Title = span(
+      [styles.second_img_title],
+      "Buy one, get one free: Classic croissant deal with code 'DOUBLE'"
+    );
+    const promo1Wrapper = div([styles.second_img_title_wrapper], promo1Title);
+    const promo2Wrapper = div([styles.second_img_title_wrapper], promo2Title);
 
-    const wrapper = div([styles.second_img_wrapper], titleWraper);
+    const wrapper = div([styles.second_img_wrapper], promo1Wrapper, promo2Wrapper);
     return wrapper;
   }
 

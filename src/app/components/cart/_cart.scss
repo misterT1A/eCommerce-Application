@@ -132,6 +132,16 @@
   }
 }
 
+.discounted_price {
+  color: $main-color-accent;
+  font-size: 20px;
+  margin-left: 5px;
+}
+
+.full_price {
+  text-decoration: line-through;
+}
+
 .empty_wrapper {
   @include flex(center, flex-start, column);
   gap: 10px;
@@ -155,11 +165,29 @@
 }
 
 .promo_block {
-  grid-column: 1 / span 2;
+  // grid-column: 1 / span 2;
   width: 100%;
   transform: translateY(100%);
+  @include flex(end, start, row);
+  gap: 15px;
+  padding: 15px;
 
-  height: 100px;
+  .promo__input {
+    max-width: 35%;
+    color: $color-dark-gray;
+    border-bottom: 1px solid $color-dark-gray;
+  }
+  .promo__input input {
+    border: none;
+    background-color: transparent;
+    font-size: 1.2rem;
+  }
+  .promo__btn {
+    padding: 5px 10px;
+    @include tablet {
+      width: 100%;
+    }
+  }
 }
 
 @keyframes slideIn {
@@ -172,7 +200,7 @@
 
 @media screen and (max-width: 900px) {
   .cart_inner {
-    @include flex(center, space-between, column);
+    @include flex(start, space-between, column);
     gap: 20px;
   }
 
