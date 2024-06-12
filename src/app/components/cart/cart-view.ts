@@ -11,6 +11,7 @@ import { button, div, span } from '@utils/elements';
 
 import styles from './_cart.scss';
 import Card from './card-element/card-element';
+import general_styles from '../../_app_style.scss';
 
 export default class CartView extends BaseComponent {
   protected cart: Cart | null;
@@ -106,6 +107,12 @@ export default class CartView extends BaseComponent {
   }
 
   private setPromoBlock() {
-    return div([styles.promo_block]);
+    const promoCodeInput = new FormField('Promo Code', 'text');
+    promoCodeInput.addClass(styles.promo__input);
+    return div(
+      [styles.promo_block],
+      promoCodeInput,
+      button([general_styles.btn, styles.promo__btn], 'APPLY PROMO CODE')
+    );
   }
 }
