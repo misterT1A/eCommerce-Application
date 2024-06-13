@@ -82,7 +82,7 @@
 
 .second_img_wrapper {
   position: relative;
-  @include flex(center, center, column);
+  @include flex(center, space-evenly, column);
   width: 100%;
   height: 400px;
   overflow: hidden;
@@ -92,9 +92,9 @@
 
 .second_img_title_wrapper {
   @include flex(center, center, column);
-  width: 350px;
-  height: 100px;
+  width: 50%;
   border-radius: 30px;
+  padding: 15px;
   background-color: rgba(250, 244, 244, 0.9);
 
   opacity: 0;

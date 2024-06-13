@@ -7,9 +7,9 @@ const setShortDescription = (text: string | undefined) => {
   return text.length > 30 ? `${text.slice(0, 30)}...` : text;
 };
 
-const setPrice = (price: number | undefined) => {
+const setPrice = (price: number | undefined, text?: string) => {
   if (!price) {
-    return 'Not for sale';
+    return text ?? 'Not for sale';
   }
 
   return `${(price / 100).toFixed(2)} €`;
