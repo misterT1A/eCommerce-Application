@@ -1,11 +1,16 @@
 import type { Image, Price, ProductProjection } from '@commercetools/platform-sdk';
 import 'swiper/css/bundle';
 
-import { changeCount, setPrice } from '@components/catalog/card-element/card-model';
+import { setPrice } from '@components/catalog/card-element/card-model';
+import AddToCart from '@components/form-ui-elements/addToCartToggler';
+import Count from '@components/form-ui-elements/countInput';
+import type HeaderController from '@components/header/header_controller';
 import Modal from '@components/modal/modal';
+import CurrentCart from '@services/cart-service/currentCart';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
-import { button, div, h2, p } from '@utils/elements';
+import debounce from '@utils/debounce';
+import { button, div, h2, p, span } from '@utils/elements';
 import setLoader from '@utils/loader/loader-view';
 
 import product_styles from './_product-styles.scss';
@@ -17,7 +22,18 @@ import card_styles from '../catalog/card-element/_card-style.scss';
 export default class ProductView extends BaseComponent {
   protected router: Router;
 
-  constructor(router: Router) {
+  public addBtn: AddToCart = new AddToCart();
+
+  public count: Count = new Count();
+
+  public addBtnLabel: BaseComponent<HTMLSpanElement> | null = null;
+
+  public removeFromCartButton: BaseComponent<HTMLButtonElement> | null = null;
+
+  constructor(
+    router: Router,
+    private headerController: HeaderController
+  ) {
     super({ tag: 'section', className: product_styles.wrapper });
     this.router = router;
   }
@@ -27,7 +43,6 @@ export default class ProductView extends BaseComponent {
     const text = this.setText(data);
     this.appendChildren([swiper, text]);
     initSwiper();
-    this.addListener('click', (e: Event) => this.handler(e));
   }
 
   private setModalContent(data: Image[] | undefined): BaseComponent {
@@ -70,20 +85,30 @@ export default class ProductView extends BaseComponent {
     }
 
     const swiper = div(['swiper', product_styles.main_img_wrapper]);
+    const thumbs = div(['swiper2', product_styles.thumbs_img_wrapper]);
     const swiperWrapper = div(['swiper-wrapper']);
+    const swiperThumbs = div(['swiper-wrapper']);
     data.forEach((image) => {
       const loader = setLoader();
       const slide = div(['swiper-slide', product_styles.main_img_wrapper], loader);
+      const thumbsSlide = div(['swiper-slide', product_styles.main_img_wrapper], loader);
       const img = new BaseComponent<HTMLImageElement>({ tag: 'img', src: image.url, className: product_styles.img });
-
+      const imgSmall = new BaseComponent<HTMLImageElement>({
+        tag: 'img',
+        src: image.url,
+        className: product_styles.img,
+      });
       img.addListener('load', () => {
         const imgLoader = slide.getChildren[0];
+        const imgLoaderThumbs = thumbsSlide.getChildren[0];
         if (imgLoader) {
           imgLoader.destroy();
+          imgLoaderThumbs.destroy();
         }
         slide.append(img);
+        thumbsSlide.append(imgSmall);
       });
-
+      swiperThumbs.append(thumbsSlide);
       swiperWrapper.append(slide);
     });
 
@@ -92,15 +117,20 @@ export default class ProductView extends BaseComponent {
     const scrollbar = div(['swiper-scrollbar']);
 
     swiperWrapper.addListener('click', () => {
-      const modal = new Modal({ title: '', content: this.setModalContent(data), parent: this.getNode() });
+      const modal = new Modal({
+        title: '',
+        content: this.setModalContent(data),
+        parent: this.getNode(),
+        fullScreen: true,
+      });
       modal.addClass(swiper_styles.overlay);
       modal.modal.addClass(swiper_styles.modal);
       modal.open();
       initZoomedSwiper();
     });
     swiper.appendChildren([swiperWrapper, controlPrev, controlNext, scrollbar]);
-
-    return swiper;
+    thumbs.appendChildren([swiperThumbs]);
+    return div([product_styles.slider], thumbs, swiper);
   }
 
   private setText(data: ProductProjection): BaseComponent {
@@ -120,7 +150,7 @@ export default class ProductView extends BaseComponent {
       description.setTextContent(data.description.en);
     }
 
-    const bottomBlock = this.createBottomBlock();
+    const bottomBlock = this.createBottomBlock(data);
 
     wrapper.appendChildren([title, price, description, bottomBlock]);
     return wrapper;
@@ -139,32 +169,58 @@ export default class ProductView extends BaseComponent {
     return div([card_styles.pay_block], price);
   }
 
-  private createBottomBlock() {
-    const countMinus = p([card_styles.count_minus], '-');
-    const countPlus = p([card_styles.count_plus], '+');
-    const countNum = p([card_styles.count_Num], '1');
-    const countWrapper = div([card_styles.count_wrapper], countMinus, countNum, countPlus);
-
-    // const cartBtn = button([styles.cart_btn], 'ADD TO CART');
+  private createBottomBlock(data: ProductProjection) {
     const backBtn = button([product_styles.back_btn, general_styles.btn], 'BACK TO CATALOG', {
       onclick: () => {
         this.router.navigateToCatalogFromProduct();
       },
     });
-    return div([product_styles.bottom_block], countWrapper, backBtn);
+    this.addBtnLabel = span([product_styles.add_button_label], 'ADD TO CART');
+    this.addBtn.append(this.addBtnLabel);
+    if (CurrentCart.getProductCountByID(data.id)) {
+      this.addBtnLabel.setTextContent('ALREADY IN CART');
+      this.addBtn.addClass(product_styles.add_button_active);
+      this.addBtn.select();
+      this.count.setValue(CurrentCart.getProductCountByID(data.id));
+    }
+    this.addBtn.addClass(product_styles.add_button);
+    this.removeFromCartButton = button([product_styles.remove_button, general_styles.btn], 'REMOVE FROM CART');
+    const block = div(
+      [product_styles.bottom_block],
+      div([product_styles.buttons_block], this.count, this.addBtn),
+      this.removeFromCartButton
+    );
+    this.setInputHandlers(block);
+    this.setButtonsActive(this.addBtn.getValue());
+    return div([product_styles.buttons_block_wrapper], block, backBtn);
   }
 
-  private handler(e: Event) {
-    const target = (e.target as HTMLElement)?.textContent;
-    switch (target) {
-      case '+':
-        changeCount((e.target as HTMLElement).parentElement, true);
-        break;
-      case '-':
-        changeCount((e.target as HTMLElement).parentElement, false);
-        break;
-      default:
-        break;
+  public setButtonsActive(isActive: boolean) {
+    if (isActive) {
+      this.addBtnLabel?.setTextContent('ALREADY IN CART');
+      this.addBtn.addClass(product_styles.add_button_active);
+      this.removeFromCartButton?.addClass(product_styles.remove_button_active);
+    } else {
+      this.addBtnLabel?.setTextContent('ADD TO CART');
+      this.addBtn.removeClass(product_styles.add_button_active);
+      this.removeFromCartButton?.addClass(product_styles.fadeout);
+      setTimeout(() => {
+        this.removeFromCartButton?.removeClass(product_styles.fadeout);
+        this.removeFromCartButton?.removeClass(product_styles.remove_button_active);
+      }, 300);
     }
+  }
+
+  private setInputHandlers(container: BaseComponent) {
+    const debouncedInputEvent = debounce(() => {
+      const inputEvent = new Event('input', { bubbles: true });
+      container.getNode().dispatchEvent(inputEvent);
+    }, 300);
+    this.count.addListener('input', (e) => {
+      if (this.addBtn.getValue() || this.count.getValue() < 0) {
+        e.stopPropagation();
+        debouncedInputEvent();
+      }
+    });
   }
 }
