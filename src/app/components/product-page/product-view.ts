@@ -85,8 +85,8 @@ export default class ProductView extends BaseComponent {
 
     const swiper = div(['swiper', product_styles.main_img_wrapper]);
     const thumbs = div(['swiper2', product_styles.thumbs_img_wrapper]);
-    const swiperWrapper = div(['swiper-wrapper']);
-    const swiperThumbs = div(['swiper-wrapper']);
+    const swiperWrapper = div(['swiper-wrapper', swiper_styles.swiper_wrapper]);
+    const swiperThumbs = div(['swiper-wrapper', swiper_styles.swiper_wrapper_thumbs]);
     data.forEach((image) => {
       const loader = setLoader();
       const slide = div(['swiper-slide', product_styles.main_img_wrapper], loader);

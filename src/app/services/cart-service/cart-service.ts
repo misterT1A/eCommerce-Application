@@ -1,4 +1,4 @@
-import type { Cart, CartUpdateAction, ClientResponse, Customer } from '@commercetools/platform-sdk';
+import type { Cart, CartUpdateAction, Customer } from '@commercetools/platform-sdk';
 
 import AuthService from '@services/auth-service';
 import MyCustomer from '@services/customer-service/myCustomer';
@@ -7,8 +7,11 @@ import { processErrorResponse, showErrorMessages } from '@utils/errors-handling'
 import CurrentCart from './currentCart';
 
 class CartApiService {
+  public apiDiscountCodes: { [id: string]: string }[] = [];
+
   constructor() {
     CurrentCart.setCart(JSON.parse(localStorage.getItem('cartNetN') as string) || null);
+    this.getDiscountCodes();
   }
 
   public async createNewCustomerCart(ID: Customer['id']) {
@@ -42,46 +45,6 @@ class CartApiService {
       .catch((error) => {
         console.error('Ошибка при создании анонимной корзины:', error);
       });
-  }
-
-  public async addToCart(productId: string) {
-    if (!CurrentCart.isCart()) {
-      await this.createAnonymousCart();
-    }
-    AuthService.getRoot()
-      .carts()
-      .withId({ ID: CurrentCart.id ?? '' })
-      .post({
-        body: {
-          version: CurrentCart.version,
-          actions: [
-            {
-              action: 'addLineItem',
-              productId,
-              quantity: 1,
-            },
-          ],
-        },
-      })
-      .execute()
-      .then((response) => {
-        CurrentCart.setCart(response.body);
-        console.log('Товар добавлен в корзину, всего товаров в корзине:', CurrentCart.totalCount);
-      })
-      .catch((error) => {
-        console.error('Ошибка при добавлении товара в корзину:', error);
-      });
-  }
-
-  public getCustomerCart(): Promise<ClientResponse> | undefined {
-    if (!AuthService.isAuthorized()) {
-      return undefined;
-    }
-    return AuthService.getRoot()
-      .carts()
-      .withCustomerId({ customerId: MyCustomer.id as string })
-      .get()
-      .execute();
   }
 
   public async changeCartEntries(actions: CartUpdateAction[]) {
@@ -120,18 +83,37 @@ class CartApiService {
   public async updateCart(ID: Cart['id']) {
     try {
       const response = await AuthService.getRoot().carts().withId({ ID }).get().execute();
-      console.log('Корзина успешно обновлена:', CurrentCart.getCart);
       CurrentCart.setCart(response.body);
     } catch (error) {
       const errorsResponse = processErrorResponse(error);
       showErrorMessages(errorsResponse);
-      console.error('Ошибка при обновлении корзины:', error);
+      // console.error('Ошибка при обновлении корзины:', error);
     }
   }
 
-  // public getCart(ID: Cart['id']) {
-  //   return AuthService.getRoot().carts().withId({ ID }).get().execute();
-  // }
+  private async getDiscountCodes() {
+    try {
+      const response = await AuthService.getRoot().discountCodes().get().execute();
+      const discountCodes = response.body.results;
+      discountCodes.forEach((code) => this.apiDiscountCodes.push({ [code.id]: code.code }));
+    } catch (error) {
+      const errorsResponse = processErrorResponse(error);
+      showErrorMessages(errorsResponse);
+    }
+  }
+
+  public getDiscountCodeNameById(id: string) {
+    const codeObj = this.apiDiscountCodes.find((obj) => Object.keys(obj).includes(id));
+    return codeObj ? codeObj[id] : '';
+  }
+
+  public isDOUBLECodeApplied() {
+    return !!CurrentCart.discountCodes?.some((code) => code.discountCode.id === '9a535f60-d16c-4abc-9e7a-a22e3929e537');
+  }
+
+  public isClassicCroissantInCart() {
+    return !!CurrentCart.products.some((product) => product.productKey === 'classic-croissant' && product.quantity > 1);
+  }
 }
 
 const CartService = new CartApiService();

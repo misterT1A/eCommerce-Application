@@ -8,7 +8,7 @@ class CurrentCart {
       this.cart = cart;
       localStorage.setItem('cartNetN', JSON.stringify(cart));
     }
-    console.log('CurrentCart store:', this.cart);
+    // console.log('CurrentCart store:', this.cart);
   }
 
   public static isCart() {
@@ -29,10 +29,6 @@ class CurrentCart {
 
   public static get id() {
     return this.cart?.id;
-  }
-
-  public static get totalPrice() {
-    return this.cart?.totalPrice.centAmount;
   }
 
   public static get products(): LineItem[] {
@@ -68,6 +64,10 @@ class CurrentCart {
 
   public static get totalCount() {
     return this.cart?.totalLineItemQuantity ?? 0;
+  }
+
+  public static get discountCodes() {
+    return this.cart?.discountCodes;
   }
 }
 
