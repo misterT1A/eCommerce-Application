@@ -79,3 +79,24 @@
   z-index: 5;
   color: $card_read_more_btn_color;
 }
+
+.removed {
+  animation: 0.3s slideIn linear forwards;
+  transition: 0.3s linear;
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+    max-height: 180px;
+  }
+  100% {
+    padding-top: 0;
+    padding-bottom: 0;
+    opacity: 0;
+    max-height: 0px;
+  }
+}

@@ -3,13 +3,12 @@ import type { ProductProjection, ProductProjectionPagedSearchResponse } from '@c
 import type HeaderController from '@components/header/header_controller';
 import Modal from '@components/modal/modal';
 import notificationEmitter from '@components/notifications/notifications-controller';
-import { getMessage, updateProductsInCart } from '@services/cart-service/cart-actions';
+import { actualizeCart, getMessage, updateProductsInCart } from '@services/cart-service/cart-actions';
 import CurrentCart from '@services/cart-service/currentCart';
 import ProductService from '@services/product_service/product_service';
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
-import debounce from '@utils/debounce';
 import { button, div, h2 } from '@utils/elements';
 import setLazyLoader from '@utils/lazy loader/lazy-loader';
 import setLoader from '@utils/loader/loader-view';
@@ -94,6 +93,7 @@ export default class ProductCards extends BaseComponent {
           if (card.addBtn.getValue()) {
             card.addBtn.unselect();
             loader.open();
+            await actualizeCart();
             const resp = await updateProductsInCart({ productID: props.id, count: 0 });
             if (resp.success && resp.actions) {
               notificationEmitter.showMessage({
@@ -106,6 +106,7 @@ export default class ProductCards extends BaseComponent {
           card.count.setValue(1);
         } else if (card.addBtn.getValue()) {
           loader.open();
+          await actualizeCart();
           const resp = await updateProductsInCart({ productID: props.id, count: card.count.getValue() });
           if (resp.success && resp.actions) {
             notificationEmitter.showMessage({
@@ -117,9 +118,9 @@ export default class ProductCards extends BaseComponent {
         }
         this.headerController.setCartCount(CurrentCart.totalCount);
       };
-      const debounced = debounce(handler, 100);
+      // const debounced = debounce(handler, 100);
 
-      card.addListener('input', debounced);
+      card.addListener('input', handler);
       card.setAnimDelay(index);
       this.append(card);
     });

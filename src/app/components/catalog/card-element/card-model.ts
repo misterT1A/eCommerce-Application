@@ -9,7 +9,7 @@ const setShortDescription = (text: string | undefined) => {
 
 const setPrice = (price: number | undefined, text?: string) => {
   if (!price) {
-    return text || 'Not for sale';
+    return text ?? 'Not for sale';
   }
 
   return `${(price / 100).toFixed(2)} €`;

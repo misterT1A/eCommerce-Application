@@ -20,6 +20,7 @@
 }
 
 .cards_wrapper {
+  grid-area: 1 / 1 / 2 / 2;
   @include flex(center, flex-start, column);
   width: 100%;
   padding-right: 10px;
@@ -29,16 +30,18 @@
   max-height: 550px;
   overflow-y: auto;
 
-  ::-webkit-scrollbar {
+  transition: 0.5s;
+
+  &::-webkit-scrollbar {
     width: 5px;
   }
 
-  ::-webkit-scrollbar-thumb {
+  &::-webkit-scrollbar-thumb {
     background: rgba($main-color-accent, 0.7);
     border-radius: 2px;
   }
 
-  ::-webkit-scrollbar-track-piece {
+  &::-webkit-scrollbar-track-piece {
     background: #fff;
     border-radius: 2px;
   }
@@ -46,6 +49,7 @@
 
 .sum {
   &_block {
+    grid-area: 1 / 2 / 2 / 3;
     @include flex(start, flex-start, column);
     gap: 30px;
     border-radius: 20px;
@@ -146,13 +150,31 @@
 }
 
 .empty_title {
-  padding: 40px;
-  font-size: 30px;
+  padding: 40px 0;
+  font-size: 20px;
   color: $main-color-accent;
 }
 
 .empty_button {
   width: auto;
+}
+
+.clear_button {
+  width: 100%;
+  max-width: 250px;
+}
+
+.cart_buttons_block {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  grid-area: 2 / 1 / 3 / 3;
+  @media (width <=900px) {
+    flex-direction: column;
+    background-color: #fffdfd;
+    border-radius: 20px;
+  }
+  padding: 10px;
 }
 
 .cards_wrapper,
@@ -162,16 +184,25 @@
   animation: slideIn 0.4s forwards;
 }
 
+.buttons_block {
+  display: flex;
+  align-items: end;
+  flex-grow: 1;
+  padding: 15px 0;
+  justify-content: end;
+  max-width: 300px;
+}
+
 .promo_block {
-  // grid-column: 1 / span 2;
-  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 250px));
+  flex-grow: 1;
   transform: translateY(100%);
-  @include flex(end, start, row);
   gap: 15px;
   padding: 15px;
 
   .promo__input {
-    max-width: 35%;
+    min-width: 200px;
     color: $color-dark-gray;
     border-bottom: 1px solid $color-dark-gray;
   }
@@ -182,6 +213,9 @@
   }
   .promo__btn {
     padding: 5px 10px;
+    height: fit-content;
+    align-self: end;
+    min-width: 200px;
     @include tablet {
       width: 100%;
     }
@@ -197,13 +231,26 @@
 }
 
 @media screen and (max-width: 900px) {
+  .wrapper {
+    max-width: 650px;
+  }
+
   .cart_inner {
-    @include flex(start, space-between, column);
+    display: grid;
+    // @include flex(start, space-between, column);
+
+    grid-template-columns: 1fr 1fr;
     gap: 20px;
+  }
+
+  .cards_wrapper {
+    grid-area: 1 / 1 / 2 / 3;
+    min-height: 250px;
   }
 
   .sum {
     &_block {
+      grid-area: 4 / 1 / 5 / 3;
       width: 100%;
       @include flex(start, flex-start, column);
       gap: 30px;
@@ -212,6 +259,38 @@
       padding: 15px;
 
       transform: translateX(100%);
+    }
+  }
+
+  .buttons_block {
+    justify-content: flex-start;
+    padding: 15px;
+    .clear_button {
+      max-width: 250px;
+    }
+  }
+
+  .promo_block {
+    .promo__btn {
+      max-width: 350px;
+    }
+    .promo__input {
+      flex-shrink: 0;
+      flex-grow: 1;
+    }
+  }
+}
+
+@media screen and (max-width: 684px) {
+  .promo_block {
+    grid-template-columns: auto;
+  }
+
+  .buttons_block {
+    justify-content: flex-start;
+    padding: 15px;
+    .clear_button {
+      max-width: 350px;
     }
   }
 }
