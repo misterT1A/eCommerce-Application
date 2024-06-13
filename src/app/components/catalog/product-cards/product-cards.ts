@@ -9,6 +9,7 @@ import ProductService from '@services/product_service/product_service';
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
+import debounce from '@utils/debounce';
 import { button, div, h2 } from '@utils/elements';
 import setLazyLoader from '@utils/lazy loader/lazy-loader';
 import setLoader from '@utils/loader/loader-view';
@@ -118,9 +119,9 @@ export default class ProductCards extends BaseComponent {
         }
         this.headerController.setCartCount(CurrentCart.totalCount);
       };
-      // const debounced = debounce(handler, 100);
+      const debounced = debounce(handler, 600);
 
-      card.addListener('input', handler);
+      card.addListener('input', debounced);
       card.setAnimDelay(index);
       this.append(card);
     });

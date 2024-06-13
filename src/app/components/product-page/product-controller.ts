@@ -10,6 +10,7 @@ import ProductsService from '@services/product_service/product_service';
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import type BaseComponent from '@utils/base-component';
+import debounce from '@utils/debounce';
 import setLoader from '@utils/loader/loader-view';
 
 import ProductView from './product-view';
@@ -29,10 +30,11 @@ export default class ProductController extends Controller<ProductView> {
     ProductsService.getProductByName(this.productName)
       .then((data) => {
         this.getView.setContent(data.body);
-        this.getView.addListener('input', async () => {
+        const handler = async () => {
           await this.handleInput(data.body);
-          this.getView.setButtonsActive(this.getView.addBtn.getValue());
-        });
+        };
+        const debounced = debounce(handler, 600);
+        this.getView.addListener('input', debounced);
         this.getView.removeFromCartButton?.addListener('click', async () => {
           const loader = new Modal({
             title: '',
@@ -41,6 +43,7 @@ export default class ProductController extends Controller<ProductView> {
             parent: this.getView.getNode(),
           });
           await this.removeFromCart(loader, data.body);
+          this.getView.count.setValue(1);
           this.headerController.setCartCount(CurrentCart.totalCount);
           this.getView.setButtonsActive(this.getView.addBtn.getValue());
         });
@@ -91,6 +94,7 @@ export default class ProductController extends Controller<ProductView> {
       loader.close();
     }
     this.headerController.setCartCount(CurrentCart.totalCount);
+    this.getView.setButtonsActive(this.getView.addBtn.getValue());
     return result;
   }
 }

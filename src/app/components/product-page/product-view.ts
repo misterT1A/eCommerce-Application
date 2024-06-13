@@ -9,7 +9,6 @@ import Modal from '@components/modal/modal';
 import CurrentCart from '@services/cart-service/currentCart';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
-import debounce from '@utils/debounce';
 import { button, div, h2, p, span } from '@utils/elements';
 import setLoader from '@utils/loader/loader-view';
 
@@ -190,7 +189,7 @@ export default class ProductView extends BaseComponent {
       div([product_styles.buttons_block], this.count, this.addBtn),
       this.removeFromCartButton
     );
-    this.setInputHandlers(block);
+    // this.setInputHandlers(block);
     this.setButtonsActive(this.addBtn.getValue());
     return div([product_styles.buttons_block_wrapper], block, backBtn);
   }
@@ -209,18 +208,5 @@ export default class ProductView extends BaseComponent {
         this.removeFromCartButton?.removeClass(product_styles.remove_button_active);
       }, 300);
     }
-  }
-
-  private setInputHandlers(container: BaseComponent) {
-    const debouncedInputEvent = debounce(() => {
-      const inputEvent = new Event('input', { bubbles: true });
-      container.getNode().dispatchEvent(inputEvent);
-    }, 300);
-    this.count.addListener('input', (e) => {
-      if (this.addBtn.getValue() || this.count.getValue() < 0) {
-        e.stopPropagation();
-        debouncedInputEvent();
-      }
-    });
   }
 }
