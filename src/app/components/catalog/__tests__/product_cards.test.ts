@@ -1,6 +1,7 @@
 import type { ProductProjection, ProductProjectionPagedSearchResponse } from '@commercetools/platform-sdk';
 
 import HeaderController from '@components/header/header_controller';
+import * as actions from '@services/cart-service/cart-actions';
 import Router from '@src/app/router/router';
 
 import CatalogView from '../catalog-view';
@@ -66,5 +67,28 @@ describe('ProductCards', () => {
     const count = products.getChildren.length;
 
     expect(count).toBe(2);
+  });
+
+  it('sholt update products in cart when input changed', async () => {
+    const setCartCount = jest.spyOn(headerController, 'setCartCount');
+    const updateSpy = jest
+      .spyOn(actions, 'updateProductsInCart')
+      .mockResolvedValue(Promise.resolve({ success: true, actions: undefined }));
+    products['createCards']([cardProps, cardProps]);
+    const card = products.getChildren[0];
+
+    const event = new Event('input', {
+      bubbles: true,
+      cancelable: true,
+    });
+
+    card.getNode().dispatchEvent(event);
+
+    await function wait() {
+      expect(updateSpy).toHaveBeenCalled();
+      expect(setCartCount).toHaveBeenCalled();
+    };
+
+    updateSpy.mockRestore();
   });
 });
