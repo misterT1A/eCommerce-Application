@@ -1,5 +1,14 @@
 import Swiper from 'swiper/bundle';
 
+const getThumbnails = () =>
+  new Swiper('.swiper2', {
+    direction: 'vertical',
+    spaceBetween: 10,
+    slidesPerView: 4,
+    freeMode: true,
+    watchSlidesProgress: true,
+  });
+
 // init Swiper:
 const initSwiper = () =>
   new Swiper('.swiper', {
@@ -22,6 +31,8 @@ const initSwiper = () =>
     scrollbar: {
       el: '.swiper-scrollbar',
     },
+
+    thumbs: { swiper: getThumbnails() },
   });
 
 const initZoomedSwiper = () =>
