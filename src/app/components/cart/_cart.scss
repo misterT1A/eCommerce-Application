@@ -65,22 +65,22 @@
     color: $card_sumBlock_color;
   }
 
-  &_subTotal {
-    padding-bottom: 20px;
-    width: 100%;
-    @include flex(center, space-between, row);
-    border-bottom: 1px solid rgba($header_border_color, 0.3);
+  // &_subTotal {
+  //   padding-bottom: 20px;
+  //   width: 100%;
+  //   @include flex(center, space-between, row);
+  //   border-bottom: 1px solid rgba($header_border_color, 0.3);
 
-    &_title {
-      font-size: 15px;
-      color: $card_sumBlock_color;
-    }
+  //   &_title {
+  //     font-size: 15px;
+  //     color: $card_sumBlock_color;
+  //   }
 
-    &_price {
-      font-size: 15px;
-      color: $header_border_color;
-    }
-  }
+  //   &_price {
+  //     font-size: 15px;
+  //     color: $header_border_color;
+  //   }
+  // }
 
   &_deliveryDesc {
     @include flex(start, space-between, column);
@@ -89,6 +89,22 @@
     &_item {
       font-size: 15px;
       color: $card_sumBlock_color;
+    }
+  }
+
+  &_discountCodes {
+    display: flex;
+    align-items: end;
+    &_wrapper {
+      display: flex;
+      align-items: end;
+      padding-left: 10px;
+      font-size: 18px;
+    }
+    &_svg {
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
     }
   }
 
