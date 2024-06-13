@@ -1,5 +1,5 @@
 $main-color-accent: #aa4e41;
-$color-light: #faf4f4;
+$color-light: rgb(250, 244, 244);
 $color-white: #ffffff;
 $color-dark-gray: #707070;
 $color-gray: #d8d8d8;
@@ -49,11 +49,34 @@ $main-color-error: #d82700;
   background-color: $color-light;
   width: 100%;
   max-width: 400px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.3);
   border-radius: 20px;
   max-height: 90vh;
   &_wide {
     max-width: 800px;
+  }
+}
+
+.fullScreen {
+  padding: 0;
+  background-color: rgba(250, 244, 244, 0.5);
+  .modal {
+    max-width: 100%;
+    max-height: 100%;
+    height: 100%;
+    border-radius: 0;
+    background-color: transparent;
+    box-shadow: none;
+    justify-content: center;
+  }
+
+  .modal__close {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 5;
+    width: 40px;
+    height: 40px;
   }
 }
 

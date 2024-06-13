@@ -1,6 +1,8 @@
 import type { CartUpdateAction, LineItem } from '@commercetools/platform-sdk';
 
 import { setPrice } from '@components/catalog/card-element/card-model';
+import Modal from '@components/modal/modal';
+import { actualizeCart } from '@services/cart-service/cart-actions';
 import CartService from '@services/cart-service/cart-service';
 import CurrentCart from '@services/cart-service/currentCart';
 import BaseComponent from '@utils/base-component';
@@ -48,6 +50,16 @@ export default class Card extends BaseComponent {
     return imgWrapper;
   }
 
+  public async remove() {
+    await new Promise((res) => {
+      this.addClass(styles.removed);
+      setTimeout(() => {
+        this.destroy();
+        res(true);
+      }, 500);
+    });
+  }
+
   private setDescription() {
     const title = span([styles.description_title], this.props.name.en);
 
@@ -70,7 +82,14 @@ export default class Card extends BaseComponent {
       quantity: this.props.quantity,
     };
     removeButton.addListener('click', async () => {
+      const loader = new Modal({ loader: true, title: '', content: setLoader(), parent: this.cartView.getNode() });
+      loader.open();
+      const currentCart = await actualizeCart();
+      if (currentCart.hasChanged) {
+        await this.cartView.updateView();
+      }
       await CartService.changeCartEntries([actionDescription]);
+      loader.close();
       this.cartView.updateView();
     });
     return removeButton;

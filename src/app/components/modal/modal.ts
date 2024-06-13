@@ -17,6 +17,8 @@ interface IModalProps<T extends BaseComponent> {
   wide?: boolean;
 
   loader?: boolean;
+
+  fullScreen?: boolean;
 }
 
 class Modal<T extends BaseComponent> extends BaseComponent {
@@ -56,6 +58,10 @@ class Modal<T extends BaseComponent> extends BaseComponent {
       this.addClass(styles.overlay_loader);
     } else {
       this.append(this.modal);
+    }
+
+    if (modalProps.fullScreen) {
+      this.addClass(styles.fullScreen);
     }
   }
 

@@ -1,6 +1,7 @@
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
+import copyTextInClipboard from '@utils/copy-text-to-clipboard';
 import { div, h2, span } from '@utils/elements';
 
 import styles from './_styles.scss';
@@ -33,10 +34,12 @@ export default class MainView extends BaseComponent {
 
   private setPromo() {
     const promo1Title = span([styles.second_img_title], "Get 25% off you cart order with promo code 'CRISPY25'!");
+    promo1Title.addListener('click', () => copyTextInClipboard('CRISPY25', 'Promo code copied to clipboard!'));
     const promo2Title = span(
       [styles.second_img_title],
       "Buy one, get one free: Classic croissant deal with code 'DOUBLE'"
     );
+    promo2Title.addListener('click', () => copyTextInClipboard('DOUBLE', 'Promo code copied to clipboard!'));
     const promo1Wrapper = div([styles.second_img_title_wrapper], promo1Title);
     const promo2Wrapper = div([styles.second_img_title_wrapper], promo2Title);
 
