@@ -4,7 +4,6 @@ import AddToCart from '@components/form-ui-elements/addToCartToggler';
 import Count from '@components/form-ui-elements/countInput';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
-import debounce from '@utils/debounce';
 import { button, div, h2, p } from '@utils/elements';
 import setLoader from '@utils/loader/loader-view';
 
@@ -32,7 +31,6 @@ export default class Card extends BaseComponent {
       this.createPayBlock(props),
     ]);
     this.addListener('click', (e: Event) => this.handler(e));
-    this.setInputHandlers();
     this.count.setValue(props.count || 1);
     if (this.props.isSelected) {
       this.addBtn.select();
@@ -83,18 +81,18 @@ export default class Card extends BaseComponent {
     return div([styles.pay_block], price, div([styles.pay_block_controls], this.count, this.addBtn));
   }
 
-  private setInputHandlers() {
-    const debouncedInputEvent = debounce(() => {
-      const inputEvent = new Event('input', { bubbles: true });
-      this.getNode().dispatchEvent(inputEvent);
-    }, 300);
-    this.count.addListener('input', (e) => {
-      if (this.addBtn.getValue() || this.count.getValue() < 0) {
-        e.stopPropagation();
-        debouncedInputEvent();
-      }
-    });
-  }
+  // private setInputHandlers() {
+  // const debouncedInputEvent = debounce(() => {
+  //   const inputEvent = new Event('input', { bubbles: true });
+  //   this.getNode().dispatchEvent(inputEvent);
+  // }, 100);
+  // this.count.addListener('input', (e) => {
+  //   if (this.addBtn.getValue() || this.count.getValue() < 0) {
+  //     e.stopPropagation();
+  //     debouncedInputEvent();
+  //   }
+  // });
+  // }
 
   public setAnimDelay(index: number) {
     const delay = 0.2 + index / 20;

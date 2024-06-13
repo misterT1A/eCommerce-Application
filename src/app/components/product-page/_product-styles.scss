@@ -1,7 +1,7 @@
 .wrapper {
-  width: 100%;
+  // width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(400px, 700px) minmax(300px, 500px);
   gap: 20px;
   padding: 20px;
   background-color: $header_background_color;
@@ -63,10 +63,21 @@
   @include flex(center, center, column);
   max-width: 500px;
   width: 100%;
-  height: 500px;
   overflow: hidden;
   border-radius: 15px;
+  aspect-ratio: 1/1;
   background-color: rgb(170, 125, 125);
+}
+
+.thumbs_img_wrapper {
+  max-width: 150px;
+  aspect-ratio: 1/1;
+}
+
+.slider {
+  display: flex;
+  overflow: hidden;
+  gap: 10px;
 }
 
 .main_img_Height {
@@ -82,9 +93,25 @@
 }
 
 .text_wrapper {
+  container-name: buttons;
+  container-type: inline-size;
   @include flex(start, flex-start, column);
   gap: 20px;
   width: 100%;
+  max-width: 600px;
+}
+
+.buttons_block_wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+  gap: 10px;
+  .back_btn {
+    height: 36px;
+    display: flex;
+    align-items: center;
+  }
 }
 
 .title {
@@ -94,11 +121,36 @@
   color: $card_title_color;
 }
 
+.remove_button {
+  display: none;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fadeout {
+  opacity: 0;
+  pointer-events: none;
+}
+.remove_button_active,
 .back_btn {
+  display: flex;
   margin-left: auto;
-  font-size: 0.8rem;
-  border-radius: 5px;
-  padding: 0.2rem;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  border-radius: 20px;
+  padding: 0.2rem 1rem;
+  animation: 0.3s fadein ease-in;
+  transition: 0.3s;
+  height: 36px;
+  min-width: 180px;
 }
 
 .description {
@@ -110,17 +162,73 @@
   display: flex;
   width: 100%;
   margin-top: auto;
+  gap: 10px;
 }
-@media screen and (max-width: 1000px) {
+
+.buttons_block {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.add_button {
+  cursor: pointer;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  border: 1px solid #aa4e41;
+  border-radius: 20px;
+  padding: 5px 15px 5px 10px;
+  transition: 0.5s;
+  span {
+    max-height: 25px;
+    transition: 0.5s;
+    svg {
+      transition: 0.5s;
+    }
+  }
+}
+
+.add_button_active {
+  pointer-events: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .add_button:hover {
+    background-color: #aa4e41;
+    span {
+      color: #ffffff;
+      svg {
+        fill: #ffffff;
+      }
+    }
+  }
+}
+
+.add_button_label {
+  flex-shrink: 0;
+  color: #aa4e41;
+}
+
+@media screen and (max-width: 1100px) {
   .wrapper {
     grid-template-columns: 1fr;
-    padding: 10px;
+    padding: 20px;
     place-items: center;
+    max-width: 900px;
   }
 
   .text_wrapper {
     padding: 20px;
     grid-column: 1 / span 2;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .slider {
+    width: 100%;
+  }
+  .thumbs_img_wrapper {
+    display: none;
   }
 }
 
@@ -134,9 +242,13 @@
   .mini_img_block {
     display: none;
   }
-
-  .main_img_wrapper {
+  .slider {
     grid-column: 1 / span 2;
+  }
+
+  .remove_button_active,
+  .back_btn {
+    width: 100%;
   }
 }
 
@@ -147,4 +259,41 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+@container buttons (width<=450px) {
+  .add_button {
+    border: none;
+    padding: 0;
+    span {
+      max-height: 40px;
+      svg {
+        fill: #aa4e41;
+      }
+    }
+    @media (hover: hover) {
+      &:hover {
+        background-color: transparent;
+        span {
+          svg {
+            fill: #aa4e41;
+          }
+        }
+      }
+    }
+    .add_button_label {
+      display: none;
+    }
+  }
+}
+
+@media (width<=400px) {
+  .bottom_block {
+    flex-direction: column;
+    gap: 10px;
+    .back_btn {
+      width: 100%;
+      height: 30px;
+    }
+  }
 }
