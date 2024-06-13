@@ -1,4 +1,4 @@
-import type { ProductProjectionPagedSearchResponse } from '@commercetools/platform-sdk';
+import type { ProductProjection, ProductProjectionPagedSearchResponse } from '@commercetools/platform-sdk';
 
 import HeaderController from '@components/header/header_controller';
 import Router from '@src/app/router/router';
@@ -14,6 +14,16 @@ const routes = [
   { path: 'product', callBack: jest.fn() },
   { path: 'error', callBack: jest.fn() },
 ];
+
+const cardProps = {
+  masterVariant: { prices: [{ value: { centAmount: 4 } }], images: [{ url: 'url' }] },
+  key: 'key',
+  id: 'kjhkjhkjh',
+  name: { en: 'title' },
+  description: { en: 'description' },
+  isSelected: true,
+  count: 5,
+} as unknown as ProductProjection;
 
 describe('ProductCards', () => {
   let products: ProductCards;
@@ -48,5 +58,13 @@ describe('ProductCards', () => {
     expect(showNotFoundSpy).toHaveBeenCalled();
 
     showNotFoundSpy.mockRestore();
+  });
+
+  it('should create cards', () => {
+    products['createCards']([cardProps, cardProps]);
+
+    const count = products.getChildren.length;
+
+    expect(count).toBe(2);
   });
 });

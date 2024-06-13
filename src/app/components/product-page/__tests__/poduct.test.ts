@@ -38,6 +38,7 @@ describe('Product Page', () => {
   const router = new Router(routes);
   let product: ProductController;
   const name = 'bread';
+  jest.mock('swiper/bundle/css', jest.fn());
 
   beforeEach(() => {
     product = new ProductController(router, name);

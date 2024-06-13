@@ -117,7 +117,7 @@ export default class ProductCards extends BaseComponent {
         }
         this.headerController.setCartCount(CurrentCart.totalCount);
       };
-      const debounced = debounce(handler, 100);
+      const debounced = debounce(handler, 600);
 
       card.addListener('input', debounced);
       card.setAnimDelay(index);

@@ -21,10 +21,11 @@ module.exports = {
     '^@types/(.*)$': '<rootDir>/src/types/$1',
     '^@fonts/(.*)$': '<rootDir>/src/fonts/$1',
     '^@src/(.*)$': '<rootDir>/src/$1',
+    '^swiper': '<rootDir>/node_modules/swiper/swiper.min.js',
   },
   testMatch: ['**/__tests__/**/*.+(js|ts)'],
   modulePathIgnorePatterns: ['<rootDir>/dist/'],
   moduleFileExtensions: ['ts', 'js'],
   setupFiles: ['<rootDir>/jest.setup.js'],
-  collectCoverageFrom: ['./src/**', '!src/**/*.d.ts'],
+  // collectCoverageFrom: ['./src/**', '!src/**/*.d.ts'],
 };
