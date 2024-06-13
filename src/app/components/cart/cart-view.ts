@@ -11,7 +11,7 @@ import CurrentCart from '@services/cart-service/currentCart';
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
-import { button, div, span } from '@utils/elements';
+import { button, div, span, svg } from '@utils/elements';
 import setLoader from '@utils/loader/loader-view';
 
 import styles from './_cart.scss';
@@ -21,13 +21,13 @@ import general_styles from '../../_app_style.scss';
 export default class CartView extends BaseComponent {
   protected cart: Cart | null;
 
-  private subTotal: BaseComponent | null = null;
-
   private totalSum: BaseComponent | null = null;
 
   private cards: Map<string, Card> = new Map();
 
   private cardsBlock: BaseComponent | null = null;
+
+  private discountBlock: BaseComponent = div([styles.sum_discountCodes]);
 
   constructor(
     protected router: Router,
@@ -36,7 +36,6 @@ export default class CartView extends BaseComponent {
     super({ className: styles.wrapper });
     this.router = router;
     this.cart = CurrentCart.getCart;
-
     this.setContent();
   }
 
@@ -44,9 +43,8 @@ export default class CartView extends BaseComponent {
     this.headerController.setCartCount(CurrentCart.totalCount);
 
     const title = span([styles.title], 'Your Cart');
-
     const cardsBlockWrapper = new BaseComponent({ className: styles.cards_wrapper }, this.setCardsBlock());
-    const totalSumBlock = this.setTotalSumBlock();
+    const checkoutBlock = this.setCheckoutBlock();
     const promoBlock = this.setPromoBlock();
     const buttonsBlock = this.setButtonsBlock();
 
@@ -55,7 +53,7 @@ export default class CartView extends BaseComponent {
       new BaseComponent(
         { className: styles.cart_inner },
         cardsBlockWrapper,
-        totalSumBlock,
+        checkoutBlock,
         div([styles.cart_buttons_block], promoBlock, buttonsBlock)
       ),
     ]);
@@ -76,8 +74,44 @@ export default class CartView extends BaseComponent {
   public async updateView() {
     this.cart = CurrentCart.getCart;
     await this.updateCards();
+    await this.updateDiscountCodes();
     this.calculateTotalSum();
     this.headerController.setCartCount(CurrentCart.totalCount);
+  }
+
+  private async updateDiscountCodes() {
+    // if any discount code is applied
+    if (CurrentCart.discountCodes?.length) {
+      this.discountBlock.setTextContent('Applied promo codes:');
+      CurrentCart.discountCodes.forEach((code) => {
+        const removeCodeBtn = span([styles.s], '', svg('assets/img/cross.svg#cross', styles.sum_discountCodes_svg));
+        removeCodeBtn.addListener('click', async () => {
+          const response = await CartService.changeCartEntries([
+            {
+              action: 'removeDiscountCode',
+              discountCode: {
+                typeId: 'discount-code',
+                id: code.discountCode.id,
+              },
+            },
+          ]);
+          if (response.success) {
+            notificationEmitter.showMessage({ messageType: 'info', text: 'Promo Code removed.' });
+            this.updateView();
+          }
+        });
+        this.discountBlock.append(
+          div(
+            [styles.sum_discountCodes_wrapper],
+            span([styles.s], CartService.getDiscountCodeNameById(code.discountCode.id)),
+            removeCodeBtn
+          )
+        );
+      });
+    } else {
+      this.discountBlock.destroyChildren();
+      this.discountBlock.setTextContent('');
+    }
   }
 
   public async updateCards() {
@@ -114,28 +148,43 @@ export default class CartView extends BaseComponent {
     );
   }
 
-  private setTotalSumBlock() {
+  private setCheckoutBlock() {
     const products = this.cart?.lineItems;
     const title = span([styles.sum_title], 'ORDER SUMMARY');
-    const deliveryblock = new FormField('Select delivery date', 'date');
+    const deliveryBlock = new FormField('Select delivery date', 'date');
     const deliveryDesc = div(
       [styles.sum_deliveryDesc],
       span([styles.sum_deliveryDesc_item], 'FREE Monday-Saturday all-day delivery on orders over £40 with DHL.'),
       span([styles.sum_deliveryDesc_item], 'For orders under £40, delivery with DHL starts at £5.00'),
       span([styles.sum_deliveryDesc_item], 'Premium delivery starts at £9.95')
     );
+
     this.totalSum = div([styles.sum_total], span([styles.sum_total_title], 'TOTAL'), div([styles.sum_total_price]));
-    const chekoutBtn = button([styles.sum_checkoutBtn], 'PROCEED TO CHECKOUT');
+    const checkoutBtn = button([styles.sum_checkoutBtn], 'PROCEED TO CHECKOUT');
 
     if (products) {
       this.calculateTotalSum();
     }
 
-    return div([styles.sum_block], title, deliveryblock, deliveryDesc, this.totalSum, chekoutBtn);
+    return div(
+      [styles.sum_block],
+      title,
+      deliveryBlock,
+      deliveryDesc,
+      this.setDiscountBlock(),
+      this.totalSum,
+      checkoutBtn
+    );
+  }
+
+  private setDiscountBlock() {
+    this.updateDiscountCodes();
+
+    return this.discountBlock;
   }
 
   private calculateTotalSum() {
-    this.totalSum?.getChildren[1].setTextContent(setPrice(this.cart?.totalPrice.centAmount, '0 €'));
+    this.totalSum?.getChildren[1].setTextContent(setPrice(this.cart?.totalPrice.centAmount, '0€'));
     if (CurrentCart.getCart?.discountCodes.length) {
       let fullPrice;
       const resultPrice = this.cart?.totalPrice.centAmount;
@@ -147,10 +196,10 @@ export default class CartView extends BaseComponent {
           span([styles.full_price], setPrice(fullPrice)),
           span([styles.discounted_price], setPrice(resultPrice)),
         ]);
-      } else {
+      } else if (CartService.isClassicCroissantInCart() && CartService.isDOUBLECodeApplied()) {
         this.totalSum?.getChildren[1].setTextContent('');
         this.totalSum?.getChildren[1].appendChildren([
-          span([styles.full_price], setPrice((resultPrice as number) * 2 ?? 0)),
+          span([styles.full_price], setPrice((resultPrice as number) * 2)),
           span([styles.discounted_price], setPrice(resultPrice)),
         ]);
       }
@@ -169,7 +218,8 @@ export default class CartView extends BaseComponent {
         },
       ]);
       if (response.success) {
-        notificationEmitter.showMessage({ messageType: 'success', text: 'Promo Code is applied!' });
+        promoCodeInput.reset();
+        notificationEmitter.showMessage({ messageType: 'info', text: 'Promo Code is applied!' });
         this.updateView();
       }
     });
