@@ -124,7 +124,7 @@ export default class App {
         callBack: async (productName: string) => {
           const { default: ProductController } = await import('@components/product-page/product-controller');
           await this.hideMain();
-          this.controller = new ProductController(this.router, productName);
+          this.controller = new ProductController(this.router, productName, this.headerController);
           this.setContent();
         },
       },
