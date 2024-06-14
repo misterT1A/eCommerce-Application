@@ -21,6 +21,7 @@ module.exports = {
     '^@types/(.*)$': '<rootDir>/src/types/$1',
     '^@fonts/(.*)$': '<rootDir>/src/fonts/$1',
     '^@src/(.*)$': '<rootDir>/src/$1',
+    '^swiper': '<rootDir>/node_modules/swiper/swiper.min.js',
   },
   testMatch: ['**/__tests__/**/*.+(js|ts)'],
   modulePathIgnorePatterns: ['<rootDir>/dist/'],
