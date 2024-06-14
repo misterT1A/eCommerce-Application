@@ -11,7 +11,6 @@ class CartApiService {
 
   constructor() {
     CurrentCart.setCart(JSON.parse(localStorage.getItem('cartNetN') as string) || null);
-    this.getDiscountCodes();
   }
 
   public async createNewCustomerCart(ID: Customer['id']) {
@@ -91,7 +90,7 @@ class CartApiService {
     }
   }
 
-  private async getDiscountCodes() {
+  public async updateDiscountCodes() {
     try {
       const response = await AuthService.getRoot().discountCodes().get().execute();
       const discountCodes = response.body.results;
