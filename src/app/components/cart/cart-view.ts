@@ -189,6 +189,7 @@ export default class CartView extends BaseComponent {
       let fullPrice;
       const resultPrice = this.cart?.totalPrice.centAmount;
       const discountedPrice = this.cart?.discountOnTotalPrice?.discountedAmount.centAmount;
+
       if (resultPrice && discountedPrice) {
         fullPrice = resultPrice + discountedPrice;
         this.totalSum?.getChildren[1].setTextContent('');
@@ -198,8 +199,13 @@ export default class CartView extends BaseComponent {
         ]);
       } else if (CartService.isClassicCroissantInCart() && CartService.isDOUBLECodeApplied()) {
         this.totalSum?.getChildren[1].setTextContent('');
+
+        const croissantPrice =
+          (CurrentCart.products.find((product) => product.productKey === 'classic-croissant')
+            ?.discountedPricePerQuantity[0].quantity ?? 0) * 270;
+
         this.totalSum?.getChildren[1].appendChildren([
-          span([styles.full_price], setPrice((resultPrice as number) * 2)),
+          span([styles.full_price], setPrice((resultPrice as number) + croissantPrice)),
           span([styles.discounted_price], setPrice(resultPrice)),
         ]);
       }
