@@ -79,7 +79,7 @@ export default class CartView extends BaseComponent {
     this.headerController.setCartCount(CurrentCart.totalCount);
   }
 
-  private async updateDiscountCodes() {
+  public async updateDiscountCodes() {
     // if any discount code is applied
     if (CurrentCart.discountCodes?.length) {
       this.discountBlock.setTextContent('Applied promo codes:');
