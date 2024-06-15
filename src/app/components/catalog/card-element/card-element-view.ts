@@ -62,7 +62,6 @@ export default class Card extends BaseComponent {
     const description = p([styles.description], setShortDescription(props.description));
     const readMoreBtn = button([styles.read_more_btn], 'READ MORE');
     readMoreBtn.getNode().setAttribute('data-name', 'read-more-button');
-
     return [title, description, readMoreBtn];
   }
 
@@ -81,22 +80,18 @@ export default class Card extends BaseComponent {
     return div([styles.pay_block], price, div([styles.pay_block_controls], this.count, this.addBtn));
   }
 
-  // private setInputHandlers() {
-  // const debouncedInputEvent = debounce(() => {
-  //   const inputEvent = new Event('input', { bubbles: true });
-  //   this.getNode().dispatchEvent(inputEvent);
-  // }, 100);
-  // this.count.addListener('input', (e) => {
-  //   if (this.addBtn.getValue() || this.count.getValue() < 0) {
-  //     e.stopPropagation();
-  //     debouncedInputEvent();
-  //   }
-  // });
-  // }
-
   public setAnimDelay(index: number) {
     const delay = 0.2 + index / 20;
     this.getNode().style.animationDelay = `${delay}s`;
+  }
+
+  public resetCardControls(productQuantityInCart: number) {
+    if (productQuantityInCart > 0) {
+      this.addBtn.select();
+    } else {
+      this.addBtn.unselect();
+    }
+    this.count.setValue(productQuantityInCart || 1);
   }
 
   private handler(e: Event) {
