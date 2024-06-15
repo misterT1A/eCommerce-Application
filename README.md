@@ -1,17 +1,23 @@
-# 🛍️ eCommerce Application
+# 🥐 BRIOCHES
 
 ## Description
 
-[TBD Project description]
+Welcome to Brioches - a TypeScript e-commerce application.
+
+Discover a wide range of products, neatly organized into categories. Easily find what you're looking for with our search, filter, and sort options to match your preferences and needs.
+
+Register to personalize your shopping experience and manage your personal details.
+
+Add items to your cart with ease, and don't forget to apply promo code for extra savings. Enjoy a smooth and enjoyable shopping experience with Brioches!
 
 App pages:
 
 - Login, Registration and Main pages 🖥️
-- Catalog Product page 📖
+- Catalog page 🍰🥨🍩
 - Detailed Product page 🔍
-- User Profile page 👥
+- User Profile page 🙎🏻‍♂️
 - Basket Page 🛒
-- About Us Page 👦👩
+- About Us Page 👨‍💻
 
 ## Technology stack 🛠️
 
@@ -21,6 +27,7 @@ App pages:
 - Sass
 - ESLint, Prettier, Husky
 - Jest
+- [Swiper](https://swiperjs.com/), [Air Datepicker](https://air-datepicker.com/home)
 
 ## Setting up and running locally 🚀
 
@@ -62,3 +69,7 @@ npm start
 - `npm run prepare`: installs Husky, that is used for git hooks
 
 ## Creators 👨‍💻
+
+- [mistert1a](https://github.com/mistert1a)
+- [alv0425](https://github.com/alv0425)
+- [tatsianask108](https://github.com/tatsianask108)
