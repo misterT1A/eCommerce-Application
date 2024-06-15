@@ -3,7 +3,7 @@ import type { LineItem } from '@commercetools/platform-sdk';
 import { setPrice } from '@components/catalog/card-element/card-model';
 import Count from '@components/form-ui-elements/countInput';
 import Modal from '@components/modal/modal';
-import { actualizeCart, updateCart } from '@services/cart-service/cart-actions';
+import { updateCart } from '@services/cart-service/cart-actions';
 import CurrentCart from '@services/cart-service/currentCart';
 import BaseComponent from '@utils/base-component';
 import debounce from '@utils/debounce';
@@ -104,12 +104,14 @@ export default class Card extends BaseComponent {
     const removeButton = span([styles.removeButton], '', svg('/assets/img/cross.svg#cross', styles.svg__removeButton));
     removeButton.addListener('click', async () => {
       const loader = new Modal({ loader: true, title: '', content: setLoader(), parent: this.cartView.getNode() });
+      let hasChanged = false;
+      const productQuantityInCart = CurrentCart.getProductCountByID(this.props.productId);
       loader.open();
-      const currentCart = await actualizeCart();
-      if (currentCart.hasChanged) {
-        await this.cartView.updateView();
+      hasChanged = (await updateCart({ productID: this.props.productId, count: 0, name: this.props.name.en ?? '' }))
+        .success;
+      if (!hasChanged) {
+        this.count.setValue(productQuantityInCart || 1);
       }
-      await updateCart({ productID: this.props.productId, count: 0, name: this.props.name.en ?? '' });
       loader.close();
       this.cartView.updateView();
     });

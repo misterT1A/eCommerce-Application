@@ -217,6 +217,10 @@ export default class CartView extends BaseComponent {
     promoCodeInput.addClass(styles.promo__input);
     const promoBtn = button([general_styles.btn, styles.promo__btn], 'APPLY PROMO CODE');
     promoBtn.addListener('click', async () => {
+      const currentCart = await actualizeCart();
+      if (currentCart.hasChanged) {
+        await this.updateView();
+      }
       const response = await CartService.changeCartEntries([
         {
           action: 'addDiscountCode',
