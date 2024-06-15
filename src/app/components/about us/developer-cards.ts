@@ -1,10 +1,10 @@
+import tania from '@assets/team-photos/tania.jpg';
 import icon from '@assets/userIcon.svg';
-import BaseComponent from '@utils/base-component';
-import { div, p } from '@utils/elements';
+import { a, div, img, p, span, svg } from '@utils/elements';
 
 import styles from './_about_us-styles.scss';
 
-const teamDescription = `We are a team of three developers currently completing our development course. This website is our final project, showcasing what we’ve learned and achieved through our collaborative efforts and detailed planning.
+const TEAM_DESCRIPTION = `We are a team of three developers currently completing our development course. This website is our final project, showcasing what we’ve learned and achieved through our collaborative efforts and detailed planning.
 
 Our development process was highly collaborative, utilizing task planning and management tools such as Kanban boards. These tools helped us organize and prioritize our tasks efficiently, ensuring steady progress and meeting our milestones.
 
@@ -12,61 +12,66 @@ Communication has been key to our success. We maintained constant contact throug
 
 We’re excited to present our project and hope you enjoy exploring our work!`;
 
-const image1 = new BaseComponent<HTMLImageElement>({
-  tag: 'img',
-  className: styles.photo,
-  src: icon,
-});
-
-const card1 = div(
-  [styles.card, styles.card_even],
+const developer1 = () =>
   div(
-    [styles.card_content],
-    p([styles.card_content_name], 'Name'),
-    p([], 'Team Lead, Frontend Developer'),
-    p([], 'Biography'),
-    p([], 'Contribution to the project:')
-  ),
-  image1
-);
+    [styles.card, styles.card_even],
+    div(
+      [styles.card_content],
+      p([styles.card_content_name], 'Name'),
+      p([styles.card_content_role], 'Team Lead, Frontend Developer'),
+      p([], 'Biography'),
+      p([], 'Contribution to the project:'),
+      a([], {
+        href: '',
+        isExternal: true,
+        icon: svg('assets/img/github.svg#gh', styles.card_content_github),
+      })
+    ),
+    img([styles.photo], icon)
+  );
 
-const image2 = new BaseComponent<HTMLImageElement>({
-  tag: 'img',
-  className: styles.photo,
-  src: icon,
-});
-image2.addClass(styles.photo_odd);
-
-const card2 = div(
-  [styles.card, styles.card_odd],
+const developer2 = () =>
   div(
-    [styles.card_content, styles.card_content_odd],
-    p([styles.card_content_name], 'Name'),
-    p([], 'Frontend Developer'),
-    p([], 'Biography'),
-    p([], 'Contribution')
-  ),
-  image2
-);
+    [styles.card, styles.card_odd],
+    div(
+      [styles.card_content, styles.card_content_odd],
+      p([styles.card_content_name], 'Name'),
+      p([styles.card_content_role], 'Frontend Developer'),
+      p([], 'Biography'),
+      p([], 'Contribution to the project:'),
+      a([], {
+        href: '',
+        isExternal: true,
+        icon: svg('assets/img/github.svg#gh', styles.card_content_github),
+      })
+    ),
+    img([styles.photo, styles.photo_odd], icon)
+  );
 
-const image3 = new BaseComponent<HTMLImageElement>({
-  tag: 'img',
-  className: styles.photo,
-  src: icon,
-});
-
-const card3 = div(
-  [styles.card, styles.card_even],
+const developer3 = () =>
   div(
-    [styles.card_content],
-    p([styles.card_content_name], 'Name'),
-    p([], 'Frontend Developer'),
-    p([], 'Biography'),
-    p([], 'Contribution')
-  ),
-  image3
-);
+    [styles.card, styles.card_even],
+    div(
+      [styles.card_content],
+      div([], span([styles.card_content_name], 'Tatsiana Skavarodka')),
+      p([styles.card_content_role], 'Frontend Developer'),
+      p(
+        [],
+        'Graduated Dental faculty of Medical university. Started learning frontend development at The Rolling Scopes School in 2023.'
+      ),
+      p(
+        [],
+        'Contribution to the project: CommerceTools project setup, Authentication, Login page, Catalog page (categories navigation, products filtering, sorting and searching), Product page (Swiper integration), Cart page (promo codes application), About Us page.'
+      ),
+      a([], {
+        href: 'https://github.com/tatsianask108',
+        isExternal: true,
+        icon: svg('assets/img/github.svg#gh', styles.card_content_github),
+      })
+    ),
+    img([styles.photo], tania)
+  );
 
-const cards = [card1, card2, card3];
+const getCards = () => [developer1(), developer2(), developer3()];
 
-export { cards, teamDescription };
+export { getCards, TEAM_DESCRIPTION };
