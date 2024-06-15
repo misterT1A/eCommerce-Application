@@ -78,6 +78,15 @@ export default class ProductView extends BaseComponent {
     return swiper;
   }
 
+  public resetControls(productQuantityInCart: number) {
+    if (productQuantityInCart > 0) {
+      this.addBtn.select();
+    } else {
+      this.addBtn.unselect();
+    }
+    this.count.setValue(productQuantityInCart || 1);
+  }
+
   private setSwiper(data: Image[] | undefined): BaseComponent {
     if (!data) {
       return p([product_styles.main_empty_img_template], 'no image');

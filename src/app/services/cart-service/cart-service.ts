@@ -86,7 +86,7 @@ class CartApiService {
     } catch (error) {
       const errorsResponse = processErrorResponse(error);
       showErrorMessages(errorsResponse);
-      // console.error('Ошибка при обновлении корзины:', error);
+      console.error('Ошибка при обновлении корзины:', error);
     }
   }
 

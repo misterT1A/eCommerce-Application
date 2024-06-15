@@ -1,11 +1,12 @@
-import type { CartUpdateAction, LineItem } from '@commercetools/platform-sdk';
+import type { LineItem } from '@commercetools/platform-sdk';
 
 import { setPrice } from '@components/catalog/card-element/card-model';
+import Count from '@components/form-ui-elements/countInput';
 import Modal from '@components/modal/modal';
-import { actualizeCart } from '@services/cart-service/cart-actions';
-import CartService from '@services/cart-service/cart-service';
+import { updateCart } from '@services/cart-service/cart-actions';
 import CurrentCart from '@services/cart-service/currentCart';
 import BaseComponent from '@utils/base-component';
+import debounce from '@utils/debounce';
 import { div, p, span, svg } from '@utils/elements';
 import setLoader from '@utils/loader/loader-view';
 
@@ -13,6 +14,8 @@ import styles from './_styles.scss';
 import type CartView from '../cart-view';
 
 export default class Card extends BaseComponent {
+  private count = new Count();
+
   constructor(
     protected props: LineItem,
     protected cartView: CartView
@@ -42,7 +45,6 @@ export default class Card extends BaseComponent {
       } else {
         img.addClass(styles.img_Width);
       }
-
       imgWrapper.getChildren[0]?.destroy();
       imgWrapper.append(img);
     });
@@ -62,7 +64,6 @@ export default class Card extends BaseComponent {
 
   private setDescription() {
     const title = span([styles.description_title], this.props.name.en);
-
     const price = span([styles.description_price], setPrice(this.props.price.value.centAmount));
     if (this.props.price.discounted) {
       price.addClass(styles.price_throgh);
@@ -70,25 +71,47 @@ export default class Card extends BaseComponent {
     } else {
       price.addClass(styles.price);
     }
+    this.count.setValue(this.props.quantity);
+    this.count.addClass(styles.count);
+    this.setInputHandler();
+    return div([styles.description_wrapper], title, price, this.count);
+  }
 
-    return div([styles.description_wrapper], title, price);
+  private setInputHandler() {
+    const handler = async () => {
+      const loader = new Modal({ loader: true, title: '', content: setLoader(), parent: this.cartView.getNode() });
+      let hasChanged = false;
+      const productQuantityInCart = CurrentCart.getProductCountByID(this.props.productId);
+      loader.open();
+      hasChanged = (
+        await updateCart({
+          productID: this.props.productId,
+          count: this.count.getValue(),
+          name: this.props.name.en ?? '',
+        })
+      ).success;
+      if (!hasChanged) {
+        this.count.setValue(productQuantityInCart || 1);
+      }
+      this.cartView.updateView();
+      loader.close();
+    };
+    const debounced = debounce(handler, 600);
+    this.addListener('input', debounced);
   }
 
   private setRemoveButton() {
     const removeButton = span([styles.removeButton], '', svg('/assets/img/cross.svg#cross', styles.svg__removeButton));
-    const actionDescription: CartUpdateAction = {
-      action: 'removeLineItem',
-      lineItemId: CurrentCart.getLineItemIdByProductId(this.props.productId),
-      quantity: this.props.quantity,
-    };
     removeButton.addListener('click', async () => {
       const loader = new Modal({ loader: true, title: '', content: setLoader(), parent: this.cartView.getNode() });
+      let hasChanged = false;
+      const productQuantityInCart = CurrentCart.getProductCountByID(this.props.productId);
       loader.open();
-      const currentCart = await actualizeCart();
-      if (currentCart.hasChanged) {
-        await this.cartView.updateView();
+      hasChanged = (await updateCart({ productID: this.props.productId, count: 0, name: this.props.name.en ?? '' }))
+        .success;
+      if (!hasChanged) {
+        this.count.setValue(productQuantityInCart || 1);
       }
-      await CartService.changeCartEntries([actionDescription]);
       loader.close();
       this.cartView.updateView();
     });

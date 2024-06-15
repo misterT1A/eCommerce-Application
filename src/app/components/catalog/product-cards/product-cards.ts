@@ -2,8 +2,7 @@ import type { ProductProjection, ProductProjectionPagedSearchResponse } from '@c
 
 import type HeaderController from '@components/header/header_controller';
 import Modal from '@components/modal/modal';
-import notificationEmitter from '@components/notifications/notifications-controller';
-import { actualizeCart, getMessage, updateProductsInCart } from '@services/cart-service/cart-actions';
+import { updateCart } from '@services/cart-service/cart-actions';
 import CurrentCart from '@services/cart-service/currentCart';
 import ProductService from '@services/product_service/product_service';
 import Pages from '@src/app/router/pages';
@@ -83,7 +82,10 @@ export default class ProductCards extends BaseComponent {
       };
 
       const card = new Card(props, this.router);
+
       const handler = async () => {
+        let hasChanged = false;
+        const productQuantityInCart = CurrentCart.getProductCountByID(props.id);
         const loader = new Modal({
           title: '',
           content: setLoader(),
@@ -94,26 +96,20 @@ export default class ProductCards extends BaseComponent {
           if (card.addBtn.getValue()) {
             card.addBtn.unselect();
             loader.open();
-            await actualizeCart();
-            const resp = await updateProductsInCart({ productID: props.id, count: 0 });
-            if (resp.success && resp.actions) {
-              notificationEmitter.showMessage({
-                messageType: 'success',
-                ...getMessage(resp.actions[0], product.name.en ?? ''),
-              });
+            hasChanged = (await updateCart({ productID: props.id, count: 0, name: product.name.en ?? '' })).success;
+            if (!hasChanged) {
+              card.resetCardControls(productQuantityInCart);
             }
             loader.close();
           }
           card.count.setValue(1);
         } else if (card.addBtn.getValue()) {
           loader.open();
-          await actualizeCart();
-          const resp = await updateProductsInCart({ productID: props.id, count: card.count.getValue() });
-          if (resp.success && resp.actions) {
-            notificationEmitter.showMessage({
-              messageType: 'success',
-              ...getMessage(resp.actions[0], product.name.en ?? ''),
-            });
+          hasChanged = (
+            await updateCart({ productID: props.id, count: card.count.getValue(), name: product.name.en ?? '' })
+          ).success;
+          if (!hasChanged) {
+            card.resetCardControls(productQuantityInCart);
           }
           loader.close();
         }
