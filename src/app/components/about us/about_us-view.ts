@@ -1,6 +1,6 @@
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
-import { div, h2, p, svg } from '@utils/elements';
+import { a, div, h2, p, svg } from '@utils/elements';
 
 import styles from './_about_us-styles.scss';
 import { TEAM_DESCRIPTION, getCards } from './developer-cards';
@@ -26,7 +26,11 @@ export default class AboutUsView extends BaseComponent {
   private setRSSchoolBlock() {
     return div(
       [styles.RSSchool],
-      svg('assets/img/rss-logo.svg#svgElem'),
+      a([], {
+        href: 'https://rs.school/',
+        isExternal: true,
+        icon: svg('assets/img/rss-logo.svg#svgElem'),
+      }),
       p([], 'The project was created as part of the training at The Rolling Scopes School in 2024.')
     );
   }
