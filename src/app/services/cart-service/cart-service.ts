@@ -11,7 +11,7 @@ class CartApiService {
 
   constructor() {
     CurrentCart.setCart(JSON.parse(localStorage.getItem('cartNetN') as string) || null);
-    this.getDiscountCodes();
+    // this.getDiscountCodes();
   }
 
   public async createNewCustomerCart(ID: Customer['id']) {
@@ -87,11 +87,11 @@ class CartApiService {
     } catch (error) {
       const errorsResponse = processErrorResponse(error);
       showErrorMessages(errorsResponse);
-      // console.error('Ошибка при обновлении корзины:', error);
+      console.error('Ошибка при обновлении корзины:', error);
     }
   }
 
-  private async getDiscountCodes() {
+  public async getDiscountCodes() {
     try {
       const response = await AuthService.getRoot().discountCodes().get().execute();
       const discountCodes = response.body.results;
