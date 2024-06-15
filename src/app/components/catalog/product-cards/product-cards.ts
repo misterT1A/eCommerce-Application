@@ -66,7 +66,7 @@ export default class ProductCards extends BaseComponent {
     }
   }
 
-  private createCards(products: ProductProjection[]) {
+  public createCards(products: ProductProjection[]) {
     products.forEach((product, index) => {
       const price = product.masterVariant.prices?.[0];
 

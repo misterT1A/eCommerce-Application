@@ -15,19 +15,4 @@ const setPrice = (price: number | undefined, text?: string) => {
   return `${(price / 100).toFixed(2)} €`;
 };
 
-const changeCount = (countParrent: HTMLElement | null, plus: boolean) => {
-  if (!countParrent) {
-    return;
-  }
-  const countElem = countParrent.children[1];
-  const count = countElem.textContent;
-  if (plus) {
-    if (count) {
-      countElem.textContent = (+count + 1).toString();
-    }
-  } else if (count && +count > 1) {
-    countElem.textContent = (+count - 1).toString();
-  }
-};
-
-export { setShortDescription, setPrice, changeCount };
+export { setShortDescription, setPrice };
