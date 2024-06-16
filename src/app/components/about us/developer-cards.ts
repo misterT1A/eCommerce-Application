@@ -29,7 +29,7 @@ const developer1 = () =>
         'Contribution to the project: Development environment configuration, Repository setup, Navigation and Header implementation, Routing implementation, Main page, Catalog page (Product List, lazy loading, Interactive product cards), Product page (Information), Cart page (Items and Information).'
       ),
       a([], {
-        href: '',
+        href: 'https://github.com/misterT1A',
         isExternal: true,
         icon: svg('assets/img/github.svg#gh', styles.card_content_github),
       })
