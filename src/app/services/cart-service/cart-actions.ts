@@ -66,7 +66,7 @@ export async function actualizeCart() {
   }
   const cartId = JSON.parse(localStorage.getItem('cartNetN') ?? '');
   const cartVersion = CurrentCart.version;
-  console.log(cartId?.id ?? '');
+  // console.log(cartId?.id ?? '');
   if (cartId?.id ?? '') {
     await CartService.updateCart(cartId?.id ?? '');
   }

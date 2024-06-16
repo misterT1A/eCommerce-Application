@@ -53,7 +53,7 @@ export function getPriceFromUrl(string: string) {
       .split('_')
       .slice(1)
       .map((bound) => parseInt(bound, 10)) as [number, number];
-    console.log(range);
+    // console.log(range);
     return range;
   }
   return ProductService.priceBounds;

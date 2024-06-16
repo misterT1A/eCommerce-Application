@@ -129,14 +129,14 @@ class AuthenticationService {
   public async sessionStateHandler(): Promise<void> {
     if (this.getRefreshTokenFromStorage(Session.AUTH)) {
       this.root = this.createRoot(this.getRefreshClient(Session.AUTH));
-      console.log('customer session is restored');
+      // console.log('customer session is restored');
     } else if (this.getRefreshTokenFromStorage(Session.ANON)) {
       this.root = this.createRoot(this.getRefreshClient(Session.ANON));
-      console.log('anon session is restored');
+      // console.log('anon session is restored');
     } else {
       this.root = this.createRoot(this.getAnonymousClient());
       await this.root.get().execute();
-      console.log('new anon session started');
+      // console.log('new anon session started');
     }
   }
 
@@ -166,7 +166,7 @@ class AuthenticationService {
         .execute()
         .then((result) => {
           if (result.body.cart) {
-            console.log('Customer cart from Commercetools', result.body.cart);
+            // console.log('Customer cart from Commercetools', result.body.cart);
             CurrentCart.setCart(result.body.cart);
           }
           this.root = root;
@@ -177,7 +177,7 @@ class AuthenticationService {
           });
           localStorage.removeItem(`${Session.ANON}-${this.PROJECT_KEY}`);
           localStorage.setItem('loggedIn', 'true');
-          console.log('login');
+          // console.log('login');
         })
         .catch((e: Error) => {
           resolve({
@@ -217,7 +217,7 @@ class AuthenticationService {
     localStorage.clear();
     CurrentCart.deleteCart();
     await this.sessionStateHandler();
-    console.log('logout');
+    // console.log('logout');
   }
 
   public isAuthorized() {
