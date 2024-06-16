@@ -1,3 +1,4 @@
+import artem from '@assets/team-photos/artem.jpg';
 import tania from '@assets/team-photos/tania.jpg';
 import icon from '@assets/userIcon.svg';
 import { a, div, img, p, span, svg } from '@utils/elements';
@@ -17,17 +18,23 @@ const developer1 = () =>
     [styles.card, styles.card_even],
     div(
       [styles.card_content],
-      p([styles.card_content_name], 'Name'),
+      p([styles.card_content_name], 'Artem Taraskin'),
       p([styles.card_content_role], 'Team Lead, Frontend Developer'),
-      p([], 'Biography'),
-      p([], 'Contribution to the project:'),
+      p(
+        [],
+        'I graduated from Technical University with a degree in shipbuilding and ocean engineering. I have been studying frontend since the beginning of 2023.'
+      ),
+      p(
+        [],
+        'Contribution to the project: Development environment configuration, Repository setup, Navigation and Header implementation, Routing implementation, Main page, Catalog page (Product List, lazy loading, Interactive product cards), Product page (Information), Cart page (Items and Information).'
+      ),
       a([], {
         href: '',
         isExternal: true,
         icon: svg('assets/img/github.svg#gh', styles.card_content_github),
       })
     ),
-    img([styles.photo], icon)
+    img([styles.photo], artem)
   );
 
 const developer2 = () =>
