@@ -72,6 +72,7 @@ const developer2 = () =>
         li([styles.contribution_tag], span([], 'form validation service')),
         li([styles.contribution_tag], span([], 'profile page')),
         li([styles.contribution_tag], span([], 'addresses managing')),
+        li([styles.contribution_tag], span([], 'Cart page')),
         li([styles.contribution_tag], span([], 'CRUD operations for cart entries')),
         li([styles.contribution_tag], span([], 'errors handling'))
       ),
@@ -93,7 +94,7 @@ const developer3 = () =>
       p([styles.card_content_role], 'Frontend Developer'),
       p(
         [],
-        'Graduated Dental faculty of Medical university. Started learning frontend development at The Rolling Scopes School in 2023.'
+        'I graduated from the Dental faculty of Medical university. Started learning frontend development at The Rolling Scopes School in 2023.'
       ),
       // p(
       //   [],
@@ -109,6 +110,7 @@ const developer3 = () =>
         li([styles.contribution_tag], span([], 'categories navigation')),
         li([styles.contribution_tag], span([], 'products filtering, sorting and searching')),
         li([styles.contribution_tag], span([], 'product page (Swiper integration)')),
+        li([styles.contribution_tag], span([], 'Cart page')),
         li([styles.contribution_tag], span([], 'promo codes application')),
         li([styles.contribution_tag], span([], 'about us page'))
       ),
