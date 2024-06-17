@@ -43,7 +43,7 @@ export default class CartView extends BaseComponent {
     this.headerController.setCartCount(CurrentCart.totalCount);
 
     const title = span([styles.title], 'Your Cart');
-    const cardsBlockWrapper = new BaseComponent({ className: styles.cards_wrapper }, this.setCardsBlock());
+    const cardsBlockWrapper = this.setCardsBlock();
     const checkoutBlock = this.setCheckoutBlock();
     const promoBlock = this.setPromoBlock();
     const buttonsBlock = this.setButtonsBlock();
