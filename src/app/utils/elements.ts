@@ -73,6 +73,12 @@ export const li = (classList: string[], ...children: ChildType[]) => {
   return liComponent;
 };
 
+export const img = (classList: string[], src: string) => {
+  const imgComponent = new BaseComponent<HTMLImageElement>({ tag: 'img', src });
+  imgComponent.addClass(...classList);
+  return imgComponent;
+};
+
 /**
  * Creates an SVG element with the specified URL and class name.
  * @param {string} url - The URL of the SVG file (relative path from index.html in /dist folder to .svg file + #id-of-svg-element
