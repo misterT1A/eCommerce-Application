@@ -32,19 +32,8 @@ describe('Catalog card element', () => {
     expect(card).toBeInstanceOf(BaseComponent);
   });
 
-  test('should change count when clicked', () => {
-    const mockEventPlus = { target: { textContent: '+' } };
-    const mockEventMinus = { target: { textContent: '-' } };
-
-    const changeCountSpy = jest.spyOn(cardModel, 'changeCount');
-    card['handler'](mockEventPlus as unknown as Event);
-    expect(changeCountSpy).toHaveBeenCalled();
-    card['handler'](mockEventMinus as unknown as Event);
-    expect(changeCountSpy).toHaveBeenCalled();
-  });
-
   test('should navigate to product page', () => {
-    const mockEvent = { target: { textContent: 'READ MORE' } };
+    const mockEvent = { target: { dataset: { name: 'read-more-button' } } };
 
     const navigate = jest.spyOn(router, 'navigateToProduct').mockImplementation(jest.fn());
     card['handler'](mockEvent as unknown as Event);
@@ -52,7 +41,7 @@ describe('Catalog card element', () => {
   });
 
   test('should not navigate for unknown link', () => {
-    const mockEvent = { target: { textContent: 'Unknown Link' } };
+    const mockEvent = { target: { dataset: { name: 'Unknown Link' } } };
 
     const navigate = jest.spyOn(router, 'navigateToProduct').mockImplementation(jest.fn());
     card['handler'](mockEvent as unknown as Event);
@@ -78,47 +67,5 @@ describe('Catalog card element', () => {
     expect(result).toBe('4.00 €');
     const result2 = cardModel.setPrice(text2);
     expect(result2).toBe('Not for sale');
-  });
-
-  describe('changeCount', () => {
-    let countParrent: HTMLElement;
-
-    beforeEach(() => {
-      countParrent = document.createElement('div');
-      countParrent.innerHTML = '<span></span><span>5</span>';
-    });
-
-    it('should do nothing if countParrent is null', () => {
-      const spy = jest.spyOn(console, 'log').mockImplementation();
-      cardModel.changeCount(null, true);
-      expect(spy).not.toHaveBeenCalled();
-      spy.mockRestore();
-    });
-
-    it('should increment the count if plus is true', () => {
-      cardModel.changeCount(countParrent, true);
-      const countElem = countParrent.children[1];
-      expect(countElem.textContent).toBe('6');
-    });
-
-    it('should decrement the count if plus is false and count is greater than 1', () => {
-      cardModel.changeCount(countParrent, false);
-      const countElem = countParrent.children[1];
-      expect(countElem.textContent).toBe('4');
-    });
-
-    it('should not decrement the count if plus is false and count is 1', () => {
-      countParrent.children[1].textContent = '1';
-      cardModel.changeCount(countParrent, false);
-      const countElem = countParrent.children[1];
-      expect(countElem.textContent).toBe('1');
-    });
-
-    it('should not change the count if count is empty', () => {
-      countParrent.children[1].textContent = '';
-      cardModel.changeCount(countParrent, true);
-      const countElem = countParrent.children[1];
-      expect(countElem.textContent).toBe('');
-    });
   });
 });

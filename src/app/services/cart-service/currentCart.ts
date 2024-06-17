@@ -17,6 +17,7 @@ class CurrentCart {
 
   public static deleteCart() {
     this.cart = null;
+    localStorage.removeItem('cartNetN');
   }
 
   public static get version() {

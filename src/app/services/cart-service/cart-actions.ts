@@ -1,5 +1,7 @@
 import type { CartAddLineItemAction, CartUpdateAction } from '@commercetools/platform-sdk';
 
+import notificationEmitter from '@components/notifications/notifications-controller';
+
 import CartService from './cart-service';
 import CurrentCart from './currentCart';
 
@@ -57,6 +59,11 @@ export const clearCart = () => {
 };
 
 export async function actualizeCart() {
+  if (!Object.prototype.hasOwnProperty.call(localStorage, 'cartNetN')) {
+    return {
+      hasChanged: false,
+    };
+  }
   const cartId = JSON.parse(localStorage.getItem('cartNetN') ?? '');
   const cartVersion = CurrentCart.version;
   console.log(cartId?.id ?? '');
@@ -67,3 +74,15 @@ export async function actualizeCart() {
     hasChanged: cartId !== CurrentCart.id || cartVersion !== CurrentCart.version,
   };
 }
+
+export const updateCart = async (productData: { productID: string; count: number; name: string }) => {
+  await actualizeCart();
+  const resp = await updateProductsInCart(productData);
+  if (resp.success && resp.actions) {
+    notificationEmitter.showMessage({
+      messageType: 'success',
+      ...getMessage(resp.actions[0], productData.name),
+    });
+  }
+  return resp;
+};

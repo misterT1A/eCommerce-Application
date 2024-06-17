@@ -79,7 +79,7 @@ export default class CartView extends BaseComponent {
     this.headerController.setCartCount(CurrentCart.totalCount);
   }
 
-  private async updateDiscountCodes() {
+  public async updateDiscountCodes() {
     // if any discount code is applied
     if (CurrentCart.discountCodes?.length) {
       this.discountBlock.setTextContent('Applied promo codes:');
@@ -217,6 +217,10 @@ export default class CartView extends BaseComponent {
     promoCodeInput.addClass(styles.promo__input);
     const promoBtn = button([general_styles.btn, styles.promo__btn], 'APPLY PROMO CODE');
     promoBtn.addListener('click', async () => {
+      const currentCart = await actualizeCart();
+      if (currentCart.hasChanged) {
+        await this.updateView();
+      }
       const response = await CartService.changeCartEntries([
         {
           action: 'addDiscountCode',

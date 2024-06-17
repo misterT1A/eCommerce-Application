@@ -4,7 +4,7 @@ import Controller from '@components/controller';
 import type HeaderController from '@components/header/header_controller';
 import Modal from '@components/modal/modal';
 import notificationEmitter from '@components/notifications/notifications-controller';
-import { getMessage, updateProductsInCart } from '@services/cart-service/cart-actions';
+import { actualizeCart, getMessage, updateCart, updateProductsInCart } from '@services/cart-service/cart-actions';
 import CurrentCart from '@services/cart-service/currentCart';
 import ProductsService from '@services/product_service/product_service';
 import Pages from '@src/app/router/pages';
@@ -56,6 +56,7 @@ export default class ProductController extends Controller<ProductView> {
   private async removeFromCart(loader: Modal<BaseComponent>, data: ProductProjection) {
     this.getView.addBtn.unselect();
     loader.open();
+    await actualizeCart();
     const resp = await updateProductsInCart({ productID: data.id, count: 0 });
     if (resp.success && resp.actions?.length) {
       notificationEmitter.showMessage({
@@ -75,6 +76,8 @@ export default class ProductController extends Controller<ProductView> {
       loader: true,
       parent: this.getView.getNode(),
     });
+    const productQuantityInCart = CurrentCart.getProductCountByID(data.id);
+    let hasChanged = false;
     if (!this.getView.count.getValue() || this.getView.count.getValue() <= 0) {
       if (this.getView.addBtn.getValue()) {
         const resp = await this.removeFromCart(loader, data);
@@ -83,13 +86,12 @@ export default class ProductController extends Controller<ProductView> {
       this.getView.count.setValue(1);
     } else if (this.getView.addBtn.getValue()) {
       loader.open();
-      const resp = await updateProductsInCart({ productID: data.id, count: this.getView.count.getValue() });
-      if (resp.success && resp.actions) {
-        notificationEmitter.showMessage({
-          messageType: 'success',
-          ...getMessage(resp.actions[0], data.name.en ?? ''),
-        });
-        result = { success: true };
+      await actualizeCart();
+      hasChanged = (
+        await updateCart({ productID: data.id, count: this.getView.count.getValue(), name: data.name.en ?? '' })
+      ).success;
+      if (!hasChanged) {
+        this.getView.resetControls(productQuantityInCart);
       }
       loader.close();
     }
