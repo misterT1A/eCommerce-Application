@@ -43,6 +43,7 @@ export default class HeaderView extends BaseComponent {
 
   private setLogo() {
     const img = new BaseComponent<HTMLImageElement>({ tag: 'img', src: logo, className: styles.logo });
+    img.addListener('click', () => this.router.navigate(Pages.MAIN));
     this.append(img);
   }
 
