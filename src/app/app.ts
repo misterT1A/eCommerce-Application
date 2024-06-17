@@ -52,10 +52,10 @@ export default class App {
     document.addEventListener('DOMContentLoaded', async () => {
       await AuthService.sessionStateHandler();
       if (CurrentCart.id) {
-        await CartService.updateDiscountCodes();
         await CartService.updateCart(CurrentCart.id);
         this.headerController.setCartCount(CurrentCart.totalCount);
       }
+      await CartService.updateDiscountCodes();
       await ProductService.getCommercetoolsData();
       await updateMyCustomerInfo();
       this.headerController.updateTextLoggined(MyCustomer.fullNameShort);

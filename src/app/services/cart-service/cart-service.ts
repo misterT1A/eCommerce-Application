@@ -39,7 +39,7 @@ class CartApiService {
       .execute()
       .then((response) => {
         CurrentCart.setCart(response.body);
-        console.log('Анонимная корзина успешно создана:', CurrentCart.getCart);
+        // console.log('Анонимная корзина успешно создана:', CurrentCart.getCart);
       })
       .catch((error) => {
         console.error('Ошибка при создании анонимной корзины:', error);
