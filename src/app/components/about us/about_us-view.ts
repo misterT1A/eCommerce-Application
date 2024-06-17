@@ -29,7 +29,7 @@ export default class AboutUsView extends BaseComponent {
       a([], {
         href: 'https://rs.school/',
         isExternal: true,
-        icon: svg('assets/img/rss-logo.svg#svgElem'),
+        icon: svg('assets/img/rss-logo.svg#svgElem', styles.RSSchool_icon),
       }),
       p([], 'The project was created as part of the training at The Rolling Scopes School in 2024.')
     );
