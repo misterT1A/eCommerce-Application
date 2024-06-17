@@ -1,7 +1,6 @@
 import aliona from '@assets/team-photos/aliona.jpg';
 import artem from '@assets/team-photos/artem.jpg';
 import tania from '@assets/team-photos/tania.jpg';
-// import icon from '@assets/userIcon.svg';
 import { a, div, img, li, p, span, svg, ul } from '@utils/elements';
 
 import styles from './_about_us-styles.scss';
@@ -61,7 +60,7 @@ const developer2 = () =>
       p([styles.card_content_role], 'Frontend Developer'),
       p(
         [],
-        'I graduated from the Faculty of Physics at Belarusian State University and worked as a researcher for a few years. Since starting to learn JavaScript last year with Rolling Scopes School, I’ve enjoyed creating dynamic and user-friendly interfaces and finding original solutions to development challenges.'
+        'I graduated from the Faculty of Physics at Belarusian State University and worked as a researcher for a few years. Since starting to learn JavaScript last year with Rolling Scopes School, I’ve enjoyed creating interfaces and finding solutions to development challenges.'
       ),
       ul(
         [styles.contribution],
