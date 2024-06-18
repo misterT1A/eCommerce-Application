@@ -89,10 +89,12 @@
   0% {
     opacity: 1;
   }
+
   50% {
     opacity: 0;
     max-height: 180px;
   }
+
   100% {
     padding-top: 0;
     padding-bottom: 0;
@@ -103,4 +105,18 @@
 
 .count {
   margin-top: auto;
+}
+
+@media screen and (max-width: 470px) {
+  .card_element {
+    display: grid;
+    grid-template-columns: 100px repeat(3, 1fr);
+    padding: 15px 0px;
+    column-gap: 10px;
+  }
+
+  .img_wrapper {
+    width: 100px;
+    height: 100px;
+  }
 }

@@ -16,6 +16,8 @@ import type CartView from '../cart-view';
 export default class Card extends BaseComponent {
   private count = new Count();
 
+  private totalPrice = 0;
+
   constructor(
     protected props: LineItem,
     protected cartView: CartView
@@ -29,6 +31,7 @@ export default class Card extends BaseComponent {
     this.appendChildren([
       this.setCardImg((this.props.variant.images as IImgCard[])[0].url),
       this.setDescription(),
+      this.setTotalPriceBlock(),
       this.setRemoveButton(),
     ]);
   }
@@ -98,6 +101,24 @@ export default class Card extends BaseComponent {
     };
     const debounced = debounce(handler, 600);
     this.addListener('input', debounced);
+  }
+
+  private setTotalPriceBlock() {
+    this.totalPrice = this.props.totalPrice.centAmount;
+    const title = span([styles.description_title], 'Total');
+    const price = span([styles.price], setPrice(this.totalPrice));
+
+    return div([styles.description_wrapper], title, price);
+  }
+
+  public get getTotalPrice() {
+    return this.totalPrice;
+  }
+
+  public updateTotalPrice(price: number) {
+    this.totalPrice = price;
+    const priceBlock = this.children[2];
+    priceBlock.getChildren[1].setTextContent(setPrice(this.totalPrice));
   }
 
   private setRemoveButton() {
