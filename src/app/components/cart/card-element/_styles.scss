@@ -1,6 +1,6 @@
 .card_element {
   display: grid;
-  grid-template-columns: 150px repeat(3, 1fr);
+  grid-template-columns: 150px repeat(2, 1fr);
   column-gap: 20px;
   width: 100%;
   padding: 15px 5px;
@@ -107,14 +107,34 @@
   margin-top: auto;
 }
 
+.count_wrapper {
+  margin-top: auto;
+  height: 40px;
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  .description_title,
+  .price {
+    font-size: 14px;
+  }
+  .description_title {
+    color: $color-dark-gray;
+  }
+  .description_wrapper {
+    gap: 0;
+  }
+}
+
 @media screen and (max-width: 470px) {
   .card_element {
     display: grid;
-    grid-template-columns: 100px repeat(3, 1fr);
+    grid-template-columns: 100px repeat(2, 1fr);
     padding: 15px 0px;
     column-gap: 10px;
   }
-
+  .description_wrapper {
+    gap: 20px;
+  }
   .img_wrapper {
     width: 100px;
     height: 100px;

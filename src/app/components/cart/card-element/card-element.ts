@@ -18,6 +18,8 @@ export default class Card extends BaseComponent {
 
   private totalPrice = 0;
 
+  private priceBlock: BaseComponent<HTMLSpanElement> | null = null;
+
   constructor(
     protected props: LineItem,
     protected cartView: CartView
@@ -31,7 +33,7 @@ export default class Card extends BaseComponent {
     this.appendChildren([
       this.setCardImg((this.props.variant.images as IImgCard[])[0].url),
       this.setDescription(),
-      this.setTotalPriceBlock(),
+      // this.setTotalPriceBlock(),
       this.setRemoveButton(),
     ]);
   }
@@ -77,7 +79,12 @@ export default class Card extends BaseComponent {
     this.count.setValue(this.props.quantity);
     this.count.addClass(styles.count);
     this.setInputHandler();
-    return div([styles.description_wrapper], title, price, this.count);
+    return div(
+      [styles.description_wrapper],
+      title,
+      price,
+      div([styles.count_wrapper], this.count, this.setTotalPriceBlock())
+    );
   }
 
   private setInputHandler() {
@@ -105,10 +112,10 @@ export default class Card extends BaseComponent {
 
   private setTotalPriceBlock() {
     this.totalPrice = this.props.totalPrice.centAmount;
-    const title = span([styles.description_title], 'Total');
-    const price = span([styles.price], setPrice(this.totalPrice));
+    const title = span([styles.description_title], 'total');
+    this.priceBlock = span([styles.price], setPrice(this.totalPrice));
 
-    return div([styles.description_wrapper], title, price);
+    return div([styles.description_wrapper], title, this.priceBlock);
   }
 
   public get getTotalPrice() {
@@ -117,8 +124,9 @@ export default class Card extends BaseComponent {
 
   public updateTotalPrice(price: number) {
     this.totalPrice = price;
-    const priceBlock = this.children[2];
-    priceBlock.getChildren[1].setTextContent(setPrice(this.totalPrice));
+    // const priceBlock = this.children[2];
+    // priceBlock.getChildren[1].setTextContent(setPrice(this.totalPrice));
+    this.priceBlock?.setTextContent(setPrice(this.totalPrice));
   }
 
   private setRemoveButton() {
