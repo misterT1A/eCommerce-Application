@@ -108,6 +108,7 @@ export default class CartView extends BaseComponent {
           )
         );
       });
+      this.updateCards();
     } else {
       this.discountBlock.destroyChildren();
       this.discountBlock.setTextContent('');
@@ -116,19 +117,29 @@ export default class CartView extends BaseComponent {
 
   public async updateCards() {
     const { products } = CurrentCart;
+
     products.forEach((product) => {
       if (!this.cards.has(product.productId)) {
         const card = new Card(product, this);
         this.cards.set(product.productId, card);
         this.cardsBlock?.append(card);
       }
+
+      if (this.cards.has(product.productId)) {
+        const card = this.cards.get(product.productId);
+        if (card?.getTotalPrice !== product.totalPrice.centAmount) {
+          card?.updateTotalPrice(product.totalPrice.centAmount);
+        }
+      }
     });
+
     const cardsRemove: Promise<void>[] = [];
     this.cards.forEach((card, key) => {
       if (!CurrentCart.getProductCountByID(key)) {
         cardsRemove.push(card.remove());
       }
     });
+
     await Promise.all(cardsRemove);
     if (!products.length) {
       this.setEmptyCardsBlockContent();
@@ -154,9 +165,9 @@ export default class CartView extends BaseComponent {
     const deliveryBlock = new FormField('Select delivery date', 'date');
     const deliveryDesc = div(
       [styles.sum_deliveryDesc],
-      span([styles.sum_deliveryDesc_item], 'FREE Monday-Saturday all-day delivery on orders over £40 with DHL.'),
-      span([styles.sum_deliveryDesc_item], 'For orders under £40, delivery with DHL starts at £5.00'),
-      span([styles.sum_deliveryDesc_item], 'Premium delivery starts at £9.95')
+      span([styles.sum_deliveryDesc_item], 'FREE Monday-Saturday all-day delivery on orders over 40 € with DHL.'),
+      span([styles.sum_deliveryDesc_item], 'For orders under 40 €, delivery with DHL starts at 5.00 €'),
+      span([styles.sum_deliveryDesc_item], 'Premium delivery starts at 9.95 €')
     );
 
     this.totalSum = div([styles.sum_total], span([styles.sum_total_title], 'TOTAL'), div([styles.sum_total_price]));
