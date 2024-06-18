@@ -326,3 +326,15 @@
     padding: 10px 10px;
   }
 }
+
+.confirmModal {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  align-items: center;
+  text-align: center;
+  .confirm__btn {
+    width: 100%;
+  }
+}
