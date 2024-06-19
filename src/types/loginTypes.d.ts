@@ -46,6 +46,7 @@ interface ILoginResult {
   message: string;
   customer?: ICustomer;
   errors?: string[];
+  cartCount?: number;
 
   statusCode?: number;
 }
