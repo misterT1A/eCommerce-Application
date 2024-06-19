@@ -11,7 +11,7 @@ import CurrentCart from '@services/cart-service/currentCart';
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
-import { button, div, span, svg } from '@utils/elements';
+import { button, div, p, span, svg } from '@utils/elements';
 import setLoader from '@utils/loader/loader-view';
 
 import styles from './_cart.scss';
@@ -249,6 +249,33 @@ export default class CartView extends BaseComponent {
 
   private setButtonsBlock() {
     const clearCartButton = button([styles.sum_checkoutBtn, styles.clear_button], 'CLEAR CART');
+    clearCartButton.addListener('click', () => this.clearCartConfirmation());
+    return div([styles.buttons_block], clearCartButton);
+  }
+
+  private clearCartConfirmation() {
+    if (CurrentCart.totalCount === 0) {
+      notificationEmitter.showMessage({
+        messageType: 'info',
+        title: 'Cart is empty!',
+        text: 'Back to catalog page to continue shopping.',
+      });
+      return;
+    }
+    const confirmationButton = button([general_styles.btn, styles.confirm__btn], 'CONFIRM');
+    const modal = new Modal({
+      title: 'Are you sure?',
+      content: div(
+        [styles.confirmModal],
+        p(
+          [],
+          'Do you want to clear your cart? Once you confirm this action, it will be irreversible. Are you sure you want to proceed?'
+        ),
+        confirmationButton
+      ),
+      parent: this.getNode(),
+    });
+    modal.open();
     const clearCartHandler = async () => {
       const loader = new Modal({ loader: true, title: '', content: setLoader(), parent: this.getNode() });
       loader.open();
@@ -265,10 +292,9 @@ export default class CartView extends BaseComponent {
           text: 'Your cart was cleared! Back to catalog to continue shopping.',
         });
         this.updateView();
+        modal.close();
       }
     };
-    clearCartButton.addListener('click', async () => clearCartHandler());
-
-    return div([styles.buttons_block], clearCartButton);
+    confirmationButton.addListener('click', async () => clearCartHandler());
   }
 }
