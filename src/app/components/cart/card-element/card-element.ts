@@ -33,7 +33,6 @@ export default class Card extends BaseComponent {
     this.appendChildren([
       this.setCardImg((this.props.variant.images as IImgCard[])[0].url),
       this.setDescription(),
-      // this.setTotalPriceBlock(),
       this.setRemoveButton(),
     ]);
   }
@@ -124,8 +123,7 @@ export default class Card extends BaseComponent {
 
   public updateTotalPrice(price: number) {
     this.totalPrice = price;
-    // const priceBlock = this.children[2];
-    // priceBlock.getChildren[1].setTextContent(setPrice(this.totalPrice));
+
     this.priceBlock?.setTextContent(setPrice(this.totalPrice));
   }
 
