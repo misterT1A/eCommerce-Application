@@ -174,6 +174,7 @@ class AuthenticationService {
             success: true,
             message: 'OK',
             customer: result.body.customer,
+            cartCount: result.body.cart?.totalLineItemQuantity,
           });
           localStorage.removeItem(`${Session.ANON}-${this.PROJECT_KEY}`);
           localStorage.setItem('loggedIn', 'true');

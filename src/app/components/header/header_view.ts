@@ -69,13 +69,13 @@ export default class HeaderView extends BaseComponent {
   public setCartCount(count: number) {
     const parrent = this.getChildren[3].getChildren[1];
     if (count > 0) {
-      const countElem = span([styles.cart_count_wrapper], count.toString());
-      parrent.append(countElem);
-    } else {
-      const countElem = parrent.getChildren[0];
-      if (countElem) {
+      if (parrent.getChildren.length) {
         parrent.destroyChildren();
       }
+      const countElem = span([styles.cart_count_wrapper], count.toString());
+      parrent.append(countElem);
+    } else if (parrent.getChildren.length) {
+      parrent.destroyChildren();
     }
   }
 
@@ -156,6 +156,7 @@ export default class HeaderView extends BaseComponent {
         this.changeTextNotLoginned();
         AuthService.logout();
         this.router.navigateToLastPoint();
+        this.setCartCount(0);
         break;
       default:
         break;

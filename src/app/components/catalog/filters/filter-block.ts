@@ -103,6 +103,7 @@ export default class FilterBlock extends BaseComponent {
       if (!this.searchInput.getValue()) {
         return;
       }
+      this.setDefaultCardsCount();
       this.handleSearch(this.searchInput.getValue());
     });
     this.searchInput.input.addListener('input', () => {
