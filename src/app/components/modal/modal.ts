@@ -1,8 +1,9 @@
 import BaseComponent from '@utils/base-component';
 import { button, div, h2, svg } from '@utils/elements';
+import setLoader from '@utils/loader/loader-view';
 
 import styles from './_modal.scss';
-import scrollControl, { lockBackground, unlockBackground } from './body-lock';
+import scrollControl, { lockBackground, unlockBackground } from './modal-helpers';
 
 interface IModalProps<T extends BaseComponent> {
   title: string;
@@ -14,6 +15,10 @@ interface IModalProps<T extends BaseComponent> {
   withoutCloseBtn?: boolean;
 
   wide?: boolean;
+
+  loader?: boolean;
+
+  fullScreen?: boolean;
 }
 
 class Modal<T extends BaseComponent> extends BaseComponent {
@@ -22,6 +27,8 @@ class Modal<T extends BaseComponent> extends BaseComponent {
   private isSubModal = false;
 
   private scrollControl = scrollControl();
+
+  private static activeModals: Set<Modal<BaseComponent>> = new Set();
 
   constructor(private modalProps: IModalProps<T>) {
     super({ tag: 'div', className: styles.overlay });
@@ -46,28 +53,47 @@ class Modal<T extends BaseComponent> extends BaseComponent {
       this.modal.addClass(styles.modal_wide);
     }
 
-    this.append(this.modal);
+    if (modalProps.loader) {
+      this.append(setLoader());
+      this.addClass(styles.overlay_loader);
+    } else {
+      this.append(this.modal);
+    }
+
+    if (modalProps.fullScreen) {
+      this.addClass(styles.fullScreen);
+    }
+  }
+
+  public static closeModals() {
+    this.activeModals.forEach((modal) => modal.close());
   }
 
   public open() {
+    Modal.activeModals.add(this);
     document.body.append(this.getNode());
     lockBackground(this.modalProps.parent);
     this.isSubModal = document.body.classList.contains(styles.bodyLock);
-    if (!this.isSubModal) {
+    if (!this.isSubModal && !this.modalProps.loader) {
       this.scrollControl.lock();
     }
   }
 
   public close() {
+    Modal.activeModals.delete(this);
     this.addClass(styles.overlay__hide);
     setTimeout(() => {
       this.destroy();
-      if (!this.isSubModal) {
+      if (!this.isSubModal && !this.modalProps.loader) {
         this.scrollControl.unlock();
       }
       unlockBackground(this.modalProps.parent);
     }, 300);
   }
+}
+
+export function closeModals() {
+  Modal.closeModals();
 }
 
 export default Modal;

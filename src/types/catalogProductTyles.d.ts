@@ -1,9 +1,13 @@
 interface ICardProps {
   key: string;
+  id: string;
   img: IImgCard[];
   title: string;
   description: string;
   price: Price | undefined;
+
+  isSelected?: boolean;
+  count?: number;
 }
 
 interface IImgCard {

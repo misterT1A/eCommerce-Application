@@ -41,7 +41,7 @@ class MessageView extends BaseComponent<HTMLElement> {
   }
 
   public setAnimationDuration(time: number | undefined) {
-    this.progress.getNode().style.animationDuration = `${time ?? 15000}ms`;
+    this.progress.getNode().style.animationDuration = `${time ?? 2000}ms`;
   }
 
   public remove() {

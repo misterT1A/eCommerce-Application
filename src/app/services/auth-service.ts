@@ -12,6 +12,7 @@ import { ClientBuilder } from '@commercetools/sdk-client-v2';
 
 import { processErrorResponse } from '@utils/errors-handling';
 
+import CurrentCart from './cart-service/currentCart';
 import { tokenCacheAnon, tokenCacheAuth } from './token-cache';
 
 enum Session {
@@ -33,7 +34,11 @@ class AuthenticationService {
   private PROJECT_KEY: string = process.env.CTP_PROJECT_KEY || '';
 
   constructor() {
-    this.root = this.createRoot(this.getAnonymousClient());
+    if (!this.isAuthorized) {
+      this.root = this.createRoot(this.getAnonymousClient());
+    } else {
+      this.root = this.createRoot(this.getRefreshClient(Session.AUTH));
+    }
   }
 
   protected createRoot(client: Client): ByProjectKeyRequestBuilder {
@@ -124,39 +129,56 @@ class AuthenticationService {
   public async sessionStateHandler(): Promise<void> {
     if (this.getRefreshTokenFromStorage(Session.AUTH)) {
       this.root = this.createRoot(this.getRefreshClient(Session.AUTH));
-      console.log('customer session is restored');
+      // console.log('customer session is restored');
     } else if (this.getRefreshTokenFromStorage(Session.ANON)) {
       this.root = this.createRoot(this.getRefreshClient(Session.ANON));
-      console.log('anon session is restored');
+      // console.log('anon session is restored');
     } else {
       this.root = this.createRoot(this.getAnonymousClient());
       await this.root.get().execute();
-      console.log('new anon session started');
+      // console.log('new anon session started');
     }
   }
 
   public async login(email: string, password: string): Promise<ILoginResult> {
+    const customerCredentials = {
+      email,
+      password,
+    };
+    const mergeCarts = {
+      anonymousCart: {
+        typeId: 'cart',
+        id: CurrentCart.id,
+      },
+      anonymousCartSignInMode: 'MergeWithExistingCustomerCart',
+    };
+    if (CurrentCart.isCart()) {
+      Object.assign(customerCredentials, mergeCarts);
+    }
+
     return new Promise<ILoginResult>((resolve) => {
       const root = this.createRoot(this.getPasswordFlowClient(email, password));
       root
         .login()
         .post({
-          body: {
-            email,
-            password,
-          },
+          body: customerCredentials,
         })
         .execute()
         .then((result) => {
+          if (result.body.cart) {
+            // console.log('Customer cart from Commercetools', result.body.cart);
+            CurrentCart.setCart(result.body.cart);
+          }
           this.root = root;
           resolve({
             success: true,
             message: 'OK',
             customer: result.body.customer,
+            cartCount: result.body.cart?.totalLineItemQuantity,
           });
           localStorage.removeItem(`${Session.ANON}-${this.PROJECT_KEY}`);
           localStorage.setItem('loggedIn', 'true');
-          console.log('login');
+          // console.log('login');
         })
         .catch((e: Error) => {
           resolve({
@@ -179,7 +201,12 @@ class AuthenticationService {
         })
         .execute();
       if (customerResponse.statusCode === 201) {
-        return await this.login(customerDraft.email, customerDraft.password ?? '');
+        // return await this.login(customerDraft.email, customerDraft.password ?? '');
+        return {
+          success: true,
+          message: 'OK',
+          customer: customerResponse.body.customer,
+        };
       }
       return { success: false, message: 'Failed to create an account.' };
     } catch (errorResponse: unknown) {
@@ -189,10 +216,9 @@ class AuthenticationService {
 
   public async logout(): Promise<void> {
     localStorage.clear();
-    // localStorage.removeItem(`${Session.AUTH}-${this.PROJECT_KEY}`);
-    // localStorage.removeItem('loggedIn');
+    CurrentCart.deleteCart();
     await this.sessionStateHandler();
-    console.log('logout');
+    // console.log('logout');
   }
 
   public isAuthorized() {

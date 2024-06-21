@@ -82,6 +82,9 @@ export default class LoginController extends Controller<LoginView> {
         MyCustomer.setCustomer(res.customer);
         this.router.navigate(Pages.MAIN);
         this.headerController.changeTextLoggined(MyCustomer.fullNameShort);
+        if (res.cartCount) {
+          this.headerController.setCartCount(res.cartCount);
+        }
       } else {
         notificationEmitter.showMessage({
           messageType: 'error',

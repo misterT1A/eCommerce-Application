@@ -1,5 +1,4 @@
 import styles from './_modal.scss';
-
 /**
  * Controls the locking and unlocking of the scroll position on the page.
  *

@@ -405,3 +405,111 @@ $main-color-error: #d82700;
 .range__label {
   color: #707070;
 }
+
+.form__inputCount {
+  max-width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  user-select: none;
+  color: #aa4e41;
+  &:focus {
+    outline: none;
+  }
+}
+
+.form__inputCount::-webkit-outer-spin-button,
+.form__inputCount::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.form__inputCount[type='number'] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.form__count {
+  max-width: 80px;
+  width: 100%;
+  height: 35px;
+  @include flex(center, space-between, row);
+
+  border: 1px solid $card_read_more_btn_color;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.form__countMinus,
+.form__countPlus {
+  @include flex(center, center, row);
+  height: 100%;
+  font-size: 14px;
+  color: $card_read_more_btn_color;
+  width: 25px;
+  background-color: transparent;
+}
+
+.form__countMinus,
+.form__countPlus {
+  transition:
+    all,
+    0.2s linear;
+  cursor: pointer;
+
+  &:active {
+    color: #fff;
+    background-color: $card_read_more_btn_color;
+  }
+}
+
+.form__inputAddToCart[type='radio'] {
+  display: none;
+}
+
+.form__addToCartIconActive,
+.form__addToCartIconInactive {
+  fill: $main-color-accent;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transition: 0.5s;
+  inset: 0 0 0 0;
+}
+
+.form__addToCartButton {
+  display: flex;
+  position: relative;
+  opacity: 0.95;
+}
+
+.form__addToCartIcons {
+  cursor: pointer;
+  position: relative;
+  height: 30px;
+  width: 40px;
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 0 0;
+    z-index: 3;
+  }
+}
+
+.form__addToCartIconInactive {
+  opacity: 0;
+}
+.form__addToCartIconActive {
+  opacity: 1;
+}
+
+.form__inputAddToCart:checked ~ .form__addToCartIcons {
+  .form__addToCartIconInactive {
+    opacity: 1;
+  }
+  .form__addToCartIconActive {
+    opacity: 0;
+  }
+  cursor: default;
+}

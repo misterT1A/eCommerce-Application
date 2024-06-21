@@ -1,0 +1,142 @@
+.card_element {
+  display: grid;
+  grid-template-columns: 150px repeat(2, 1fr);
+  column-gap: 20px;
+  width: 100%;
+  padding: 15px 5px;
+  border-bottom: 1px solid rgba($header_border_color, 0.3);
+}
+
+.img_wrapper {
+  @include flex(center, center, column);
+  max-width: 150px;
+  width: 100%;
+  height: 150px;
+  overflow: hidden;
+  border-radius: 15px;
+  background-color: rgb(170, 125, 125);
+}
+
+.img_Height {
+  width: auto;
+  max-height: 150px;
+}
+
+.img_Width {
+  max-width: 150px;
+  height: auto;
+}
+
+.description {
+  &_wrapper {
+    @include flex(start, flex-start, column);
+    gap: 20px;
+  }
+
+  &_title {
+    font-size: 20px;
+    color: $card_title_color;
+  }
+
+  &_price {
+    font-size: 15px;
+    color: $main-color-accent;
+  }
+}
+
+.removeButton {
+  position: absolute;
+  right: 2%;
+  cursor: pointer;
+
+  .svg__removeButton {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.price,
+.price_throgh {
+  position: relative;
+  font-size: 20px;
+  color: $card_read_more_btn_color;
+  white-space: nowrap;
+}
+
+.price_throgh {
+  text-decoration: line-through;
+  color: $card_price_throgh_color;
+  font-size: 15px;
+}
+
+.price_discount {
+  text-align: right;
+  font-size: 20px;
+  width: 100%;
+  position: absolute;
+  top: -20px;
+  left: 0;
+  z-index: 5;
+  color: $card_read_more_btn_color;
+}
+
+.removed {
+  animation: 0.3s slideIn linear forwards;
+  transition: 0.3s linear;
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+    max-height: 180px;
+  }
+
+  100% {
+    padding-top: 0;
+    padding-bottom: 0;
+    opacity: 0;
+    max-height: 0px;
+  }
+}
+
+.count {
+  margin-top: auto;
+}
+
+.count_wrapper {
+  margin-top: auto;
+  height: 40px;
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  .description_title,
+  .price {
+    font-size: 14px;
+  }
+  .description_title {
+    color: $color-dark-gray;
+  }
+  .description_wrapper {
+    gap: 0;
+  }
+}
+
+@media screen and (max-width: 470px) {
+  .card_element {
+    display: grid;
+    grid-template-columns: 100px repeat(2, 1fr);
+    padding: 15px 0px;
+    column-gap: 10px;
+  }
+  .description_wrapper {
+    gap: 20px;
+  }
+  .img_wrapper {
+    width: 100px;
+    height: 100px;
+  }
+}

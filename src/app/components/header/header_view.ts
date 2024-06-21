@@ -3,7 +3,7 @@ import AuthService from '@services/auth-service';
 import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
-import { svg } from '@utils/elements';
+import { span, svg } from '@utils/elements';
 
 import menuStyle from './_dropMenu.scss';
 import styles from './_style.scss';
@@ -43,6 +43,7 @@ export default class HeaderView extends BaseComponent {
 
   private setLogo() {
     const img = new BaseComponent<HTMLImageElement>({ tag: 'img', src: logo, className: styles.logo });
+    img.addListener('click', () => this.router.navigate(Pages.MAIN));
     this.append(img);
   }
 
@@ -56,11 +57,26 @@ export default class HeaderView extends BaseComponent {
     const svgBasket = svg(`/assets/img/basketIcon.svg#svgElem`, styles.basketLogoFill);
     const basketIcon = new BaseComponent({ className: styles.basketLogo }, svgBasket);
     basketIcon.addListener('click', () => {
-      svgBasket.classList.toggle(styles.basketLogoActive);
+      this.router.navigate(Pages.CART);
+      // CartService.addToCart('103ab460-284b-4046-a8a8-df061ff1fb14');
     });
 
     const wrapper = new BaseComponent({ className: styles.menuBlock }, userIcon, basketIcon);
     this.append(wrapper);
+  }
+
+  // throw 0 to remove counter, and another number above 0 to display the counter
+  public setCartCount(count: number) {
+    const parrent = this.getChildren[3].getChildren[1];
+    if (count > 0) {
+      if (parrent.getChildren.length) {
+        parrent.destroyChildren();
+      }
+      const countElem = span([styles.cart_count_wrapper], count.toString());
+      parrent.append(countElem);
+    } else if (parrent.getChildren.length) {
+      parrent.destroyChildren();
+    }
   }
 
   private setDropMenu() {
@@ -140,6 +156,7 @@ export default class HeaderView extends BaseComponent {
         this.changeTextNotLoginned();
         AuthService.logout();
         this.router.navigateToLastPoint();
+        this.setCartCount(0);
         break;
       default:
         break;

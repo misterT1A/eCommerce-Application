@@ -6,6 +6,7 @@ import Toggler from '@components/form-ui-elements/formToggler';
 import type RangeSelector from '@components/form-ui-elements/range-selector';
 import ProductService from '@services/product_service/product_service';
 import type Router from '@src/app/router/router';
+import { isCountCards } from '@src/app/router/router-helpers';
 import BaseComponent from '@utils/base-component';
 import { button, div } from '@utils/elements';
 import { sortProducts, transformCategoryName, transformCategoryNamesForView } from '@utils/filters-helpers';
@@ -102,6 +103,7 @@ export default class FilterBlock extends BaseComponent {
       if (!this.searchInput.getValue()) {
         return;
       }
+      this.setDefaultCardsCount();
       this.handleSearch(this.searchInput.getValue());
     });
     this.searchInput.input.addListener('input', () => {
@@ -122,7 +124,7 @@ export default class FilterBlock extends BaseComponent {
   public async reset() {
     this.updateView();
     ProductService.resetFilters();
-    await ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
+    await ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body));
     this.breadcrumbs.update([CATALOG_ROOT]);
     this.router.setEmptyUrlCatalog();
     this.filters.removeClass(styles.blur);
@@ -144,7 +146,7 @@ export default class FilterBlock extends BaseComponent {
 
   private handleSearch(query: string) {
     ProductService.setSearchQuery(query);
-    ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
+    ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body));
   }
 
   private categoryChange() {
@@ -169,27 +171,32 @@ export default class FilterBlock extends BaseComponent {
     if (!this.isCategoryChosen()) {
       return;
     }
+    this.setDefaultCardsCount();
+
     this.categoryChange();
     const categoryID = CATEGORIES[transformCategoryName(this.categorySelect.getValue())];
     const categoryKey = Object.keys(CATEGORIES).find((key) => CATEGORIES[key] === categoryID) ?? '';
     this.router.setUrlCatalog(categoryKey);
-    ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
+    ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body));
   }
 
   public handlePriceRangeChange() {
+    this.setDefaultCardsCount();
     ProductService.setPriceRange(this.priceFilter.getValue());
-    ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
+    ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body));
     this.router.setUrlCatalog(getPriceFilter());
   }
 
   private handleSubcategoryChange() {
+    this.setDefaultCardsCount();
+
     this.router.setUrlCatalog(transformCategoryName(this.subcategorySelect.getValue()));
 
     this.breadcrumbs.update([CATALOG_ROOT, this.categorySelect.getValue(), this.subcategorySelect.getValue()]);
     const subcategoryID = SUBCATEGORIES[transformCategoryName(this.subcategorySelect.getValue())];
     ProductService.setChosenCategory(subcategoryID.id);
 
-    ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
+    ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body));
   }
 
   private isCategoryChosen() {
@@ -197,14 +204,16 @@ export default class FilterBlock extends BaseComponent {
   }
 
   private handleFiltersChange(filterValue: FilterKeys) {
+    this.setDefaultCardsCount();
     ProductService.applyFilter(filterValue);
-    ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
+    ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body));
     this.router.setUrlCatalog(filterValue);
   }
 
   private handleSortChange(value: SortKey) {
+    this.setDefaultCardsCount();
     ProductService.applySort(value);
-    ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body.results));
+    ProductService.getFilteredProducts().then((data) => this.productCardsBlock.setProducts(data.body));
     this.router.setUrlCatalog(value);
   }
 
@@ -256,10 +265,28 @@ export default class FilterBlock extends BaseComponent {
       this.categoryChange();
       this.breadcrumbs.update([CATALOG_ROOT]);
     }
+
+    this.checkCardsCount(values);
+
     ProductService.getFilteredProducts().then((data) => {
-      this.productCardsBlock.setProducts(data.body.results);
+      this.productCardsBlock.setProducts(data.body);
       this.updatePriceRange(data);
       this.priceFilter.setValue(ProductService.getPriceRange());
     });
+  }
+
+  private checkCardsCount(values: string[]) {
+    const filter = values.filter((elem) => isCountCards(elem)).join('');
+    const count = filter.replace(/\D/g, '');
+    if (count) {
+      ProductService.setDefaultCardsCount(+count);
+    } else {
+      ProductService.resetDefaultCardsCount();
+    }
+  }
+
+  private setDefaultCardsCount() {
+    ProductService.resetDefaultCardsCount();
+    this.router.setEmptyCardsCountURL();
   }
 }

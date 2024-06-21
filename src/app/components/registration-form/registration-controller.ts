@@ -5,6 +5,8 @@ import FormField from '@components/form-ui-elements/formField';
 import type HeaderController from '@components/header/header_controller';
 import notificationEmitter from '@components/notifications/notifications-controller';
 import AuthService from '@services/auth-service';
+// import CartService from '@services/cart-service/cart-service';
+import CartService from '@services/cart-service/cart-service';
 import MyCustomer from '@services/customer-service/myCustomer';
 import RegistrationValidator from '@services/registrationValidationService/registrationValidator';
 import Pages from '@src/app/router/pages';
@@ -101,14 +103,24 @@ class RegistrationController extends Controller<RegistrationView> {
     this.getView.disableButton();
     const response = await AuthService.signUp(customerDraft);
     if (response.success) {
-      notificationEmitter.showMessage({
-        messageType: 'success',
-        title: 'Account created!',
-        text: 'Access your profile to control your personal information and preferences.',
-      });
-      MyCustomer.setCustomer(response.customer);
-      this.router.navigate(Pages.MAIN);
-      this.headerController.changeTextLoggined(MyCustomer.fullNameShort);
+      const { cartID } = await CartService.createNewCustomerCart(response.customer?.id ?? '');
+      const loginResp = await AuthService.login(customerDraft.email, customerDraft.password ?? '');
+      if (loginResp.success) {
+        notificationEmitter.showMessage({
+          messageType: 'success',
+          title: 'Account created!',
+          text: 'Access your profile to control your personal information and preferences.',
+        });
+        MyCustomer.setCustomer(response.customer);
+        this.router.navigate(Pages.MAIN);
+        this.headerController.changeTextLoggined(MyCustomer.fullNameShort);
+        if (cartID) {
+          await CartService.updateCart(cartID);
+        }
+      } else {
+        showErrorMessages(loginResp);
+        this.getView.unlockButton();
+      }
     } else {
       showErrorMessages(response);
       this.getView.unlockButton();

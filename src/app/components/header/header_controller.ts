@@ -18,4 +18,8 @@ export default class HeaderController extends Controller<HeaderView> {
       this.changeTextLoggined(name);
     }
   }
+
+  public setCartCount(count: number) {
+    this.getView.setCartCount(count);
+  }
 }

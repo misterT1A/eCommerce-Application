@@ -3,6 +3,7 @@ import Pages from '@src/app/router/pages';
 import type Router from '@src/app/router/router';
 import BaseComponent from '@utils/base-component';
 import { div } from '@utils/elements';
+import throttle from '@utils/throttle';
 
 import styles from './_burger-style.scss';
 import mainStyles from './_style.scss';
@@ -27,7 +28,7 @@ export default class BurgerMenu extends BaseComponent {
     this.setUserBlock();
     this.append(this.contentWrapper);
     this.addListener('click', (e: Event) => this.navigate(e));
-    window.addEventListener('resize', () => this.resizeHandeler());
+    window.addEventListener('resize', () => throttle(() => this.resizeHandler(), 100)());
   }
 
   private setMenuContent() {
@@ -39,11 +40,11 @@ export default class BurgerMenu extends BaseComponent {
         textContent: 'CATALOG',
         className: styles.menuBtn,
       },
-      // {
-      //   tag: 'span',
-      //   textContent: 'ABOUT US',
-      //   className: styles.menuBtn,
-      // },
+      {
+        tag: 'span',
+        textContent: 'ABOUT US',
+        className: styles.menuBtn,
+      },
     ];
     props.forEach((prop) => wrapper.append(new BaseComponent(prop)));
     this.contentWrapper.append(wrapper);
@@ -53,7 +54,6 @@ export default class BurgerMenu extends BaseComponent {
     const isAuthorized = AuthService.isAuthorized();
     const wrapper = div([styles.userWrapper]);
     const props: Props[] = [
-      // { tag: 'li', className: styles.menuBtn, textContent: 'J. DOE' },
       {
         tag: 'li',
         className: styles.menuBtn,
@@ -64,11 +64,6 @@ export default class BurgerMenu extends BaseComponent {
         className: styles.menuBtn,
         textContent: 'Sign Up',
       },
-      // {
-      //   tag: 'li',
-      //   className: styles.menuBtn,
-      //   textContent: 'Log Out',
-      // },
     ];
     props.forEach((prop) => {
       if (prop.textContent !== 'Log Out') {
@@ -82,13 +77,11 @@ export default class BurgerMenu extends BaseComponent {
     this.contentWrapper.append(wrapper);
   }
 
-  private resizeHandeler() {
+  private resizeHandler() {
     const width = window.innerWidth;
 
     if (width > 1000 && this.burgerBtn.getNode().classList.contains(mainStyles.burgerBtn_active)) {
-      document.body.classList.remove(styles.bodyHidden);
-    } else if (this.burgerBtn.getNode().classList.contains(mainStyles.burgerBtn_active)) {
-      document.body.classList.add(styles.bodyHidden);
+      this.hideMenu();
     }
   }
 
@@ -102,6 +95,13 @@ export default class BurgerMenu extends BaseComponent {
     } else {
       document.body.classList.add(styles.bodyHidden);
     }
+  }
+
+  private hideMenu() {
+    this.burgerBtn.getNode().classList.remove(mainStyles.burgerBtn_active);
+    this.contentWrapper.getNode().classList.remove(styles.menuBlockActive);
+    this.getNode().classList.remove(styles.wrapperActive);
+    document.body.classList.remove(styles.bodyHidden);
   }
 
   public changeTextLoggined() {
@@ -119,7 +119,7 @@ export default class BurgerMenu extends BaseComponent {
   }
 
   private navigate(e: Event) {
-    this.toggleMenu();
+    this.hideMenu();
     const target = (e.target as HTMLElement)?.textContent;
     switch (target) {
       case 'HOME':
@@ -128,9 +128,9 @@ export default class BurgerMenu extends BaseComponent {
       case 'CATALOG':
         this.router.navigate(Pages.CATALOG);
         break;
-      // case 'ABOUT US':
-      //   // this.router.navigate(Pages.);
-      //   break;
+      case 'ABOUT US':
+        this.router.navigate(Pages.ABOUT);
+        break;
       case 'Log In':
         this.router.navigate(Pages.LOGIN);
         break;

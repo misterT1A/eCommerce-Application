@@ -1,5 +1,6 @@
 import { CATEGORIES, FILTERS, SORT, SUBCATEGORIES } from '@components/catalog/filters/constants-filters';
 import { isPriceFilter } from '@components/catalog/filters/price-filter-helpers';
+import { closeModals } from '@components/modal/modal';
 import AuthService from '@services/auth-service';
 
 import Pages from './pages';
@@ -51,9 +52,10 @@ export default class Router {
     if (!popstate) {
       window.history.pushState(null, '', `/${url}`);
     }
+    closeModals();
   }
 
-  public setUrlCatalog(filter: string) {
+  public setUrlCatalog(filter: string, cardsCount?: number) {
     const path = this.getCurrentPath();
     const parsePath = path.split('/').splice(1);
 
@@ -81,6 +83,12 @@ export default class Router {
       urlSeters.setParseRange(parsePath, filter);
     }
 
+    if (urlSeters.isCountCards(filter)) {
+      if (cardsCount) {
+        urlSeters.setCountCards(parsePath, filter, cardsCount);
+      }
+    }
+
     const catalogUrl = `/${Pages.CATALOG}`;
     const filtersUrl = `/${urlSeters.sortUrl(parsePath)}`;
     window.history.pushState(null, '', !parsePath.length ? catalogUrl : catalogUrl + filtersUrl);
@@ -88,6 +96,15 @@ export default class Router {
 
   public setEmptyUrlCatalog() {
     window.history.pushState(null, '', `/${Pages.CATALOG}`);
+  }
+
+  public setEmptyCardsCountURL() {
+    const path = this.getCurrentPath();
+    const parsePath = path.split('/').splice(1);
+    const countUrl = parsePath.find((elem) => urlSeters.isCountCards(elem));
+    if (countUrl) {
+      this.setUrlCatalog(countUrl, 100);
+    }
   }
 
   public navigateToLastPoint() {

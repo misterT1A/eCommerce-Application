@@ -1,27 +1,27 @@
-import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk';
-
 import type { CategoryKey, FilterKeys, SortKey } from '@components/catalog/filters/constants-filters';
 import { CATEGORIES, FILTERS, SORT, SUBCATEGORIES } from '@components/catalog/filters/constants-filters';
 import AuthService from '@services/auth-service';
 
 class GetProductsService {
-  protected root: ByProjectKeyRequestBuilder;
-
   protected filters: Set<string> = new Set();
 
   protected priceRange: [number, number] = [0, 50000];
 
   protected priceMaxRange: [number, number] = [0, 50000];
 
-  protected sortOrder = '';
+  protected sortOrder = 'price asc';
 
   protected searchQuery = '';
 
   protected chosenCategory = '';
 
-  constructor() {
-    this.root = AuthService.getRoot();
-  }
+  protected DEFAULTCARDSCOUNT = 6;
+
+  protected limitCardsCount = this.DEFAULTCARDSCOUNT;
+
+  protected quantityToAddCount = 3;
+
+  protected cardsCount = 0;
 
   public setChosenCategory(category: string) {
     if (!category) {
@@ -55,7 +55,7 @@ class GetProductsService {
   }
 
   public async getSubcategories(categoryId: CategoryKey) {
-    return this.root
+    return AuthService.getRoot()
       .categories()
       .get({
         queryArgs: {
@@ -66,19 +66,25 @@ class GetProductsService {
   }
 
   public getCategories() {
-    return this.root.categories().get().execute();
+    return AuthService.getRoot().categories().get().execute();
   }
 
   public getProductByName(name: string) {
-    return this.root.productProjections().withKey({ key: name }).get().execute();
+    return AuthService.getRoot().productProjections().withKey({ key: name }).get().execute();
   }
 
   public resetFilters() {
     this.filters.clear();
     this.chosenCategory = '';
     this.searchQuery = '';
-    this.sortOrder = '';
+    this.sortOrder = 'price asc';
     this.priceRange = this.priceMaxRange;
+    this.limitCardsCount = this.DEFAULTCARDSCOUNT;
+    this.cardsCount = 0;
+  }
+
+  public getDefaultCardsCount() {
+    return this.DEFAULTCARDSCOUNT;
   }
 
   public setPriceRange(range: [number, number]) {
@@ -95,6 +101,24 @@ class GetProductsService {
 
   public getPriceRange() {
     return this.priceRange;
+  }
+
+  public setOffsetCardsCount() {
+    if (this.cardsCount < 6) {
+      this.cardsCount += this.DEFAULTCARDSCOUNT;
+      return this.cardsCount + this.quantityToAddCount;
+    }
+    this.cardsCount += this.quantityToAddCount;
+    return this.cardsCount + this.quantityToAddCount;
+  }
+
+  public setDefaultCardsCount(count: number) {
+    this.limitCardsCount = count;
+  }
+
+  public resetDefaultCardsCount() {
+    this.limitCardsCount = this.DEFAULTCARDSCOUNT;
+    this.cardsCount = 0;
   }
 
   public setSearchQuery(query: string) {
@@ -118,7 +142,7 @@ class GetProductsService {
     this.sortOrder = SORT[sortType];
   }
 
-  public getFilteredProducts() {
+  public getFilteredProducts(isAddNewCards = false) {
     const filtersQuery = Array.from(this.filters);
     const facet = [`variants.price.centAmount:range(0 to 100000)`];
     if (this.chosenCategory) {
@@ -127,19 +151,31 @@ class GetProductsService {
 
     filtersQuery.push(this.getPriceFilter());
 
-    return this.root
+    const params = {
+      priceCurrency: 'EUR',
+      filter: filtersQuery,
+      limit: this.limitCardsCount,
+      offset: 0,
+      sort: [this.sortOrder],
+      'text.en': this.searchQuery,
+      fuzzy: true,
+      facet,
+    };
+
+    if (isAddNewCards) {
+      if (this.limitCardsCount > this.DEFAULTCARDSCOUNT) {
+        this.cardsCount = this.limitCardsCount;
+      }
+      this.limitCardsCount = this.quantityToAddCount;
+      params.limit = this.limitCardsCount;
+      params.offset = this.cardsCount;
+    }
+
+    return AuthService.getRoot()
       .productProjections()
       .search()
       .get({
-        queryArgs: {
-          priceCurrency: 'EUR',
-          filter: filtersQuery,
-          limit: 100,
-          sort: [this.sortOrder],
-          'text.en': this.searchQuery,
-          fuzzy: true,
-          facet,
-        },
+        queryArgs: params,
       })
       .execute();
   }
