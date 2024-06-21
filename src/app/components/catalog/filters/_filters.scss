@@ -1,0 +1,157 @@
+.filterBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  padding-top: 0;
+
+  opacity: 0;
+  transform: translateX(-100%);
+  animation: slideIn 0.4s forwards;
+
+  @include tablet {
+    position: fixed;
+    width: 60%;
+    right: 100%;
+    top: 0;
+    min-height: 100vh;
+    z-index: 51;
+    transform: translateX(0);
+    background-color: #fff;
+    transition: transform 0.6s ease-in-out;
+    padding: 8%;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+
+    animation: none;
+    opacity: 1;
+
+    &--visible {
+      transform: translateX(100%);
+    }
+  }
+
+  @include mobile {
+    width: 90%;
+    padding: 15%;
+  }
+}
+
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.close-btn {
+  display: none;
+  width: 40px;
+  height: 40px;
+  background: center / contain no-repeat;
+  background-image: URL(../../../../assets/cross.svg);
+  position: absolute;
+  top: 1%;
+  right: 2%;
+
+  @include tablet {
+    display: block;
+  }
+}
+
+.reset-btn {
+  padding: 5px 0;
+  color: $card_read_more_btn_color;
+  font-size: 16px;
+  border: 1px solid $card_read_more_btn_color;
+  border-radius: 20px;
+  background-color: transparent;
+  transition: all 0.3s linear;
+
+  &:active {
+    background-color: $card_read_more_btn_color;
+    color: #fff;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: $card_read_more_btn_color;
+      color: #fff;
+    }
+  }
+}
+
+input[type='search']::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  position: absolute;
+  right: 0px;
+  height: 15px;
+  width: 15px;
+  margin-left: 0.4em;
+  background-image: URL(../../../../assets/cross.svg);
+  cursor: pointer;
+}
+
+input[type='search'] {
+  display: block;
+  padding-left: 30px;
+}
+
+.inactive {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.blur {
+  filter: blur(1px);
+  pointer-events: none;
+}
+
+.toggle-filters {
+  position: sticky;
+  top: 2%;
+  width: 120px;
+  background-color: #fff;
+  border-radius: 10px;
+  display: none;
+  align-items: center;
+  gap: 15px;
+  font-size: 1.1rem;
+  padding: 10px;
+  z-index: 10;
+  box-shadow: 0px 2px 16px -4px rgba(0, 0, 0, 0.2);
+  color: $card_read_more_btn_color;
+  cursor: pointer;
+
+  &-btn {
+    background: center / contain no-repeat;
+    background-image: URL(../../../../assets/filters.svg);
+    height: 20px;
+    width: 20px;
+  }
+
+  @include tablet {
+    display: flex;
+  }
+}
+
+.overlay {
+  position: sticky;
+  top: 2%;
+  z-index: 70;
+}
+
+.overlay--visible {
+  position: sticky;
+  top: 2%;
+  position: fixed;
+  inset: 0 0 0 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(1px);
+  z-index: 70;
+  padding: 15px;
+  opacity: 1;
+  animation: fade-in 0.2s ease-in forwards;
+  transition: 0.2s;
+}

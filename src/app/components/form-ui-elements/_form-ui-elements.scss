@@ -1,0 +1,515 @@
+$main-color-accent: #aa4e41;
+$color-light: #faf4f4;
+$color-white: #ffffff;
+$color-dark-gray: #707070;
+$color-gray: #d8d8d8;
+$color-light-gray: #efefef;
+$main-color-error: #d82700;
+
+.form__field {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 5px;
+}
+
+.form__selection {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  gap: 5px;
+}
+
+.form__selectionName {
+  font-weight: 500;
+}
+
+.form__selectionButton {
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  text-align: start;
+  border: 1px solid $color-dark-gray;
+  border-radius: 5px;
+  height: 40px;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+
+.form__selectionList {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 200px;
+  list-style: none;
+  background-color: $color-white;
+  top: calc(100% - 3px);
+  overflow: auto;
+  border-radius: 0 0 5px 5px;
+  border: $color-dark-gray 1px solid;
+  border-top: none;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: 0.2s;
+  opacity: 0;
+}
+
+.form__selectionList::-webkit-scrollbar {
+  width: 0.5em;
+}
+
+.form__selectionList::-webkit-scrollbar-thumb {
+  background-color: #d8d8d8;
+  border-radius: 10px;
+}
+
+.form__selectionItem {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 40px;
+  &:hover {
+    background-color: $color-light-gray;
+  }
+}
+
+.form__selectionField {
+  display: flex;
+  width: 100%;
+  padding: 0;
+}
+
+.form__selectionButtonWrapper {
+  display: flex;
+  position: relative;
+  height: 40px;
+  button,
+  ul {
+    flex-shrink: 0;
+    display: block;
+    width: 100%;
+  }
+}
+
+.form__selectionInput {
+  display: none;
+}
+
+.form__selectionLabel {
+  display: flex;
+  width: 100%;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.form__selection_show {
+  .form__selectionList {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.form__input {
+  display: flex;
+  width: 100%;
+  height: 40px;
+  padding: 5px;
+  border: 1px solid $color-dark-gray;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.form__selectionInput:checked ~ .form__selectionLabel {
+  background-color: $color-light-gray;
+}
+
+.form__errors {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: $main-color-error;
+  font-size: 12px;
+}
+
+.form__inputPasswordToggler {
+  position: absolute;
+  top: calc(50% - 15px);
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  border: none;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  background-position: center;
+}
+
+.form__inputSearch {
+  position: absolute;
+  top: calc(50% - 15px);
+  left: 0px;
+  width: 30px;
+  height: 30px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  background-position: center;
+  background-image: URL(../../../assets/magnifying-glass.svg);
+}
+
+.form__inputWrapper {
+  position: relative;
+  .form__inputPasswordToggler {
+    background-image: URL(../../../assets/opened-eye.svg);
+  }
+  &_visible {
+    .form__inputPasswordToggler {
+      opacity: 1;
+      background-image: URL(../../../assets/closed-eye.svg);
+    }
+  }
+}
+
+.form__inputsWrapperSmall {
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  display: grid;
+  @media (width <= 450px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form__inputWrapper_date {
+  .form__input {
+    background-image: url(../../../assets/calendar.svg);
+    background-position: calc(100% - 10px);
+    background-size: 20px;
+    background-repeat: no-repeat;
+  }
+}
+
+.form__input:focus {
+  outline: none;
+  border: 1px solid #000000;
+}
+
+.form__address {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+
+.form__checkbox {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.form__inputCheckbox {
+  display: none;
+}
+
+.form__inputCheckbox:checked ~ .form__inputCheckmark {
+  background-image: url(../../../assets/checkmark.svg);
+  background-size: contain;
+}
+
+.form__inputCheckmark {
+  width: 20px;
+  height: 20px;
+  border-radius: 2px;
+  border: 1px solid $color-dark-gray;
+}
+
+.form__inputLabel {
+  font-weight: 700;
+}
+
+.form__toggler {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.form__inputToggler {
+  display: none;
+}
+
+.form__togglerLabel {
+  font-weight: 700;
+}
+
+.form__inputTogglerContainer {
+  display: flex;
+  cursor: pointer;
+}
+
+.form__inputTogglerBase {
+  display: block;
+  padding: 4px;
+  background-color: $color-dark-gray;
+  width: 35px;
+  height: 22px;
+  border-radius: 20px;
+  transition: 0.2s;
+}
+
+.form__inputTogglerMark {
+  display: block;
+  height: 100%;
+  width: 50%;
+  background-color: #ffffff;
+  border-radius: 50%;
+  transition: 0.2s;
+}
+
+.form__inputToggler:checked ~ .form__inputTogglerBase .form__inputTogglerMark {
+  transform: translateX(100%);
+}
+
+.form__inputToggler:checked ~ .form__inputTogglerBase {
+  background-color: #aa4e41;
+}
+
+.form__selectionTag {
+  background-color: #9c9c9c;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 20px;
+  gap: 3px;
+  border-radius: 20px;
+  padding: 3px 5px;
+}
+
+.form__selectionContainer {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+  overflow-x: hidden;
+  border: 1px solid $color-dark-gray;
+  border-radius: 5px;
+  padding: 0px 10px;
+  cursor: pointer;
+}
+
+.form__selectionOverlay {
+  display: none;
+}
+
+.form__selectionIcon {
+  position: absolute;
+  top: calc(50% - 7px);
+  right: 10px;
+  width: 15px;
+  height: 15px;
+  transition: 0.2s;
+}
+
+.form__selection_show {
+  .form__selectionOverlay {
+    position: fixed;
+    display: block;
+    inset: 0 0 0 0;
+  }
+  .form__selectionIcon {
+    transform: rotate(180deg);
+  }
+}
+
+.form__tagIcon {
+  width: 12px;
+  height: 12px;
+  fill: #ffffff;
+}
+
+.range {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.range__rangeSlider {
+  display: grid;
+  cursor: pointer;
+}
+
+.range__rangeSliderBackground {
+  grid-area: 1 / 1 / 2 / 2;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.range__rangeSliderBackgroundBar {
+  grid-area: 1 / 1 / 2 / 2;
+  height: 2px;
+  background-color: #9c9c9c;
+  width: 100%;
+  align-self: center;
+}
+
+.range__leftBound,
+.range__rightBound {
+  height: 10px;
+  flex-shrink: 0;
+}
+.range__leftBound {
+  border-right: #000000 2px solid;
+}
+
+.range__rightBound {
+  border-left: #000000 2px solid;
+}
+
+.range__rangeBar {
+  height: 2px;
+  width: 100%;
+  flex-grow: 1;
+  background-color: #000000;
+}
+
+.range__rangeInputs {
+  grid-area: 1 / 1 / 2 / 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.range__input {
+  opacity: 0;
+  height: 0.2px;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 2px;
+  width: 100%;
+  background-color: #c6c6c6;
+  pointer-events: none;
+  &::-webkit-slider-thumb {
+    pointer-events: all;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+}
+
+.range__label {
+  color: #707070;
+}
+
+.form__inputCount {
+  max-width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  user-select: none;
+  color: #aa4e41;
+  &:focus {
+    outline: none;
+  }
+}
+
+.form__inputCount::-webkit-outer-spin-button,
+.form__inputCount::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.form__inputCount[type='number'] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.form__count {
+  max-width: 80px;
+  width: 100%;
+  height: 35px;
+  @include flex(center, space-between, row);
+
+  border: 1px solid $card_read_more_btn_color;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.form__countMinus,
+.form__countPlus {
+  @include flex(center, center, row);
+  height: 100%;
+  font-size: 14px;
+  color: $card_read_more_btn_color;
+  width: 25px;
+  background-color: transparent;
+}
+
+.form__countMinus,
+.form__countPlus {
+  transition:
+    all,
+    0.2s linear;
+  cursor: pointer;
+
+  &:active {
+    color: #fff;
+    background-color: $card_read_more_btn_color;
+  }
+}
+
+.form__inputAddToCart[type='radio'] {
+  display: none;
+}
+
+.form__addToCartIconActive,
+.form__addToCartIconInactive {
+  fill: $main-color-accent;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transition: 0.5s;
+  inset: 0 0 0 0;
+}
+
+.form__addToCartButton {
+  display: flex;
+  position: relative;
+  opacity: 0.95;
+}
+
+.form__addToCartIcons {
+  cursor: pointer;
+  position: relative;
+  height: 30px;
+  width: 40px;
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 0 0;
+    z-index: 3;
+  }
+}
+
+.form__addToCartIconInactive {
+  opacity: 0;
+}
+.form__addToCartIconActive {
+  opacity: 1;
+}
+
+.form__inputAddToCart:checked ~ .form__addToCartIcons {
+  .form__addToCartIconInactive {
+    opacity: 1;
+  }
+  .form__addToCartIconActive {
+    opacity: 0;
+  }
+  cursor: default;
+}

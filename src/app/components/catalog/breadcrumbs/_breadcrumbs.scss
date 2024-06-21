@@ -1,0 +1,26 @@
+.breadcrumbsBlock {
+  opacity: 1;
+  transition: opacity 0.2s linear;
+  padding-left: 10px;
+  color: $main-color-accent;
+  font-size: 1rem;
+}
+
+.ul .li {
+  display: inline;
+  cursor: pointer;
+}
+
+.ul > .li:last-child > span {
+  transform: 0.2 ease;
+  border-bottom: 1px solid $main-color-accent;
+  font-weight: bold;
+}
+
+.li:last-child {
+  pointer-events: none;
+}
+
+.hide {
+  opacity: 0;
+}
