@@ -1,0 +1,51 @@
+{
+  "compilerOptions": {
+    "target": "es2022", /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
+    "allowJs": true, /* set to false if migration from JS to TS is not needed */
+    "resolveJsonModule": true, /* allow importing JSON files as modules */
+    "moduleDetection": "auto", /* Control what method is used to detect module-format JS files. */
+    "moduleResolution": "bundler", /* Specify how TypeScript looks up a file from a given module specifier. */
+    "lib": [
+      "es2022",
+      "dom",
+      "dom.iterable"
+    ],
+    "module": "ESNext",
+    "baseUrl": "./", /* Specify the base directory to resolve non-relative module names. */
+    "paths": {
+      "@components/*": [
+        "src/app/components/*"
+      ],
+      "@utils/*": [
+        "src/app/utils/*"
+      ],
+      "@style/*": [
+        "src/style/*"
+      ],
+      "@services/*": [
+        "src/app/services/*"
+      ],
+      "@assets/*": [
+        "src/assets/*"
+      ],
+      "@types/*": [
+        "src/types/*"
+      ],
+      "@fonts/*": [
+        "src/fonts/*"
+      ],
+      "@src/*": [
+        "src/*"
+      ],
+    },
+    "esModuleInterop": true, /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
+    "forceConsistentCasingInFileNames": true, /* Ensure that casing is correct in imports. */
+    /* Type Checking */
+    "strict": true, /* Enable all strict type-checking options. */
+    "noImplicitAny": true, /* Enable error reporting for expressions and declarations with an implied 'any' type. */
+    "skipLibCheck": true /* Skip type checking all .d.ts files. */
+  },
+  "include": [
+    "**/*.ts"
+  ]
+}

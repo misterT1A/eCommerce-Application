@@ -1,0 +1,190 @@
+$main-color-accent: #aa4e41;
+$color-light: #faf4f4;
+$color-white: #ffffff;
+$color-dark-gray: #707070;
+$color-gray: #d8d8d8;
+$color-light-gray: #efefef;
+$main-color-error: #d82700;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin: 0 auto;
+  padding: 20px 0;
+  gap: 15px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.form__wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.form__title {
+  font-size: 33px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.form__formText {
+  text-align: center;
+}
+
+.form__button {
+  width: 100%;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  border-radius: 50px;
+  border: 1px solid $main-color-accent;
+  color: $main-color-accent;
+  transition: 0.2s;
+  &:hover {
+    background-color: $main-color-accent;
+    color: $color-white;
+  }
+}
+
+.form__inputsWrapperSmall {
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  display: grid;
+  @media (width <= 450px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form__addresses {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  &_billing {
+    .form__addressesTogglerBar {
+      transform: translate(50%);
+    }
+    .form__addressesBar {
+      transform: translate(-50%);
+    }
+    .form__addressesTogglerLabelRight {
+      color: $color-light;
+    }
+    .form__addressesTogglerLabelLeft {
+      color: $main-color-accent;
+    }
+  }
+  &_shipping {
+    .form__addressesTogglerBar {
+      transform: translate(-50%);
+    }
+  }
+  &_common {
+    .form__addressesTogglerBar {
+      opacity: 0;
+    }
+    .form__addressesToggler {
+      pointer-events: none;
+    }
+    .form__addressesTogglerLabelRight,
+    .form__addressesTogglerLabelLeft {
+      color: $main-color-accent;
+    }
+  }
+}
+
+.form__addressesTitle {
+  color: $main-color-accent;
+  border-bottom: 1px solid #aa4e41;
+  font-weight: 500;
+}
+
+.form__addressesTogglerBar {
+  display: flex;
+  background-color: $main-color-accent;
+  border-radius: 50px;
+  height: 35px;
+  width: 50%;
+  transition: 0.5s;
+}
+
+.form__addressesContainer {
+  overflow-x: hidden;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.form__addressesBar {
+  width: 200%;
+  display: flex;
+  transition: 0.5s;
+  gap: 10px;
+}
+
+.form__addressesTogglerLabelLeft {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $color-light;
+  left: 0px;
+  width: 50%;
+  height: 100%;
+  transition: 0.5s;
+}
+
+.form__addressesTogglerLabelRight {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $main-color-accent;
+  right: 0px;
+  width: 50%;
+  height: 100%;
+  transition: 0.5s;
+}
+
+.form__addressesToggler {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border: 1px solid $main-color-accent;
+  background-color: transparent;
+  border-radius: 50px;
+}
+
+.form__footer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.form__formLink {
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    transition: 0.2s;
+    width: 100%;
+    height: 1px;
+    left: 0;
+    bottom: -2px;
+    transform: scaleX(0);
+    background-color: #000000;
+  }
+  @media (hover: hover) {
+    &:hover::after {
+      transform: scaleX(1);
+    }
+  }
+}

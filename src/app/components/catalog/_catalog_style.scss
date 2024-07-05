@@ -1,0 +1,16 @@
+.wrapper {
+  width: 100%;
+  @include flex(start, flex-end, column);
+  gap: 25px;
+}
+
+.mainContent {
+  @include flex(start, start, row);
+
+  @include tablet {
+    margin: auto;
+  }
+
+  gap: 1%;
+  width: 100%;
+}

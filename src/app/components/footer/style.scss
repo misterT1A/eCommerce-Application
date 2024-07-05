@@ -1,0 +1,151 @@
+.footer {
+  width: 100%;
+  padding: 30px 60px;
+  background-color: $header_background_color;
+  @include flex(flex-start, space-between, column);
+  gap: 16px;
+}
+
+.wrapper {
+  padding: 0 0 20px 0;
+  width: 100%;
+  border-bottom: 2px solid $footer_links_color;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.block {
+  @include flex(flex-start, space-between, column);
+  gap: 20px;
+  justify-self: center;
+  align-self: first baseline;
+}
+
+.block:last-child {
+  justify-self: flex-end;
+}
+
+.categoriesTitle {
+  display: block;
+  width: 150px;
+  font-size: 16px;
+  color: $footer_cat_titles_color;
+
+  border-bottom: 1px solid #aa4e41;
+}
+
+.categoriesWrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  grid-row-gap: 30px;
+  grid-column-gap: 20px;
+}
+
+.linksWrapper {
+  @include flex(flex-start, space-between, column);
+  gap: 20px;
+}
+
+.link,
+.linkContact {
+  position: relative;
+  font-size: 16px;
+  white-space: nowrap;
+  color: $footer_links_color;
+}
+
+.link {
+  cursor: pointer;
+  transition: color 0.3s linear;
+}
+
+.contactItem {
+  @include flex(flex-start, space-between, row);
+  gap: 10px;
+}
+
+.contactLink {
+  @include flex(flex-start, space-between, column);
+  gap: 4px;
+}
+
+.svgIcon {
+  width: 20px;
+  height: 20px;
+  fill: $footer_links_color;
+}
+
+.aboutWrapper {
+  width: 100%;
+  padding: 14px 0;
+  @include flex(center, space-between, row);
+}
+
+.aboutText {
+  font-size: 16px;
+  color: $footer_links_color;
+}
+
+.aboutLogo {
+  width: 130px;
+  height: 47px;
+}
+
+@media screen and (max-width: 1000px) {
+  .wrapper {
+    grid-template-columns: repeat(2, 1fr);
+    grid-row-gap: 40px;
+  }
+
+  .block {
+    justify-self: first baseline;
+  }
+
+  .block:first-child {
+    width: 100%;
+  }
+
+  .block:last-child {
+    justify-self: first baseline;
+  }
+
+  .categoriesWrapper {
+    width: 100%;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
+
+  .blockFull {
+    grid-column: 1 / span 2;
+  }
+
+  .blockHalf {
+    grid-column: span 1;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .block:first-child {
+    display: none;
+  }
+
+  .aboutWrapper {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .wrapper {
+    grid-template-columns: 1fr;
+    grid-row-gap: 20px;
+  }
+}
+
+@media not all and (hover: none) {
+  .link:hover {
+    color: $footer_cat_titles_color;
+    @include flex(center, space-between, row);
+  }
+}
